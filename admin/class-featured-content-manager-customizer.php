@@ -1,0 +1,396 @@
+<?php
+/**
+ * Featured Content Manager Customizer.
+ *
+ * @package Featured_Content_Manager_Customizer
+ * @author  Jesper Nilsson <jesper@klandestino.se>
+ */
+class Featured_Content_Manager_Customizer {
+
+	/**
+	 * Instance of this class.
+	 *
+	 * @since    0.1.0
+	 *
+	 * @var      object
+	 */
+	protected static $instance = null;
+
+	/**
+	 * Initialize the plugin by loading admin scripts & styles, adding a
+	 * cusomizer settings and setting up actions & filters.
+	 *
+	 * @since     0.1.0
+	 */
+	private function __construct() {
+
+		// Call $plugin_slug from public plugin class.
+		$plugin = Featured_Content_Manager::get_instance();
+		$this->plugin_slug = $plugin->get_plugin_slug();
+
+		// Register customizer panels, settings and option
+		add_action( 'customize_register', array( $this, 'featured_area_customize_register' ) );
+
+		// Load admin style sheet.
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+
+		// Load admin JavaScript.
+		add_action( 'customize_controls_print_footer_scripts', array( $this, 'available_featured_items_panel' ) );
+		add_action( 'customize_controls_print_footer_scripts',  array( $this, 'search_result_templates' ) );
+		add_action( 'customize_controls_print_footer_scripts',  array( $this, 'featured_item_templates' ) );
+		add_action( 'customize_controls_print_footer_scripts',  array( $this, 'sortable_placeholder_localization' ) );
+
+		// Set up plugin specific actions and hooks.	
+		add_action( 'init', array( $this, 'action_method_name' ) );
+		add_filter( 'init', array( $this, 'filter_method_name' ) );
+
+	}
+
+	/**
+	 * Return an instance of this class.
+	 *
+	 * @since     0.1.0
+	 *
+	 * @return    object    A single instance of this class.
+	 */
+	public static function get_instance() {
+
+		// If the single instance hasn't been set, set it now.
+		if ( null == self::$instance ) {
+			self::$instance = new self;
+		}
+
+		return self::$instance;
+	}
+
+	/**
+	 * Register and enqueue customizer-specific style sheet.
+	 *
+	 * @since     0.1.0
+	 */
+	public function enqueue_admin_styles() {
+
+		$screen = get_current_screen();
+
+		if ( 'customize' == $screen->id ) {
+			wp_enqueue_style( $this->plugin_slug .'-customizer-styles', plugins_url( 'assets/css/customizer.css', __FILE__ ), array(), Featured_Content_Manager::VERSION );
+		}
+
+	}
+
+	/**
+	 * Register and enqueue customizer-specific JavaScript.
+	 *
+	 * @since     0.1.0
+	 */
+	public function enqueue_admin_scripts() {
+
+		$screen = get_current_screen();
+
+		if ( 'customize' == $screen->id ) {
+			wp_enqueue_script( $this->plugin_slug . '-customizer-script', plugins_url( 'assets/js/customizer.js', __FILE__ ), array( 'jquery' ), Featured_Content_Manager::VERSION );
+		}
+
+	}
+
+	/**
+	 * Add AJAX & POST handling actions.
+	 *
+	 * @since    0.1.0
+	 */
+	public function action_method_name() {
+		// Save posts when "Save & Publish" is pressed from Customizer
+		add_action( 'customize_save_after',  array( $this, 'featured_area_customize_save' ) );
+
+		// Save, find and get single post from AJAX request
+		add_action( 'wp_ajax_fcm_save_posts', array( $this, 'save_draft_order' ) );
+		add_action( 'wp_ajax_search_content', array( $this, 'featured_content_search' ) );
+		add_action( 'wp_ajax_get_post', array( $this, 'get_post' ) );
+		add_action( 'wp_ajax_add_area', array( $this, 'add_area' ) );
+		add_action( 'wp_ajax_remove_area', array( $this, 'remove_area' ) );
+	}
+
+	/**
+	 * No filters implemented yet
+	 *
+	 * @since    0.1.0
+	 */
+	public function filter_method_name() {
+	}
+
+	/**
+	 * Call for Featured Content Manager class' function to save drafts
+	 *
+	 * @since    0.1.0
+	 */
+	public function save_draft_order(){
+		Featured_Content_Manager::save_order( 'draft' );
+		echo json_encode( array( 'error' => false ) );
+		die();
+	}
+
+	/**
+	 * Call for Featured Content Manager class' function to publish
+	 *
+	 * @since    0.1.0
+	 */
+	public function featured_area_customize_save($wp_customize){
+		Featured_Content_Manager::get_instance();
+		foreach ( $wp_customize->settings() as $setting ) {
+			if( strpos($setting->id,'featured_area_') !== false ){
+				$form = $wp_customize->get_setting( $setting->id )->value();
+
+				$values = array();
+				parse_str($form, $values);
+				$_REQUEST = $values;
+				Featured_Content_Manager::save_order();
+			}
+		}
+	}
+
+	/**
+	 * Call for Featured Content Manager class' function to add a featured area
+	 *
+	 * @since    0.1.0
+	 */
+	public function add_area(){
+		Featured_Content_Manager::add_featured_area();
+	}
+
+	/**
+	 * Call for Featured Content Manager class' function to remove a featured area
+	 *
+	 * @since    0.1.0
+	 */
+	public function remove_area(){
+		Featured_Content_Manager::remove_featured_area();
+	}
+
+	/**
+	 * Call for Featured Content Manager class' function to get a post
+	 *
+	 * @since    0.1.0
+	 */
+	public function get_post(){
+		Featured_Content_Manager::get_featured_content_post();
+	}
+
+	/**
+	 * Add panel, sections, settings and controls form evere Featured Area.
+	 *
+	 * @since    0.1.0
+	 */
+	public function featured_area_customize_register( $wp_customize ){
+
+		require( plugin_dir_path( __FILE__ ) . 'includes/class-featured-area-control.php' );
+		require( plugin_dir_path( __FILE__ ) . 'includes/class-create-featured-area-control.php' );
+
+		$wp_customize->add_panel( 'featured_areas', array(
+			'title'       => __('Feature Content Manager', $this->plugin_slug ),
+			'description' => '<p>' . __( 'This panel is used for managing featured areas. You can add pages and posts.', $this->plugin_slug ) . '</p>',
+			'priority'    => 0,
+		) );
+
+		$featured_areas = get_terms( Featured_Content_Manager::TAXONOMY, array( 'hide_empty' => false, 'orderby' => 'id', 'order' => 'DESC' ) );
+
+		$wp_customize->add_section( 'new_featured_area_section', 
+			array(
+				'title' => __('New Featured Area', $this->plugin_slug ),
+				'priority' => 999,
+				'panel'     => 'featured_areas',
+			)
+		);
+			
+		$wp_customize->add_setting( 'new_featured_area_setting', 
+			array(
+				'default' => '',
+				'transport' => 'refresh',
+			)
+		);
+
+		$wp_customize->add_control(
+			new Create_Featured_Area_Control( $wp_customize, 'create-featured-area-control', 
+				array(
+					'label' => __( 'Create Featured Area', $this->plugin_slug ),
+					'section' => 'new_featured_area_section',
+					'settings' => 'new_featured_area_setting'
+				) 
+			)
+		);
+
+		foreach ($featured_areas as $featured_area) :
+			$section_id = 'featured_area_' . $featured_area->term_id;
+			$area_name_setting_id = $section_id . '[name]';
+
+			$wp_customize->add_section( $section_id, 
+				array(
+					'title' => $featured_area->name,
+					'priority' => 10,
+					'panel'     => 'featured_areas',
+				)
+			);
+			
+			$wp_customize->add_setting( $area_name_setting_id, 
+				array(
+					'default' => '',
+					'transport' => 'refresh',
+				)
+			);
+
+			$wp_customize->add_control( 
+				new Featured_Area_Control( $wp_customize, 'featured-area-'.$featured_area->term_id, 
+					array(
+						'label' => __( 'Featured Area', $this->plugin_slug ),
+						'section' => $section_id,
+						'settings' => $area_name_setting_id,
+						'area' => $featured_area->term_id,
+					) 
+				)
+			);
+			
+		endforeach;
+	}
+
+	/**
+	 * Handle AJAX search request for available features content.
+	 *
+	 * @since    0.1.0
+	 */
+	function featured_content_search(){
+		if( isset($_REQUEST['search_term']) ){
+			$search_query = new WP_Query( array(
+					's' => $_REQUEST['search_term'],
+					'post_type' => array('post','page'),
+					'post_per_page' => '10'
+				)
+			);
+			if ( $search_query->have_posts() ) {
+				$output = array();
+				$i = 0;
+				while ( $search_query->have_posts() ) {
+					$search_query->the_post();
+					$output[$i]['ID'] = get_the_id();
+					$output[$i]['post_title'] = get_the_title();
+					$output[$i]['post_type'] = get_post_type();
+					$output[$i]['post_content'] = wp_trim_words( get_the_content(), 12, '...' );
+					$i++;
+				}
+				echo json_encode( array( 'error' => FALSE, 'result' => $output ) );
+				die();
+			}
+		}
+		echo json_encode( array( 'error' => TRUE ) );
+		die();
+	}
+
+	/**
+	 * Print out panel for available featured contents and the search form.
+	 *
+	 * @since    0.1.0
+	 */
+	public function available_featured_items_panel() {
+	?>
+		<div id="available-featured-items" class="accordion-container">
+			<div id="available-featured-items-filter">
+				<label class="screen-reader-text" for="featured-items-search">Search Content</label>
+				<input type="search" id="featured-items-search" placeholder="<?php _e( 'Search content', $this->plugin_slug ); ?>">
+			</div>
+			<div id="featured-items-filter-result">
+				<ul>
+				</ul>
+			</div>
+		</div>
+	<?php
+	}
+
+	/**
+	 * Print out featured item templates i wp-template format.
+	 *
+	 * @since    0.1.0
+	 */
+	public function featured_item_templates() {
+	?>
+	<script type="text/html" id="tmpl-featured-item">
+		<li class="closed">
+			<div class="fcm-title">
+				<div class="sidebar-name-arrow"><br></div>
+				<div class="sidebar-parent-arrow"><br></div>
+				<h4>{{data.post.post_title}}</h4>
+			</div>
+			<div class="fcm-inside">
+				<fieldset name="post-{{data.post.ID}}">
+					<input type="hidden" name="post_thumbnail[{{data.index}}]" value="{{data.post_thumbnail.ID}}">
+					<input type="hidden" name="area[{{data.index}}]" value="{{data.term}}">
+					<input type="hidden" name="menu_order[{{data.index}}]" value="{{data.post.menu_order}}">
+					<input type="hidden" name="post_id[{{data.index}}]" value="{{data.post.ID}}">
+					<input type="hidden" name="child[{{data.index}}]" value="{{data.child}}">
+					<input type="hidden" name="post_original[{{data.index}}]" value="{{data.post_original.ID}}">
+					<div class="uploader">
+						<# if( data.post_thumbnail.guid) { #>
+						<p>
+							<a href="#" title="Select thumbnail" class="edit-thumbnail"><img src="{{data.post_thumbnail.guid}}"></a>
+						</p>
+						<p>
+							<a href="#" title="Delete thumbnail" class="remove-thumbnail"><?php _e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
+						</p>
+						<# } else { #>
+							<p>
+							<a href="#" title="Select thumbnail" class="edit-thumbnail"><?php _e( 'Select thumbnail', $this->plugin_slug ); ?></a>
+						</p>
+						<p>
+							<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail"><?php _e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
+						</p>
+						<# } #>
+					</div>
+					<p>
+						<input type="text" name="post_title[{{data.index}}]" value="{{data.post.post_title}}">
+					</p>
+					<p>
+						<input type="text" name="post_date[{{data.index}}]" value="{{data.post.post_date}}">
+					</p>
+					<p>
+						<textarea name="post_content[{{data.index}}]">{{data.post.post_content}}</textarea>
+					</p>
+					<p>
+						<a href="#" class="remove"><?php _e( 'Delete', $this->plugin_slug ); ?></a>
+					</p>
+				</fieldset>
+			</div>
+			<div class="fcm-children">
+				<ul class="sortable connectable"></ul>
+			</div>
+		</li>
+	</script>
+	<?php
+	}
+
+	/**
+	 * Print out search result templates i wp-template format for the available feature content panel.
+	 *
+	 * @since    0.1.0
+	 */
+	public function search_result_templates(){
+	?>
+		<script type="text/html" id="tmpl-featured-area-search-result-item">
+			<li class="featured-area-search-result-item {{data.post_type}}" data-id="{{data.ID}}">
+				<div class="featured-area-search-item-title">
+					<h4>{{data.post_title}}</h4>
+				</div>
+				<div class="featured-area-search-item-content">
+					{{data.post_content}}
+				</div>
+			</li>
+		</script>
+	<?php
+	}
+
+	/**
+	 * Print style that localize sortable placeholder.
+	 *
+	 * @since    0.1.0
+	 */
+	public function sortable_placeholder_localization(){
+		echo '<style>.placeholder:before{content:"' . __('Drop Here!', 'featured-content-manager') . '" !important;}</style>';
+	}
+}
