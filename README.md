@@ -16,7 +16,7 @@ Featured Content Manager is a plugin highly influenced by (the now dead projekt)
 3. Now you are ready to update your theme for Featured Content Manager
 
 ## WikiPages
-* [Read more in our Wiki](https://github.com/redundans/featured-content-manager/wiki)
+* [Read more in the plugin wiki pages](https://github.com/redundans/featured-content-manager/wiki)
 
 ## Changelog
  
