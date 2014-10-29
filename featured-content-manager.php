@@ -3,16 +3,16 @@
  * @package   Featured_Content_Manager
  * @author    Jesper Nilsson <jesper@klandestino.se>
  * @license   GPL-2.0+
- * @link      https://bitbucket.org/redundans
+ * @link      https://github.com/redundans
  * @copyright 2014 Jesper Nilsson
  *
  * @wordpress-plugin
  * Plugin Name:       	Featured Content Manager
- * Plugin URI:       	https://bitbucket.org/klandestino/featured-content-manager
+ * Plugin URI:       	https://github.com/redundans/featured-content-manager
  * Description:       	Featured Content Manager is a plugin highly influenced by (the now dead projekt) wp-featured-content. It lets users create featured items that mirrors posts - then order them and edit their representation inside featured areas.
  * Version:           	0.1.0
  * Author:       		Jesper Nilsson
- * Author URI:      	https://bitbucket.org/redundans
+ * Author URI:      	https://github.com/redundans
  * Text Domain:     	featured-content-manager
  * License:         	GPL-2.0+
  * License URI:     	http://www.gnu.org/licenses/gpl-2.0.txt
