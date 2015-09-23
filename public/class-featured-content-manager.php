@@ -146,7 +146,7 @@ class Featured_Content_Manager {
 		) );
 
 		// If featured area taxonomy is registred add Main Area term.
-		if( !term_exists( 'Featured Content Main Area', self::TAXONOMY ) )
+		if ( ! term_exists( 'Main Area', self::TAXONOMY ) )
 			wp_insert_term(
 				'Main Area',
 				self::TAXONOMY,
@@ -381,7 +381,7 @@ class Featured_Content_Manager {
 	 *
 	 * @since    0.1.0
 	 */
-	public function add_featured_area( ) {
+	public static function add_featured_area( ) {
 		$area_title = $_POST['area'];
 		if( wp_insert_term( $area_title, self::TAXONOMY ) ){
 			echo json_encode( array( 'error' => null ) );
@@ -396,7 +396,7 @@ class Featured_Content_Manager {
 	 *
 	 * @since    0.1.0
 	 */
-	public function remove_featured_area( ) {
+	public static function remove_featured_area( ) {
 		$area_id = (int)$_POST['area'];
 		if( wp_delete_term( $area_id, self::TAXONOMY ) ){
 			echo json_encode( array( 'error' => null ) );
@@ -411,7 +411,7 @@ class Featured_Content_Manager {
 	 *
 	 * @since    0.1.0
 	 */
-	public function get_featured_content_post( ) {
+	public static function get_featured_content_post( ) {
 		$post_id = $_POST['post_id'];
 		$target = $_POST['target'];
 
@@ -443,9 +443,10 @@ class Featured_Content_Manager {
 	 *
 	 * @since    0.1.0
 	 */
-	public function save_order( $post_status = 'publish' ){
-		if( $post_status == '' )
+	public static function save_order( $post_status = 'publish' ){
+		if( $post_status == '' ) {
 			$post_status = 'publish';
+		}
 
 		if( wp_verify_nonce( $_REQUEST['_wpnonce'], 'fcm_save_posts' ) ) {
 			$post_ids = $_REQUEST['post_id'];

@@ -32,8 +32,8 @@ class Featured_Content_Manager_Customizer {
 		add_action( 'customize_register', array( $this, 'featured_area_customize_register' ) );
 
 		// Load admin style sheet.
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+		add_action( 'customize_controls_print_styles', array( $this, 'enqueue_admin_styles' ) );
+		add_action( 'customize_controls_print_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
 		// Load admin JavaScript.
 		add_action( 'customize_controls_print_footer_scripts', array( $this, 'available_featured_items_panel' ) );
@@ -41,9 +41,15 @@ class Featured_Content_Manager_Customizer {
 		add_action( 'customize_controls_print_footer_scripts',  array( $this, 'featured_item_templates' ) );
 		add_action( 'customize_controls_print_footer_scripts',  array( $this, 'sortable_placeholder_localization' ) );
 
-		// Set up plugin specific actions and hooks.	
-		add_action( 'init', array( $this, 'action_method_name' ) );
-		add_filter( 'init', array( $this, 'filter_method_name' ) );
+		// Save posts when "Save & Publish" is pressed from Customizer
+		add_action( 'customize_save_after',  array( $this, 'featured_area_customize_save' ) );
+
+		// Save, find and get single post from AJAX request
+		add_action( 'wp_ajax_fcm_save_posts', array( $this, 'save_draft_order' ) );
+		add_action( 'wp_ajax_search_content', array( $this, 'featured_content_search' ) );
+		add_action( 'wp_ajax_get_post', array( $this, 'get_post' ) );
+		add_action( 'wp_ajax_add_area', array( $this, 'add_area' ) );
+		add_action( 'wp_ajax_remove_area', array( $this, 'remove_area' ) );
 
 	}
 
@@ -71,11 +77,7 @@ class Featured_Content_Manager_Customizer {
 	 */
 	public function enqueue_admin_styles() {
 
-		$screen = get_current_screen();
-
-		if ( 'customize' == $screen->id ) {
-			wp_enqueue_style( $this->plugin_slug .'-customizer-styles', plugins_url( 'assets/css/customizer.css', __FILE__ ), array(), Featured_Content_Manager::VERSION );
-		}
+		wp_enqueue_style( $this->plugin_slug .'-customizer-styles', plugins_url( 'assets/css/customizer.css', __FILE__ ), array(), Featured_Content_Manager::VERSION );
 
 	}
 
@@ -86,37 +88,8 @@ class Featured_Content_Manager_Customizer {
 	 */
 	public function enqueue_admin_scripts() {
 
-		$screen = get_current_screen();
+		wp_enqueue_script( $this->plugin_slug . '-customizer-script', plugins_url( 'assets/js/customizer.js', __FILE__ ), array( 'jquery', 'jquery-ui-sortable' ), Featured_Content_Manager::VERSION );
 
-		if ( 'customize' == $screen->id ) {
-			wp_enqueue_script( $this->plugin_slug . '-customizer-script', plugins_url( 'assets/js/customizer.js', __FILE__ ), array( 'jquery' ), Featured_Content_Manager::VERSION );
-		}
-
-	}
-
-	/**
-	 * Add AJAX & POST handling actions.
-	 *
-	 * @since    0.1.0
-	 */
-	public function action_method_name() {
-		// Save posts when "Save & Publish" is pressed from Customizer
-		add_action( 'customize_save_after',  array( $this, 'featured_area_customize_save' ) );
-
-		// Save, find and get single post from AJAX request
-		add_action( 'wp_ajax_fcm_save_posts', array( $this, 'save_draft_order' ) );
-		add_action( 'wp_ajax_search_content', array( $this, 'featured_content_search' ) );
-		add_action( 'wp_ajax_get_post', array( $this, 'get_post' ) );
-		add_action( 'wp_ajax_add_area', array( $this, 'add_area' ) );
-		add_action( 'wp_ajax_remove_area', array( $this, 'remove_area' ) );
-	}
-
-	/**
-	 * No filters implemented yet
-	 *
-	 * @since    0.1.0
-	 */
-	public function filter_method_name() {
 	}
 
 	/**
@@ -184,71 +157,71 @@ class Featured_Content_Manager_Customizer {
 	public function featured_area_customize_register( $wp_customize ){
 
 		require( plugin_dir_path( __FILE__ ) . 'includes/class-featured-area-control.php' );
-		require( plugin_dir_path( __FILE__ ) . 'includes/class-create-featured-area-control.php' );
+		//require( plugin_dir_path( __FILE__ ) . 'includes/class-create-featured-area-control.php' );
 
 		$wp_customize->add_panel( 'featured_areas', array(
 			'title'       => __('Feature Content Manager', $this->plugin_slug ),
 			'description' => '<p>' . __( 'This panel is used for managing featured areas. You can add pages and posts.', $this->plugin_slug ) . '</p>',
-			'priority'    => 0,
+			'priority'    => 20
 		) );
 
 		$featured_areas = get_terms( Featured_Content_Manager::TAXONOMY, array( 'hide_empty' => false, 'orderby' => 'id', 'order' => 'DESC' ) );
 
-		$wp_customize->add_section( 'new_featured_area_section', 
-			array(
-				'title' => __('New Featured Area', $this->plugin_slug ),
-				'priority' => 999,
-				'panel'     => 'featured_areas',
-			)
-		);
-			
-		$wp_customize->add_setting( 'new_featured_area_setting', 
-			array(
-				'default' => '',
-				'transport' => 'refresh',
-			)
-		);
+		// $wp_customize->add_section( 'new_featured_area_section',
+		// 	array(
+		// 		'title' => __('New Featured Area', $this->plugin_slug ),
+		// 		'priority' => 999,
+		// 		'panel'     => 'featured_areas',
+		// 	)
+		// );
 
-		$wp_customize->add_control(
-			new Create_Featured_Area_Control( $wp_customize, 'create-featured-area-control', 
-				array(
-					'label' => __( 'Create Featured Area', $this->plugin_slug ),
-					'section' => 'new_featured_area_section',
-					'settings' => 'new_featured_area_setting'
-				) 
-			)
-		);
+		// $wp_customize->add_setting( 'new_featured_area_setting',
+		// 	array(
+		// 		'default' => '',
+		// 		'transport' => 'refresh',
+		// 	)
+		// );
+
+		// $wp_customize->add_control(
+		// 	new Create_Featured_Area_Control( $wp_customize, 'create-featured-area-control',
+		// 		array(
+		// 			'label' => __( 'Create Featured Area', $this->plugin_slug ),
+		// 			'section' => 'new_featured_area_section',
+		// 			'settings' => 'new_featured_area_setting'
+		// 		)
+		// 	)
+		// );
 
 		foreach ($featured_areas as $featured_area) :
 			$section_id = 'featured_area_' . $featured_area->term_id;
 			$area_name_setting_id = $section_id . '[name]';
 
-			$wp_customize->add_section( $section_id, 
+			$wp_customize->add_section( $section_id,
 				array(
 					'title' => $featured_area->name,
 					'priority' => 10,
 					'panel'     => 'featured_areas',
 				)
 			);
-			
-			$wp_customize->add_setting( $area_name_setting_id, 
+
+			$wp_customize->add_setting( $area_name_setting_id,
 				array(
 					'default' => '',
 					'transport' => 'refresh',
 				)
 			);
 
-			$wp_customize->add_control( 
-				new Featured_Area_Control( $wp_customize, 'featured-area-'.$featured_area->term_id, 
+			$wp_customize->add_control(
+				new Featured_Area_Control( $wp_customize, 'featured-area-'.$featured_area->term_id,
 					array(
 						'label' => __( 'Featured Area', $this->plugin_slug ),
 						'section' => $section_id,
 						'settings' => $area_name_setting_id,
 						'area' => $featured_area->term_id,
-					) 
+					)
 				)
 			);
-			
+
 		endforeach;
 	}
 
@@ -258,6 +231,7 @@ class Featured_Content_Manager_Customizer {
 	 * @since    0.1.0
 	 */
 	function featured_content_search(){
+
 		if( isset($_REQUEST['search_term']) ){
 			$search_query = new WP_Query( array(
 					's' => $_REQUEST['search_term'],
