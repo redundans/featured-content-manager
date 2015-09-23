@@ -167,7 +167,7 @@ class Featured_Content_Manager {
 	 *
 	 * @since     0.1.0
 	 */
-	public function get_featured_content( $area, $post_status = 'publish' ) {
+	public static function get_featured_content( $area, $post_status = 'publish' ) {
 		if( $post_status == '' ) $post_status = 'publish';
 		if( isset($_REQUEST['wp_customize']) ) $post_status = 'draft';
 		if( !is_int( $area ) ) $area = get_term_by( 'name', $area, self::TAXONOMY );
@@ -423,10 +423,10 @@ class Featured_Content_Manager {
 			$post_thumbnail->ID = '';
 		}
 
-		$output = array( 
-			'error' => 0, 
-			'post' => $post, 
-			'post_original' => array( 'ID' => $post_id ), 
+		$output = array(
+			'error' => 0,
+			'post' => $post,
+			'post_original' => array( 'ID' => $post_id ),
 			'post_thumbnail' => $post_thumbnail,
 			'term' => $target
 		);
@@ -450,10 +450,10 @@ class Featured_Content_Manager {
 		if( wp_verify_nonce( $_REQUEST['_wpnonce'], 'fcm_save_posts' ) ) {
 			$post_ids = $_REQUEST['post_id'];
 			$featured_area = $_REQUEST['featured_area'];
-			
-			$trash_posts = new WP_Query( 
-				array( 
-					'post_type' => self::POST_TYPE, 
+
+			$trash_posts = new WP_Query(
+				array(
+					'post_type' => self::POST_TYPE,
 					'post_status' => ($post_status == 'publish' ? array('publish', 'future') : 'draft'),
 					'tax_query' => array(
 						array(
@@ -483,7 +483,7 @@ class Featured_Content_Manager {
 					if( $_REQUEST['child'][$index] == 'true' ) {
 						$parent = $parent_id;
 					}
-					$post = 
+					$post =
 						array(
 							'ID' => '',
 							'post_title' => $_REQUEST['post_title'][$index],
@@ -509,7 +509,7 @@ class Featured_Content_Manager {
 	}
 
 	/**
-	 * Filter that returns the original post url when permalink for featured 
+	 * Filter that returns the original post url when permalink for featured
 	 * item is requested.
 	 *
 	 * @param string $url
@@ -536,7 +536,7 @@ class Featured_Content_Manager {
 }
 
 /**
- * Public function that return featured content items for a specified 
+ * Public function that return featured content items for a specified
  * featured area from theme or other plugins.
  *
  * @param string $area
