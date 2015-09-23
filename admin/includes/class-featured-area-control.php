@@ -54,49 +54,58 @@ class Featured_Area_Control extends WP_Customize_Control {
 		echo '<input type="hidden" name="action" value="fcm_save_posts">';
 		echo '<input type="hidden" name="_wpnonce" value="'.wp_create_nonce('fcm_save_posts').'" />';
 		echo '<input type="hidden" name="featured_area" value="'. $this->area. '" />';
-		if ( $featured_items != null && $featured_items->have_posts() ) {
-			while ( $featured_items->have_posts() ) {
-				$featured_items->the_post();
-														
-				$child_markup = null;
-				$post_thumbnail_id = get_post_thumbnail_id( get_the_id() );
-				$post = get_post( get_the_id() );
-				$post_thumbnail = ($post_thumbnail_id != '' ? get_post( $post_thumbnail_id ) : false);
-						
-				if($post_thumbnail) {
-					$post_thumbnail->url = wp_get_attachment_image_src( $post_thumbnail_id, 'large' );
-					$post_thumbnail->url = $post_thumbnail->url[0];
+
+		$posts_array = get_posts( 
+			array(
+				'post_type' => 'featured_item', 
+				'tax_query' => array(
+					array(
+						'taxonomy' => 'featured_area',
+						'field' => 'id',
+						'terms' => $this->area
+					)
+				)
+			)
+		);
+		foreach ($posts_array as $post) {
+			$child_markup = null;
+			$post_thumbnail_id = get_post_thumbnail_id( $post->ID );
+			$post = get_post( $post->ID );
+			$post_thumbnail = ($post_thumbnail_id != '' ? get_post( $post_thumbnail_id ) : false);
+
+			if($post_thumbnail) {
+				$post_thumbnail->url = wp_get_attachment_image_src( $post_thumbnail_id, 'large' );
+				$post_thumbnail->url = $post_thumbnail->url[0];
+			}
+
+			$post_original_id = get_post_meta( $post->ID, 'cfm_post_parent', TRUE );
+
+			$output = $this->render_featured_item( $index, $post, $post_original_id, 'false', $post_thumbnail );
+
+			$children = get_children( array( 'post_parent' => $post->ID, 'post_type' => Featured_Content_Manager::POST_TYPE, 'numberposts' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' ), ARRAY_A );
+
+			$index++;
+					
+			foreach ( $children as $child ) {
+				$child_post = get_post( $child["ID"] );
+				$post_thumbnail_id = get_post_thumbnail_id( $child["ID"] );
+				$post_thumbnail = ( $post_thumbnail_id != '' ? get_post( $post_thumbnail_id ) : false );
+			
+				if( $post_thumbnail ) {
+					$post_thumbnail->url = wp_get_attachment_thumb_url( $post_thumbnail_id );
 				}
-						
-				$post_original_id = get_post_meta( get_the_id(), 'cfm_post_parent', TRUE );
 
-				$output = $this->render_featured_item( $index, $post, $post_original_id, 'false', $post_thumbnail );
-
-				$children = get_children( array( 'post_parent' => get_the_id(), 'post_type' => Featured_Content_Manager::POST_TYPE, 'numberposts' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' ), ARRAY_A );
+				$child_markup[] = $this->render_featured_item( $index, $child_post, $post_original_id, 'true', $post_thumbnail );
 
 				$index++;
-						
-				foreach ( $children as $child ) {
-					$child_post = get_post( $child["ID"] );
-					$post_thumbnail_id = get_post_thumbnail_id( $child["ID"] );
-					$post_thumbnail = ( $post_thumbnail_id != '' ? get_post( $post_thumbnail_id ) : false );
-				
-					if( $post_thumbnail ) {
-						$post_thumbnail->url = wp_get_attachment_thumb_url( $post_thumbnail_id );
-					}
-
-					$child_markup[] = $this->render_featured_item( $index, $child_post, $post_original_id, 'true', $post_thumbnail );
-
-					$index++;
-				}
-					
-				if( $child_markup ){
-					$output = str_replace('closed', 'closed parent', $output );
-					$output = str_replace('<ul class="sortable connectable"></ul>', '<ul class="sortable connectable">'.implode( '', $child_markup ).'</ul>', $output);
-				}
-				print $output;
-
 			}
+				
+			if( $child_markup ){
+				$output = str_replace('closed', 'closed parent', $output );
+				$output = str_replace('<ul class="sortable connectable"></ul>', '<ul class="sortable connectable">'.implode( '', $child_markup ).'</ul>', $output);
+			}
+
+			print $output;
 		}
 		echo '</ul>';
 		echo '<p>';

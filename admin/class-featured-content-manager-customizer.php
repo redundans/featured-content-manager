@@ -98,7 +98,7 @@ class Featured_Content_Manager_Customizer {
 	 * @since    0.1.0
 	 */
 	public function save_draft_order(){
-		Featured_Content_Manager::save_order( 'draft' );
+		Featured_Content_Manager::save_order( 'draft', $_REQUEST );
 		echo json_encode( array( 'error' => false ) );
 		die();
 	}
@@ -116,8 +116,7 @@ class Featured_Content_Manager_Customizer {
 
 				$values = array();
 				parse_str($form, $values);
-				$_REQUEST = $values;
-				Featured_Content_Manager::save_order();
+				Featured_Content_Manager::save_order('publish', $values);
 			}
 		}
 	}

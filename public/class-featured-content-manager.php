@@ -443,66 +443,67 @@ class Featured_Content_Manager {
 	 *
 	 * @since    0.1.0
 	 */
-	public static function save_order( $post_status = 'publish' ){
+	public static function save_order( $post_status = 'publish', $values ){
 		if( $post_status == '' ) {
 			$post_status = 'publish';
 		}
+		if(isset($values['_wpnonce'])) {
+			if( wp_verify_nonce( $values['_wpnonce'], 'fcm_save_posts' ) ) {
+				$post_ids = $values['post_id'];
+				$featured_area = $values['featured_area'];
 
-		if( wp_verify_nonce( $_REQUEST['_wpnonce'], 'fcm_save_posts' ) ) {
-			$post_ids = $_REQUEST['post_id'];
-			$featured_area = $_REQUEST['featured_area'];
-
-			$trash_posts = new WP_Query(
-				array(
-					'post_type' => self::POST_TYPE,
-					'post_status' => ($post_status == 'publish' ? array('publish', 'future') : 'draft'),
-					'tax_query' => array(
-						array(
-							'taxonomy' => self::TAXONOMY,
-							'field'    => 'id',
-							'terms'    => $featured_area,
-						),
+				$trash_posts = new WP_Query(
+					array(
+						'post_type' => self::POST_TYPE,
+						'post_status' => ($post_status == 'publish' ? array('publish', 'future') : 'draft'),
+						'tax_query' => array(
+							array(
+								'taxonomy' => self::TAXONOMY,
+								'field'    => 'id',
+								'terms'    => $featured_area,
+							),
+						)
 					)
-				)
-			);
+				);
 
-			if ( $trash_posts->have_posts() ) {
-				while ( $trash_posts->have_posts() ) {
-					$trash_posts->the_post();
-					wp_delete_post( get_the_ID(), true );
-					wp_delete_object_term_relationships( get_the_ID(), self::TAXONOMY, TRUE );
+				if ( $trash_posts->have_posts() ) {
+					while ( $trash_posts->have_posts() ) {
+						$trash_posts->the_post();
+						wp_delete_post( get_the_ID(), true );
+						wp_delete_object_term_relationships( get_the_ID(), self::TAXONOMY, TRUE );
+					}
+					wp_reset_postdata();
 				}
-				wp_reset_postdata();
-			}
 
-			$index = 0;
-			$parent_id = '';
-			if( is_array( $post_ids ) ) {
-				foreach ($post_ids as $post_id) {
-					$index++;
-					$parent = 0;
-					if( $_REQUEST['child'][$index] == 'true' ) {
-						$parent = $parent_id;
-					}
-					$post =
-						array(
-							'ID' => '',
-							'post_title' => $_REQUEST['post_title'][$index],
-							'post_content' => $_REQUEST['post_content'][$index],
-							'menu_order' => $_REQUEST['menu_order'][$index],
-							'post_parent' => $parent,
-							'post_type' => self::POST_TYPE,
-							'post_status' => $post_status,
-							'post_date' => date( 'Y-m-d H:i:s', strtotime( $_REQUEST['post_date'][$index] ) )
-						);
-					$featured_content_id = wp_insert_post( $post );
-					if( $parent == 0 ) {
-						$parent_id = $featured_content_id;
-					}
-					update_post_meta( $featured_content_id, 'cfm_post_parent', $_REQUEST['post_original'][$index] );
-					wp_set_post_terms( $featured_content_id, array( $featured_area ), self::TAXONOMY, TRUE );
-					if( $_REQUEST['post_thumbnail'][$index] != '' ) {
-						set_post_thumbnail( $featured_content_id, $_REQUEST['post_thumbnail'][$index] );
+				$index = 0;
+				$parent_id = '';
+				if( is_array( $post_ids ) ) {
+					foreach ($post_ids as $post_id) {
+						$index++;
+						$parent = 0;
+						if( $values['child'][$index] == 'true' ) {
+							$parent = $parent_id;
+						}
+						$post =
+							array(
+								'ID' => '',
+								'post_title' => $values['post_title'][$index],
+								'post_content' => $values['post_content'][$index],
+								'menu_order' => $values['menu_order'][$index],
+								'post_parent' => $parent,
+								'post_type' => self::POST_TYPE,
+								'post_status' => $post_status,
+								'post_date' => date( 'Y-m-d H:i:s', strtotime( $values['post_date'][$index] ) )
+							);
+						$featured_content_id = wp_insert_post( $post );
+						if( $parent == 0 ) {
+							$parent_id = $featured_content_id;
+						}
+						update_post_meta( $featured_content_id, 'cfm_post_parent', $values['post_original'][$index] );
+						wp_set_post_terms( $featured_content_id, array( $featured_area ), self::TAXONOMY, TRUE );
+						if( $values['post_thumbnail'][$index] != '' ) {
+							set_post_thumbnail( $featured_content_id, $values['post_thumbnail'][$index] );
+						}
 					}
 				}
 			}
