@@ -2,6 +2,7 @@ var $ = jQuery.noConflict(), timer;
 
 $(function() {
 
+	$('body').ready(function(){
 	$('.sortable').sortable({
 		connectWith: '.connectable',
 		opacity: 0.5,
@@ -26,7 +27,7 @@ $(function() {
 			changeState = true;
 		}
 	}).disableSelection();
-
+	});
 	function update_preview(){
 
 		$('ul.featured-area').each( function(index) {
