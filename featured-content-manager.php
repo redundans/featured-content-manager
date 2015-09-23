@@ -57,9 +57,5 @@ add_action( 'plugins_loaded', array( 'Featured_Content_Manager', 'get_instance' 
  * The code below is intended to to give the lightest footprint possible.
  *
  */
-if ( is_admin() ) {
-
-	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-featured-content-manager-customizer.php' );
-	add_action( 'plugins_loaded', array( 'Featured_Content_Manager_Customizer', 'get_instance' ) );
-
-}
+require_once( plugin_dir_path( __FILE__ ) . 'admin/class-featured-content-manager-customizer.php' );
+add_action( 'init', array( 'Featured_Content_Manager_Customizer', 'get_instance' ) );
