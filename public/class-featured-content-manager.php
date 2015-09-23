@@ -170,7 +170,10 @@ class Featured_Content_Manager {
 	public static function get_featured_content( $area, $post_status = 'publish' ) {
 		if( $post_status == '' ) $post_status = 'publish';
 		if( isset($_REQUEST['wp_customize']) ) $post_status = 'draft';
-		if( !is_int( $area ) ) $area = get_term_by( 'name', $area, self::TAXONOMY );
+		if( !is_int( $area ) ) {
+			$area = get_term_by( 'name', $area, self::TAXONOMY );
+			$area = $area->term_id;
+		}
 
 		if ( ! did_action( 'init' ) ) {
 			_doing_it_wrong( 'wp_get_featured_content()', "Cannot be called before the 'init' action.", '3.8' );
@@ -193,6 +196,7 @@ class Featured_Content_Manager {
 					'terms'    => $area,
 				),
 			);
+
 		$query = new WP_Query( $args );
 		return $query;
 	}
