@@ -1,8 +1,8 @@
 <?php
 
-require_once( 'featured-content-manager.php' );
+require_once( 'featured-content.php' );
 
-class Featured_Content_Manager_Tests extends WP_UnitTestCase {
+class Featured_Content_Tests extends WP_UnitTestCase {
 
 	function setUp(){
 		parent::setUp();

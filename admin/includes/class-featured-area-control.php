@@ -2,7 +2,7 @@
 /**
  * Featured Area Control.
  *
- * @package Featured_Content_Manager
+ * @package Featured_Content
  * @author  Jesper Nilsson <jesper@klandestino.se>
  */
 class Featured_Area_Control extends WP_Customize_Control {

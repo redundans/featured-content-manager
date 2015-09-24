@@ -13,7 +13,7 @@
  * Version:           	0.1.0
  * Author:       		Jesper Nilsson
  * Author URI:      	https://github.com/redundans
- * Text Domain:     	featured-content-manager
+ * Text Domain:     	featured-content
  * License:         	GPL-2.0+
  * License URI:     	http://www.gnu.org/licenses/gpl-2.0.txt
  * Domain Path:       	/languages
@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
  *----------------------------------------------------------------------------*/
 
 /*
- * Include the plugin manager.
+ * Include the plugin.
  *
  */
 require_once( plugin_dir_path( __FILE__ ) . 'public/class-featured-content-manager.php' );
@@ -48,6 +48,8 @@ register_deactivation_hook( __FILE__, array( 'Featured_Content_Manager', 'deacti
  *
  */
 add_action( 'plugins_loaded', array( 'Featured_Content_Manager', 'get_instance' ) );
+
+remove_theme_support('featured-content');
 
 /*----------------------------------------------------------------------------*
  * Dashboard and Administrative Functionality

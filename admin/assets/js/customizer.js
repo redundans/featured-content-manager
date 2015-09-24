@@ -54,6 +54,8 @@ $(function() {
 				});
 			});
 
+			console.log($(customize_control).find('ul.featured-area:first :input'));
+
 			var serialized_form = $(customize_control).find('ul.featured-area:first :input').serialize();
 			if( $(customize_setting).val() != serialized_form ){
 				$.ajax({

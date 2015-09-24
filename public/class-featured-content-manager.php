@@ -45,7 +45,7 @@ class Featured_Content_Manager {
 	 *
 	 * @var      string
 	 */
-	protected $plugin_slug = 'featured-content-manager';
+	public $plugin_slug = 'featured-content-manager';
 
 	/**
 	 * Instance of this class.
@@ -70,24 +70,24 @@ class Featured_Content_Manager {
 		// Activate plugin when new blog is added
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 
-		// Add theme support for featured content manager
-		add_action( 'after_setup_theme', array( $this, 'theme_support' ) );
-
 		// If the theme supports it, register post_type and taxonomy
 		add_action( 'init', array( $this, 'init' ) );
 
 		// Add filter for featured item permalink.
 		add_filter( 'post_type_link', array( $this, 'filter_featured_item_permalink'), 10, 3 );
 
-	}
+		/*
+		 * Add action for altering main query.
+		 *
+		 */
+		add_action( 'pre_get_posts', array( $this, 'fc_alter_main_query' ) );
 
-	/**
-	 * Turns theme support on when Featured Content Manager is installed
-	 *
-	 * @since    0.1.0
-	 */
-	function theme_support() {
-		add_theme_support( $this->plugin_slug );
+		/*
+		 * Add action for population children.
+		 *
+		 */
+		add_filter( 'the_content', array( $this, 'fc_populate_children' ) );
+
 	}
 
 	/**
@@ -96,10 +96,6 @@ class Featured_Content_Manager {
 	 * @since     0.1.0
 	 */
 	function init() {
-
-		// If theme support is inactive halt here.
-		if ( ! current_theme_supports( $this->plugin_slug ) )
-			return;
 
 		// Register the featured item post type.
 		register_post_type( self::POST_TYPE, array(
@@ -365,7 +361,7 @@ class Featured_Content_Manager {
 	}
 
 	/**
-	 * Load Featured Content Manager text domain for translation.
+	 * Load Featured Content text domain for translation.
 	 *
 	 * @since    0.1.0
 	 */
@@ -421,13 +417,35 @@ class Featured_Content_Manager {
 		if( $post_status == '' ) {
 			$post_status = 'publish';
 		}
-		if(isset($values['_wpnonce'])) {
+		if(isset($values['_wpnonce']) && isset($values['post_id']) ) {
 			if( wp_verify_nonce( $values['_wpnonce'], 'fcm_save_posts' ) ) {
 				$post_ids = $values['post_id'];
 				$featured_area = $values['featured_area'];
 
-				self::trash_posts( $post_status, $featured_area );
+		error_log($post_status);
 
+		$trash_posts = new WP_Query(
+			array(
+				'post_status' => $post_status,
+				'post_type' => self::POST_TYPE,
+				'tax_query' => array(
+					array(
+						'taxonomy' => self::TAXONOMY,
+						'field'    => 'id',
+						'terms'    => $featured_area,
+					)
+				)
+			)
+		);
+
+		if ( $trash_posts->have_posts() ) {
+			while ( $trash_posts->have_posts() ) {
+				$trash_posts->the_post();
+				wp_delete_post( get_the_ID(), true );
+				wp_delete_object_term_relationships( get_the_ID(), self::TAXONOMY, TRUE );
+			}
+			wp_reset_postdata();
+		}
 				$index = 0;
 				$parent_id = '';
 				if( is_array( $post_ids ) ) {
@@ -471,28 +489,90 @@ class Featured_Content_Manager {
 	 * @since    0.1.0
 	 */
 	public static function trash_posts( $post_status, $featured_area ){
-		$trash_posts = new WP_Query(
-		array(
-			'post_type' => self::POST_TYPE,
-			'post_status' => ($post_status == 'publish' ? array('publish', 'future') : 'draft'),
-			'tax_query' => array(
-				array(
-					'taxonomy' => self::TAXONOMY,
-					'field'    => 'id',
-					'terms'    => $featured_area,
-				),
-			)
-		)
-	);
-
-	if ( $trash_posts->have_posts() ) {
-		while ( $trash_posts->have_posts() ) {
-			$trash_posts->the_post();
-			wp_delete_post( get_the_ID(), true );
-			wp_delete_object_term_relationships( get_the_ID(), self::TAXONOMY, TRUE );
+		if( $post_status == 'publish' ) {
+			$post_statuses = array('publish');
+		} else {
+			$post_statuses = array('draft');
 		}
-		wp_reset_postdata();
+
+		$trash_posts = new WP_Query(
+			array(
+				'post_type' => self::POST_TYPE,
+				'tax_query' => array(
+					array(
+						'taxonomy' => self::TAXONOMY,
+						'field'    => 'id',
+						'terms'    => $featured_area,
+					)
+				)
+			)
+		);
+
+		if ( $trash_posts->have_posts() ) {
+			while ( $trash_posts->have_posts() ) {
+				$trash_posts->the_post();
+				wp_delete_post( get_the_ID(), true );
+				wp_delete_object_term_relationships( get_the_ID(), self::TAXONOMY, TRUE );
+			}
+			wp_reset_postdata();
+		}
 	}
+
+	/**
+	 * Altering the main query for home to include featured items.
+	 *
+	 * @param object $query
+	 *
+	 * @since    1.0
+	 */
+	function fc_alter_main_query( $query )
+	{
+		global $wp_customize;
+		if ( term_exists( 'Main Area', Featured_Content_Manager::TAXONOMY ) && $query->is_main_query() && $query->is_home() ){
+
+			if ( isset( $wp_customize ) ) 
+				$query->set('post_status', 'draft');
+			
+			$taxquery = array(
+				array(
+					'taxonomy' => Featured_Content_Manager::TAXONOMY,
+					'field' => 'name',
+					'terms' => 'Main Area',
+					'operator'=> 'IN'
+				)
+			);
+
+			$query->set('post_type', Featured_Content_Manager::POST_TYPE);
+			$query->set('tax_query', $taxquery );
+			$query->set('post_parent', 0);
+			$query->set('orderby', 'menu_order');
+			$query->set('order', 'ASC');
+		}
+	}
+
+
+	/**
+	 * Altering the main query for home to include featured items.
+	 *
+	 * @param string $content
+	 *
+	 * @since    1.0
+	 */
+	function fc_populate_children( $content ){
+		if( $GLOBALS['post']->post_type == self::POST_TYPE ){
+			$children = get_children( array( 'post_parent' => $GLOBALS['post']->ID, 'post_type' => Featured_Content_Manager::POST_TYPE, 'numberposts' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' ), ARRAY_A );
+			foreach ($children as $child) {
+				$parent_id = wp_get_post_parent_id($child['ID']);
+				$content = sprintf(
+					'%s <h2>%s</h2><p><a href="%s">%s</a></p>',
+	            	$content,
+	            	__('Related posts', 'featured-content' ),
+	            	get_permalink($parent_id),
+	            	$child['post_title']
+	        	);
+			}
+		}
+		return $content;
 	}
 
 	/**

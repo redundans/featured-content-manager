@@ -136,7 +136,6 @@ class Featured_Content_Manager_Customizer {
 	public function featured_area_customize_register( $wp_customize ){
 
 		require( plugin_dir_path( __FILE__ ) . 'includes/class-featured-area-control.php' );
-		//require( plugin_dir_path( __FILE__ ) . 'includes/class-create-featured-area-control.php' );
 
 		$wp_customize->add_panel( 'featured_areas', array(
 			'title'       => __('Feature Content Manager', $this->plugin_slug ),

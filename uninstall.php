@@ -2,7 +2,7 @@
 /**
  * Fired when the plugin is uninstalled.
  *
- * @package   Featured_Content_Manager
+ * @package   Featured_Content
  * @author    Jesper Nilsson <jesper@klandestino.se>
  * @license   GPL-2.0+
  * @link      https://github.com/redundans
