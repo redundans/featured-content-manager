@@ -3,8 +3,8 @@
 Contributors: Jesper Nilsson <jesper@klandestino.se>
 Tags: featured items
 Requires at least: 4.0
-Tested up to: 4.0
-Stable tag: 0.1.0
+Tested up to: 4.3
+Stable tag: 1.0
 
 ## Description
 
@@ -20,5 +20,8 @@ Featured Content is a plugin highly influenced by (the now dead projekt) wp-feat
 
 ## Changelog
  
+### 1.0
+* Alters main query if there is no theme support
+
 ### 0.1.0
 * Initial release
