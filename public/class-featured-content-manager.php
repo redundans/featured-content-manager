@@ -528,7 +528,7 @@ class Featured_Content_Manager {
 	function fc_alter_main_query( $query )
 	{
 		global $wp_customize;
-		if ( term_exists( 'Main Area', Featured_Content_Manager::TAXONOMY ) && $query->is_main_query() && $query->is_home() ){
+		if ( !current_theme_supports($this->plugin_slug) term_exists( 'Main Area', Featured_Content_Manager::TAXONOMY ) && $query->is_main_query() && $query->is_home() ){
 
 			if ( isset( $wp_customize ) ) 
 				$query->set('post_status', 'draft');
