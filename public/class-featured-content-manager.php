@@ -566,7 +566,7 @@ class Featured_Content_Manager {
 				$content = sprintf(
 					'%s <h2>%s</h2><p><a href="%s">%s</a></p>',
 	            	$content,
-	            	__('Related posts', 'featured-content' ),
+	            	__('Related posts', $this->plugin_slug ),
 	            	get_permalink($parent_id),
 	            	$child['post_title']
 	        	);
