@@ -68,49 +68,50 @@ class Featured_Area_Control extends WP_Customize_Control {
 			)
 		);
 		foreach ($posts_array as $post) {
-			$child_markup = null;
-			$post_thumbnail_id = get_post_thumbnail_id( $post->ID );
-			$post = get_post( $post->ID );
-			$post_thumbnail = ($post_thumbnail_id != '' ? get_post( $post_thumbnail_id ) : false);
+			if( wp_get_post_parent_id($post->ID) === 0 ):
+				$child_markup = null;
+				$post_thumbnail_id = get_post_thumbnail_id( $post->ID );
+				$post = get_post( $post->ID );
+				$post_thumbnail = ($post_thumbnail_id != '' ? get_post( $post_thumbnail_id ) : false);
 
-			if($post_thumbnail) {
-				$post_thumbnail->url = wp_get_attachment_image_src( $post_thumbnail_id, 'large' );
-				$post_thumbnail->url = $post_thumbnail->url[0];
-			}
-
-			$post_original_id = get_post_meta( $post->ID, 'cfm_post_parent', TRUE );
-
-			$output = $this->render_featured_item( $index, $post, $post_original_id, 'false', $post_thumbnail );
-
-			$children = get_children( array( 'post_parent' => $post->ID, 'post_type' => Featured_Content_Manager::POST_TYPE, 'numberposts' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' ), ARRAY_A );
-
-			$index++;
-					
-			foreach ( $children as $child ) {
-				$child_post = get_post( $child["ID"] );
-				$post_thumbnail_id = get_post_thumbnail_id( $child["ID"] );
-				$post_thumbnail = ( $post_thumbnail_id != '' ? get_post( $post_thumbnail_id ) : false );
-			
-				if( $post_thumbnail ) {
-					$post_thumbnail->url = wp_get_attachment_thumb_url( $post_thumbnail_id );
+				if($post_thumbnail) {
+					$post_thumbnail->url = wp_get_attachment_image_src( $post_thumbnail_id, 'large' );
+					$post_thumbnail->url = $post_thumbnail->url[0];
 				}
 
-				$child_markup[] = $this->render_featured_item( $index, $child_post, $post_original_id, 'true', $post_thumbnail );
+				$post_original_id = get_post_meta( $post->ID, 'cfm_post_parent', TRUE );
+
+				$output = $this->render_featured_item( $index, $post, $post_original_id, 'false', $post_thumbnail );
+
+				$children = get_children( array( 'post_parent' => $post->ID, 'post_type' => Featured_Content_Manager::POST_TYPE, 'numberposts' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' ), ARRAY_A );
 
 				$index++;
-			}
+						
+				foreach ( $children as $child ) {
+					$child_post = get_post( $child["ID"] );
+					$post_thumbnail_id = get_post_thumbnail_id( $child["ID"] );
+					$post_thumbnail = ( $post_thumbnail_id != '' ? get_post( $post_thumbnail_id ) : false );
 				
-			if( $child_markup ){
-				$output = str_replace('closed', 'closed parent', $output );
-				$output = str_replace('<ul class="sortable connectable"></ul>', '<ul class="sortable connectable">'.implode( '', $child_markup ).'</ul>', $output);
-			}
+					if( $post_thumbnail ) {
+						$post_thumbnail->url = wp_get_attachment_thumb_url( $post_thumbnail_id );
+					}
 
-			print $output;
+					$child_markup[] = $this->render_featured_item( $index, $child_post, $post_original_id, 'true', $post_thumbnail );
+
+					$index++;
+				}
+					
+				if( $child_markup ){
+					$output = str_replace('closed', 'closed parent', $output );
+					$output = str_replace('<ul class="sortable connectable"></ul>', '<ul class="sortable connectable">'.implode( '', $child_markup ).'</ul>', $output);
+				}
+
+				print $output;
+			endif;
 		}
 		echo '</ul>';
 		echo '<p>';
 		echo '<a class="add-featured-items button">' . __('Add item', $this->plugin_slug ) . '</a>';
-		echo '<a class="remove-area left">' . __('Remove featured area', $this->plugin_slug ) . '</a>';
 		echo '</p>';
 	}
 
@@ -125,8 +126,9 @@ class Featured_Area_Control extends WP_Customize_Control {
 		$output = '
 			<li class="closed">
 				<div class="fcm-title">
-					<div class="sidebar-name-arrow"></div>
+					<div class="sidebar-name-arrow"><span class="toggle-indicator" aria-hidden="true"></span></div>
 					<div class="sidebar-parent-arrow"></div>
+					<div class="sidebar-delete-icon"></div>
 					<h4>' . $post->post_title . '</h4>
 				</div>
 				<div class="fcm-inside">

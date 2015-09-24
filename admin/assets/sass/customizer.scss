@@ -2,29 +2,19 @@
  * SASS styles for Featured Content Manager
  */
 
-#accordion-section-new_featured_area_section h3.accordion-section-title:after {
-	content: "\f132";
-}
-
 ul.sortable {
 	margin: 0;
 	padding: 0;
 	min-height: 20px;
 
 	li {
-		margin: 0 auto 10px;
+		margin: -1px auto 0;
 
 		&.placeholder {
 			position: relative;
-			padding: 15px;
-			border: 1px dashed #e5e5e5;
+			height: 42px;
+			border: 1px dashed #dddddd;
 			text-align: center;
-
-			&:before {
-				//content: 'Drop here';
-				text-align: center;
-				color: #bbb;
-			}
 
 			&.child {
 				margin-left: 20px;
@@ -34,7 +24,8 @@ ul.sortable {
 		.fcm-title {
 			position: relative;
 			overflow: hidden;
-			background: #fafafa;
+			height: 42px;
+			background: #fff;
 			color: #222;
 			border: 1px solid #e5e5e5;
 			-webkit-box-shadow: 0 1px 1px rgba(0,0,0,.04);
@@ -44,23 +35,24 @@ ul.sortable {
 				position: absolute;
 				top: 0;
 				right: 30px;
+				width: 25px;
 				bottom: 0;
-				color: #aaa;
+				padding-top: 13px;
 				cursor: pointer;
 
-				background: #fafafa;
-				box-shadow: 0 0 10px 10px #fafafa;
+				background: #fff;
+				box-shadow: -10px 0 10px 0 #fff;
 
-				&:before {
+				z-index: 999;
+
+				&:after {
 					content: '\f325';
-					right: 0;
-					top: 4px;
-					font: 400 20px/1 dashicons;
+					left: 10px;
+					font: 400 11px/1 dashicons;
 					speak: none;
 					display: inline-block;
-					padding: 8px 10px;
 					position: relative;
-					opacity: .5;
+					color: #a0a5aa;
 					-webkit-font-smoothing: antialiased;
 					-moz-osx-font-smoothing: grayscale;
 					text-decoration: none !important;
@@ -72,22 +64,58 @@ ul.sortable {
 				top: 0;
 				right: 0;
 				bottom: 0;
-				color: #aaa;
+				width: 30px;
+				padding-top: 11px;
 				cursor: pointer;
-				z-index: 999;
 
-				&:before {
-					content: '\f107';
-					right: 0;
-					top: 4px;
+				background: #fff;
+				box-shadow: -10px 0 10px 0 #fff;
+
+				z-index: 998;
+
+				.toggle-indicator {
+					&:after {
+						content: '\f142';
+						font: 400 20px/1 dashicons;
+						color: #a0a5aa;
+						vertical-align: top;
+						speak: none;
+						-webkit-font-smoothing: antialiased;
+						-moz-osx-font-smoothing: grayscale;
+						text-decoration: none!important;
+					}
+				}
+			}
+
+			.sidebar-delete-icon {
+				display: none;
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				width: 30px;
+				padding-top: 11px;
+				cursor: pointer;
+
+				background: #fff;
+				box-shadow: -10px 0 10px 0 #fff;
+
+				z-index: 998;
+
+				&:after {
+					color: #a00;
+					content: "\f335";
 					font: 400 20px/1 dashicons;
-					speak: none;
-					display: inline-block;
-					padding: 8px 10px;
-					position: relative;
 					-webkit-font-smoothing: antialiased;
 					-moz-osx-font-smoothing: grayscale;
-					text-decoration: none !important;
+					position: absolute;
+					top: 12px;
+					left: 1px;
+				}
+				&:hover {
+					&:after {
+						color: red;
+					}
 				}
 			}
 
@@ -105,7 +133,7 @@ ul.sortable {
 		}
 
 		.fcm-inside {
-			background: #fff;
+			background: #efefef;
 			border-top: 0;
 			padding: 1px 15px 15px;
 			line-height: 16px;
@@ -127,9 +155,9 @@ ul.sortable {
 
 		.fcm-children {
 			display: none;
-			background: #fff;
+			background: #efefef;
 			border-top: 0;
-			padding: 15px 15px 5px;
+			padding: 15px;
 			line-height: 16px;
 
 			border: 1px solid #e5e5e5;
@@ -154,12 +182,19 @@ ul.sortable {
 			display: block;
 		}
 
-		&.closed .fcm-title .sidebar-name-arrow:before {
-			opacity: .5;
+		&.closed .fcm-title .sidebar-name-arrow .toggle-indicator:after {
+			content: '\f140';
+			font: 400 20px/1 dashicons;
+			color: #a0a5aa;
+			vertical-align: top;
+			speak: none;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			text-decoration: none!important;
 		}
 
 		&.parent .fcm-title .sidebar-parent-arrow:before {
-			opacity: 1;
+			color: #ddd;
 		}
 
 	}
@@ -302,12 +337,6 @@ ul.sortable {
 	}
 }
 
-a.remove-area {
-	display: inline-block;
-	padding: 0.4em 0;
-	cursor: pointer;
-}
-
 a.add-featured-items {
 	cursor: pointer;
 	float: right;
@@ -330,10 +359,19 @@ a.add-featured-items {
 
 body.adding-featured-items {
 
-	a.add-featured-items:before {
-		-webkit-transform: rotate(45deg);
-		-ms-transform: rotate(45deg);
-		transform: rotate(45deg);
+
+	a.add-featured-items {
+		background: #eee;
+		border-color: #929793;
+		color: #32373c;
+		-webkit-box-shadow: inset 0 2px 5px -3px rgba(0,0,0,.5);
+		box-shadow: inset 0 2px 5px -3px rgba(0,0,0,.5);
+
+		&:before {
+			-webkit-transform: rotate(45deg);
+			-ms-transform: rotate(45deg);
+			transform: rotate(45deg);
+		}
 	}
 
 	#available-featured-items {
@@ -346,5 +384,13 @@ body.adding-featured-items {
 
 	.wp-full-overlay-main {
 		left: 300px;
+	}
+
+	.sidebar-delete-icon {
+		display: inline-block !important;
+	}
+
+	.sidebar-name-arrow {
+		display: none;
 	}
 }

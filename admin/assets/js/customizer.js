@@ -81,7 +81,7 @@ $(function() {
 		}, ms);
 	}
 
-	$(document).on('click', '.sidebar-name-arrow', function(){
+	$(document).on('click', '.sidebar-name-arrow, .fcm-title h4', function(){
 		$(this).closest('li').toggleClass('closed');
 	});
 
@@ -90,6 +90,11 @@ $(function() {
 	});
 
 	$(document).on('click', '.remove', function(){
+		$(this).closest('li').remove();
+		update_preview();
+	});
+
+	$(document).on('click', '.sidebar-delete-icon', function(){
 		$(this).closest('li').remove();
 		update_preview();
 	});
@@ -125,6 +130,8 @@ $(function() {
 		var target = $(event.target);
 		if (target.closest('div#available-featured-items').length) {
 			return;
+		} else if ( $(target).hasClass('sidebar-delete-icon') ){
+			return;
 		} else if( $('body.wp-customizer').hasClass('adding-featured-items') ) {
 			$('body').removeClass('adding-featured-items');
 			$('.adding-featured-items-target').removeClass('adding-featured-items-target');
@@ -133,43 +140,6 @@ $(function() {
 			$(event.target).parent().parent().children('ul.featured-area').addClass('adding-featured-items-target');
 			$('body').addClass('adding-featured-items');
 		}
-	});
-
-	$('body.wp-customizer').on('click', 'a.remove-area', function(event){
-		var target = $(event.target).closest('.control-section');
-		var area_id = $(target).find('input[name=featured_area]').val();
-		if (confirm('Are you sure you want to remove this area?')) {
-
-			var data = {
-				action: 'remove_area',
-				area: area_id
-			};
-
-			$.post( ajaxurl, data, function(response) {
-				if( !response.error ) {
-					$(target).fadeOut('slow', function(){
-	    				$(this).remove();
-	    			});
-				}
-			}, "JSON");
-
-		}
-	});
-
-	$('body.wp-customizer').on('click', '#create-fatured-area', function(event){
-		var target = $(event.target).closest('.customize-control');
-		var area_title = $(target).find('#featured-area-title').val();
-
-		var data = {
-			action: 'add_area',
-			area: area_title
-		};
-
-		$.post( ajaxurl, data, function(response) {
-			if( !response.error ) {
-				alert('Please reload customizer to start manage your new Featured Area.');
-			}
-		}, "JSON");
 	});
 
 
