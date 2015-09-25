@@ -18,7 +18,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 		Featured_Content_Manager::trash_posts( array( 'draft', 'publish' ), $featured_area->term_id );
 
 		// Delete the featured area
-		wp_delete_term( $featured_area->term_id, Featured_Content_Manager::TAXONOMY )
+		wp_delete_term( $featured_area->term_id, Featured_Content_Manager::TAXONOMY );
 	endforeach;
 
 	exit;
