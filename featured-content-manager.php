@@ -49,6 +49,11 @@ register_deactivation_hook( __FILE__, array( 'Featured_Content_Manager', 'deacti
  */
 add_action( 'plugins_loaded', array( 'Featured_Content_Manager', 'get_instance' ) );
 
+/*
+ * Add style class for featured 
+ */
+add_filter( 'post_class', array( 'Featured_Content_Manager', 'fcm_style_post_class' ) );
+
 remove_theme_support('featured-content');
 
 /*----------------------------------------------------------------------------*

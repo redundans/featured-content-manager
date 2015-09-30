@@ -35,6 +35,15 @@ class Featured_Content_Manager {
 	const TAXONOMY  = 'featured_area';
 
 	/**
+	 * Unique identifier for featured area taxonomy.
+	 *
+	 * @since   0.1.0
+	 *
+	 * @var     string
+	 */
+	const STYLE_TAXONOMY  = 'featured_item_style';
+
+	/**
 	 * Unique identifier for your plugin.
 	 *
 	 * The variable name is used as the text domain when internationalizing strings
@@ -80,13 +89,13 @@ class Featured_Content_Manager {
 		 * Add action for altering main query.
 		 *
 		 */
-		add_action( 'pre_get_posts', array( $this, 'fc_alter_main_query' ) );
+		add_action( 'pre_get_posts', array( $this, 'fcm_alter_main_query' ) );
 
 		/*
 		 * Add action for population children.
 		 *
 		 */
-		add_filter( 'the_content', array( $this, 'fc_populate_children' ) );
+		add_filter( 'the_content', array( $this, 'fcm_populate_children' ) );
 
 	}
 
@@ -96,6 +105,7 @@ class Featured_Content_Manager {
 	 * @since     0.1.0
 	 */
 	function init() {
+		global $fcm_registered_styles;
 
 		// Register the featured item post type.
 		register_post_type( self::POST_TYPE, array(
@@ -141,6 +151,29 @@ class Featured_Content_Manager {
 			),
 		) );
 
+		// Register the featured content style
+		register_taxonomy( self::STYLE_TAXONOMY, array( self::POST_TYPE ), array(
+			'public'            => false,
+			'hierarchical'      => true,
+			'show_ui'           => false,
+			'show_admin_column' => false,
+			'show_in_menu'      => false,
+			'description'       => __( 'This is some text explaining that the theme has this featured location.' ),
+			'labels'            => array(
+				'name'              => _x( 'Featured Content Style', 'taxonomy general name', $this->plugin_slug ),
+				'singular_name'     => _x( 'Featured Content Style', 'taxonomy singular name', $this->plugin_slug ),
+				'search_items'      => __( 'Search Featured Content Styles', $this->plugin_slug ),
+				'all_items'         => __( 'All Featured Content Styles', $this->plugin_slug ),
+				'parent_item'       => __( 'Parent Featured Content Style', $this->plugin_slug ),
+				'parent_item_colon' => __( 'Parent Featured Content Style:', $this->plugin_slug ),
+				'edit_item'         => __( 'Edit Featured Content Style', $this->plugin_slug ),
+				'update_item'       => __( 'Update Featured Content Style', $this->plugin_slug ),
+				'add_new_item'      => __( 'Add New Featured Content Style', $this->plugin_slug ),
+				'new_item_name'     => __( 'New Featured Content Style Name', $this->plugin_slug ),
+				'menu_name'         => __( 'Featured Content Style' ),
+			),
+		) );
+
 		// If featured area taxonomy is registred add Main Area term.
 		if ( ! term_exists( 'Main Area', self::TAXONOMY ) )
 			wp_insert_term(
@@ -151,6 +184,23 @@ class Featured_Content_Manager {
 				)
 			);
 
+		// Delete featured content styles if not registred
+		$styles = get_terms( self::STYLE_TAXONOMY, array('hide_empty' => 0) );
+		if( taxonomy_exists(self::STYLE_TAXONOMY) ) {
+			foreach ($styles as $style) {
+				if ( !in_array( $style->name, $fcm_registered_styles) ) {
+					wp_delete_term( $style->term_id, self::STYLE_TAXONOMY );
+				}
+			}
+		}
+		// Insert featured content styles if registred
+		if ( $fcm_registered_styles ) {
+			foreach ($fcm_registered_styles as $fcm_registered_style) {
+				if( !term_exists( $fcm_registered_style, self::STYLE_TAXONOMY ) ){
+					$out = wp_insert_term( $fcm_registered_style, self::STYLE_TAXONOMY );
+				}
+			}
+		}
 	}
 
 	/**
@@ -525,7 +575,7 @@ class Featured_Content_Manager {
 	 *
 	 * @since    1.0
 	 */
-	function fc_alter_main_query( $query )
+	function fcm_alter_main_query( $query )
 	{
 		global $wp_customize;
 		if ( !current_theme_supports($this->plugin_slug) && term_exists( 'Main Area', Featured_Content_Manager::TAXONOMY ) && $query->is_main_query() && $query->is_home() ){
@@ -558,7 +608,7 @@ class Featured_Content_Manager {
 	 *
 	 * @since    1.0
 	 */
-	function fc_populate_children( $content ){
+	function fcm_populate_children( $content ){
 		if( $GLOBALS['post']->post_type == self::POST_TYPE ){
 			$children = get_children( array( 'post_parent' => $GLOBALS['post']->ID, 'post_type' => Featured_Content_Manager::POST_TYPE, 'numberposts' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' ), ARRAY_A );
 			foreach ($children as $child) {
@@ -600,6 +650,28 @@ class Featured_Content_Manager {
 		}
 		return $url;
 	}
+
+	/**
+	 * Adds the featured item style term as post class
+	 * 
+	 * @param  array $classes  Predefined classes
+	 * @return array           Predefined plus new classes
+	 */
+	public static function fcm_style_post_class( $classes ) {
+		global $post;
+		if( get_post_type($post->ID) === self::POST_TYPE && taxonomy_exists(self::STYLE_TAXONOMY) ) {
+			$style_list = wp_get_post_terms($post->ID, self::STYLE_TAXONOMY, array("fields" => "slug"));
+			foreach($style_list as $style) {
+				$classes[] = $style['slug'];
+			}
+		}
+		return $classes;
+	}
+
+	public static function fcm_register_styles( $styles = array() ) {
+		global $fcm_registered_styles;
+        $fcm_registered_styles = array_merge( (array) $fcm_registered_styles, $styles );
+	}
 }
 
 /**
@@ -614,4 +686,8 @@ class Featured_Content_Manager {
  */
 function get_featured_content( $area, $post_status = array( 'publish' ) ){
 	return Featured_Content_Manager::get_featured_content( $area, $post_status );
+}
+
+function register_featured_content_styles(  $styles = array() ){
+	Featured_Content_Manager::fcm_register_styles( $styles );
 }
