@@ -237,6 +237,7 @@ class Featured_Content_Manager_Customizer {
 	 * @since    0.1.0
 	 */
 	public function featured_item_templates() {
+		$styles = get_terms( Featured_Content_Manager::STYLE_TAXONOMY, array('hide_empty' => 0) );
 	?>
 	<script type="text/html" id="tmpl-featured-item">
 		<li class="closed">
@@ -271,6 +272,20 @@ class Featured_Content_Manager_Customizer {
 						</p>
 						<# } #>
 					</div>
+					<?php	
+						if ( is_array( $styles ) ) {
+							$i = 0;
+							echo '<select name="style[{{data.index}}]">';
+							foreach ($styles as $style) {
+								if($i==0)
+									echo '<option value="' . $style->term_id . '" selected>' . $style->name . '</option>';
+								else
+									echo '<option value="' . $style->term_id . '">' . $style->name . '</option>';
+								$i++;
+							}
+							echo '</select>';
+						}
+					?>
 					<p>
 						<input type="text" name="post_title[{{data.index}}]" value="{{data.post.post_title}}">
 					</p>
