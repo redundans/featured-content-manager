@@ -1,17 +1,17 @@
 <?php
 
-require_once( 'featured-content.php' );
+require_once( 'featured-content-manager.php' );
 
 class Featured_Content_Tests extends WP_UnitTestCase {
 
 	function setUp(){
 		parent::setUp();
-		$this->plugin = new Featured_Content;
+		$this->plugin = Featured_Content_Manager::get_instance();
 	}
 
 	/**
 	 * Initial tests
-	 * Here we test that our plugin exists and creates all 
+	 * Here we test that our plugin exists and creates all
 	 * the needed conditions for it to work.
 	 */
 	function test_if_featured_item_post_type_exists() {
@@ -22,10 +22,6 @@ class Featured_Content_Tests extends WP_UnitTestCase {
 		$this->assertTrue( taxonomy_exists( 'featured_area' ) );
 	}
 
-	function test_current_theme_supports_featured_content() {
-		$this->assertTrue( current_theme_supports( 'featured-content' ) );
-	}
-
 
 	/**
 	 * Conditional tests
@@ -33,8 +29,8 @@ class Featured_Content_Tests extends WP_UnitTestCase {
 	 * in respect to different conditions.
 	 */
 	function test_get_featured_content_does_return_object() {
-		$query = $this->plugin->get_featured_content('2');
+		$query = $this->plugin->get_featured_content( 'Main Area' );
 		$this->assertObjectHasAttribute( 'posts', $query );
 	}
-	
+
 }
