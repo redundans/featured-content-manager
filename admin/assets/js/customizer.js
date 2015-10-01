@@ -3,33 +3,33 @@ var $ = jQuery.noConflict(), timer;
 $(function() {
 
 	$('body').ready(function(){
-	$('.sortable').sortable({
-		connectWith: '.connectable',
-		opacity: 0.5,
-		handle: '.fcm-title',
-		placeholder: 'placeholder',
-		receive: function( event, ui ) {
-			var area = $(ui.item).parents('ul').data('area');
-			var parent = $(ui.item).parents('ul.sortable li').find('input[name^=post_id]').val();
+		$('.sortable').sortable({
+			connectWith: '.connectable',
+			opacity: 0.5,
+			handle: '.fcm-title',
+			placeholder: 'placeholder',
+			receive: function( event, ui ) {
+				var area = $(ui.item).parents('ul').data('area');
+				var parent = $(ui.item).parents('ul.sortable li').find('input[name^=post_id]').val();
 
-			$(ui.item).find('input[name^=area]').first().val(area);
+				$(ui.item).find('input[name^=area]').first().val(area);
 
-			if( parent === undefined ){
-				$(ui.item).children('.fcm-inside').find('input[name^=child]').val('false');
-			} else {
-				$(ui.item).find('input[name^=child]').val( 'true' );
+				if( parent === undefined ){
+					$(ui.item).children('.fcm-inside').find('input[name^=child]').val('false');
+				} else {
+					$(ui.item).find('input[name^=child]').val( 'true' );
+				}
+			},
+			sort: function( event, ui ) {
+			},
+			stop: function( event, ui ) {
+				update_preview();
+				changeState = true;
 			}
-		},
-		sort: function( event, ui ) {
-		},
-		stop: function( event, ui ) {
-			update_preview();
-			changeState = true;
-		}
-	}).disableSelection();
+		}).disableSelection();
 	});
-	function update_preview(){
 
+	function update_preview(){
 		$('ul.featured-area').each( function(index) {
 			var customize_control = $(this).parents('li.customize-control');
 			var customize_setting = $(customize_control).children('input.customizer-setting');
@@ -53,8 +53,6 @@ $(function() {
 					featured_item_index = featured_item_index + 1;
 				});
 			});
-
-			console.log($(customize_control).find('ul.featured-area:first :input'));
 
 			var serialized_form = $(customize_control).find('ul.featured-area:first :input').serialize();
 			if( $(customize_setting).val() != serialized_form ){
@@ -156,7 +154,7 @@ $(function() {
 		};
 
 		$.post( ajaxurl, data, function(response) {
-			var new_index = $('.sortable li').length+1, template;
+			var new_index = $('.adding-featured-items-target li').length+1, template;
 			template = wp.template( 'featured-item' );
 
 			response.post.ID = 'new';
@@ -203,6 +201,6 @@ $(function() {
 
 	$(document).on('keyup', '#featured-items-search', start_search_timer );
 	$(document).on('keyup', '.sortable li input[type=text], .sortable li textarea', start_update_preview_timer );
-	$(document).on('change', '.sortable li input[type=hidden]', start_update_preview_timer );
+	$(document).on('change', '.sortable li input[type=hidden], .sortable li select', start_update_preview_timer );
 
 });

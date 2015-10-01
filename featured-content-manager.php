@@ -65,3 +65,5 @@ add_filter( 'post_class', array( 'Featured_Content_Manager', 'fcm_style_post_cla
  */
 require_once( plugin_dir_path( __FILE__ ) . 'admin/class-featured-content-manager-customizer.php' );
 add_action( 'init', array( 'Featured_Content_Manager_Customizer', 'get_instance' ) );
+
+add_action( 'admin_menu', array( 'Featured_Content_Manager', 'fcm_menu_page' ) );

@@ -123,6 +123,14 @@ class Featured_Area_Control extends WP_Customize_Control {
 	 * @since     0.1.0
 	 */
 	public function render_featured_item( $index, $post, $post_original_id, $child, $post_thumbnail ){
+		$styles = get_terms( Featured_Content_Manager::STYLE_TAXONOMY, array('hide_empty' => 0) );
+		$post_style = wp_get_post_terms($post->ID, Featured_Content_Manager::STYLE_TAXONOMY);
+
+		if ( count($post_style)!=0 )
+			$post_style = $post_style[0];
+		else
+			$post_style = null;
+
 		$output = '
 			<li class="closed">
 				<div class="fcm-title">
@@ -158,10 +166,20 @@ class Featured_Area_Control extends WP_Customize_Control {
 							</p>
 							<p>
 								<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail">' . __( 'Delete thumbnail', $this->plugin_slug ) . '</a>
-							</p>';
+							</p>
+						</div>';
 		} 
-		$output .= '	</div>
-						<p>
+		if ( is_array( $styles ) ) {
+			$output .= '<select name="style[' . $index . ']"">';
+			foreach ( $styles as $style ) {
+				if ( $post_style != null && intval($post_style->term_id) === intval($style->term_id) )
+					$output .= '<option value="' . $style->term_id . '" selected>' . $style->name . '</option>';
+				else
+					$output .= '<option value="' . $style->term_id . '">' . $style->name . '</option>';
+			}
+			$output .= '</select>';
+		}
+		$output .= '	<p>
 							<input type="text" name="post_title[' . $index . ']" value="' . $post->post_title . '">
 						</p>
 						<p>

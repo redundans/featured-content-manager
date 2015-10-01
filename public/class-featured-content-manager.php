@@ -677,6 +677,10 @@ class Featured_Content_Manager {
 		global $fcm_registered_styles;
         $fcm_registered_styles = array_merge( (array) $fcm_registered_styles, $styles );
 	}
+
+	public static function fcm_menu_page() {
+		add_menu_page( __('Feature Content Manager', 'featured-content-manager' ), __('Feature Content', 'featured-content-manager' ), 'featured-content-manager', '/wp-admin/customize.php?autofocus%5Bpanel%5D=featured_areas&return=%2Fwp-admin%2Findex.php', '', 'dashicons-exerpt-view', 61 );
+	}
 }
 
 /**
