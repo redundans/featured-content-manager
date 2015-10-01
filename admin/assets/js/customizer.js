@@ -37,7 +37,7 @@ $(function() {
 
 			// ReIndexing Areas and menu_order;
 			$(this).children('li').each( function(i) {
-				$(this).first('fieldset').find('input, textarea').each( function(x) {
+				$(this).first('fieldset').find('input, textarea, select').each( function(x) {
 					var name = $(this).attr('name'), pattern = /\[(.*?)\]/g;
 					$(this).attr('name', name.replace(/\[(.+?)\]/g, '['+featured_item_index+']') );
 				});
@@ -45,7 +45,7 @@ $(function() {
 
 				featured_item_index = featured_item_index + 1;
 				$(this).find('li').each( function(y) {
-					$(this).first('fieldset').find('input, textarea').each( function(x) {
+					$(this).first('fieldset').find('input, textarea, select').each( function(x) {
 						var name = $(this).attr('name'), pattern = /\[(.*?)\]/g;
 						$(this).attr('name', name.replace(/\[(.+?)\]/g, '['+featured_item_index+']') );
 					});
