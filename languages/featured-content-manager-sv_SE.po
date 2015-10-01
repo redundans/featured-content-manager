@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Featured Content Manager\n"
-"POT-Creation-Date: 2015-09-24 16:49+0100\n"
-"PO-Revision-Date: 2015-09-24 16:53+0100\n"
+"POT-Creation-Date: 2015-10-01 02:06+0100\n"
+"PO-Revision-Date: 2015-10-01 02:08+0100\n"
 "Last-Translator: Jesper Nilsson <jesper@klandestino.se>\n"
 "Language-Team: Klandestino AB <kontakt@klandestino.se>\n"
 "Language: sv_SE\n"
@@ -16,6 +16,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #: admin/class-featured-content-manager-customizer.php:141
+#: public/class-featured-content-manager.php:682
 msgid "Feature Content Manager"
 msgstr "Hantering av utvalt innehåll"
 
@@ -27,7 +28,7 @@ msgstr ""
 "sidor och poster."
 
 #: admin/class-featured-content-manager-customizer.php:170
-#: public/class-featured-content-manager.php:140
+#: public/class-featured-content-manager.php:150
 msgid "Featured Area"
 msgstr "Utvalt innehåll"
 
@@ -35,20 +36,20 @@ msgstr "Utvalt innehåll"
 msgid "Search content"
 msgstr "Sök innehåll"
 
-#: admin/class-featured-content-manager-customizer.php:263
-#: admin/class-featured-content-manager-customizer.php:270
-#: admin/includes/class-featured-area-control.php:152
+#: admin/class-featured-content-manager-customizer.php:264
+#: admin/class-featured-content-manager-customizer.php:271
 #: admin/includes/class-featured-area-control.php:160
+#: admin/includes/class-featured-area-control.php:168
 msgid "Delete thumbnail"
 msgstr "Ta bort tumnagel"
 
-#: admin/class-featured-content-manager-customizer.php:267
-#: admin/includes/class-featured-area-control.php:157
+#: admin/class-featured-content-manager-customizer.php:268
+#: admin/includes/class-featured-area-control.php:165
 msgid "Select thumbnail"
 msgstr "Välj tumnagel"
 
-#: admin/class-featured-content-manager-customizer.php:284
-#: admin/includes/class-featured-area-control.php:174
+#: admin/class-featured-content-manager-customizer.php:299
+#: admin/includes/class-featured-area-control.php:192
 msgid "Delete"
 msgstr "Ta bort"
 
@@ -60,77 +61,118 @@ msgstr "Drag och släpp för att ordna om utvalda objekt."
 msgid "Add item"
 msgstr "Lägg till"
 
-#: public/class-featured-content-manager.php:111
+#: public/class-featured-content-manager.php:121
 msgid "Add New Featured Item"
 msgstr "Lägg till Utvalt Innehåll"
 
-#: public/class-featured-content-manager.php:112
+#: public/class-featured-content-manager.php:122
 msgid "Edit Featured Item"
 msgstr "Ändra Utvalt Innehåll"
 
-#: public/class-featured-content-manager.php:113
+#: public/class-featured-content-manager.php:123
 msgid "New Featured Item"
 msgstr "Nytt Utvalt Innehåll"
 
-#: public/class-featured-content-manager.php:114
+#: public/class-featured-content-manager.php:124
 msgid "View Featured Item"
 msgstr "Visa Utvalt Innehåll"
 
-#: public/class-featured-content-manager.php:115
+#: public/class-featured-content-manager.php:125
 msgid "Search Featured Items"
 msgstr "Sök Utvalt Innehåll"
 
-#: public/class-featured-content-manager.php:116
+#: public/class-featured-content-manager.php:126
 msgid "No Featured Items found"
 msgstr "Inget Utvalt Innehåll hittades"
 
-#: public/class-featured-content-manager.php:117
+#: public/class-featured-content-manager.php:127
 msgid "No Featured Items found in Trash"
 msgstr "Inget Utvalt Innehåll i papperskorgen"
 
-#: public/class-featured-content-manager.php:128
+#: public/class-featured-content-manager.php:138
+#: public/class-featured-content-manager.php:161
 msgid "This is some text explaining that the theme has this featured location."
 msgstr ""
 
-#: public/class-featured-content-manager.php:132
+#: public/class-featured-content-manager.php:142
 msgid "Search Featured Areas"
 msgstr "Sök Utvalt Område"
 
-#: public/class-featured-content-manager.php:133
+#: public/class-featured-content-manager.php:143
 msgid "All Featured Areas"
 msgstr "Alla Utvalda Områden"
 
-#: public/class-featured-content-manager.php:134
+#: public/class-featured-content-manager.php:144
 msgid "Parent Featured Area"
 msgstr "Förälder till Utvalt Innehåll"
 
-#: public/class-featured-content-manager.php:135
+#: public/class-featured-content-manager.php:145
 msgid "Parent Featured Area:"
 msgstr "Förälder till utvalt innegåll:"
 
-#: public/class-featured-content-manager.php:136
+#: public/class-featured-content-manager.php:146
 msgid "Edit Featured Area"
 msgstr "Ändra Utvalt Innehåll"
 
-#: public/class-featured-content-manager.php:137
+#: public/class-featured-content-manager.php:147
 msgid "Update Featured Area"
 msgstr "Uppdatera Utvalt Innehåll"
 
-#: public/class-featured-content-manager.php:138
+#: public/class-featured-content-manager.php:148
 msgid "Add New Featured Area"
 msgstr "Skapa nytt anpassat område"
 
-#: public/class-featured-content-manager.php:139
+#: public/class-featured-content-manager.php:149
 msgid "New Featured Area Name"
 msgstr "Nytt anpassat område"
 
-#: public/class-featured-content-manager.php:150
+#: public/class-featured-content-manager.php:165
+msgid "Search Featured Content Styles"
+msgstr "Sök stil för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:166
+msgid "All Featured Content Styles"
+msgstr "All stil för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:167
+msgid "Parent Featured Content Style"
+msgstr "Förälderstil för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:168
+msgid "Parent Featured Content Style:"
+msgstr "Förälderstil för utvalt innehåll:"
+
+#: public/class-featured-content-manager.php:169
+msgid "Edit Featured Content Style"
+msgstr "Ändra stil för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:170
+msgid "Update Featured Content Style"
+msgstr "Uppdatera stil för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:171
+msgid "Add New Featured Content Style"
+msgstr "Lägg till stil för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:172
+msgid "New Featured Content Style Name"
+msgstr "Ny stil för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:173
+msgid "Featured Content Style"
+msgstr "Stil för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:183
 msgid "A default and predefined term for the Featured Area taxonomy."
 msgstr "Ett förvalt Utvalt Område"
 
-#: public/class-featured-content-manager.php:569
+#: public/class-featured-content-manager.php:624
 msgid "Related posts"
 msgstr "Relaterat innehåll"
+
+#: public/class-featured-content-manager.php:682
+msgid "Feature Content"
+msgstr "Utvalt innehåll"
 
 #~ msgid "New Featured Area"
 #~ msgstr "Nytt område"
