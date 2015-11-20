@@ -64,7 +64,10 @@ class Featured_Area_Control extends WP_Customize_Control {
 						'field' => 'id',
 						'terms' => $this->area
 					)
-				)
+				),
+				'posts_per_page' => -1,
+				'orderby' => 'menu_order',
+				'order' => 'ASC'
 			)
 		);
 		foreach ($posts_array as $post) {
