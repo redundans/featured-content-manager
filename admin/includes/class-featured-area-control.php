@@ -55,9 +55,9 @@ class Featured_Area_Control extends WP_Customize_Control {
 		echo '<input type="hidden" name="_wpnonce" value="'.wp_create_nonce('fcm_save_posts').'" />';
 		echo '<input type="hidden" name="featured_area" value="'. $this->area. '" />';
 
-		$posts_array = get_posts( 
+		$posts_array = get_posts(
 			array(
-				'post_type' => 'featured_item', 
+				'post_type' => 'featured_item',
 				'tax_query' => array(
 					array(
 						'taxonomy' => 'featured_area',
@@ -89,12 +89,12 @@ class Featured_Area_Control extends WP_Customize_Control {
 				$children = get_children( array( 'post_parent' => $post->ID, 'post_type' => Featured_Content_Manager::POST_TYPE, 'numberposts' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' ), ARRAY_A );
 
 				$index++;
-						
+
 				foreach ( $children as $child ) {
 					$child_post = get_post( $child["ID"] );
 					$post_thumbnail_id = get_post_thumbnail_id( $child["ID"] );
 					$post_thumbnail = ( $post_thumbnail_id != '' ? get_post( $post_thumbnail_id ) : false );
-				
+
 					if( $post_thumbnail ) {
 						$post_thumbnail->url = wp_get_attachment_thumb_url( $post_thumbnail_id );
 					}
@@ -103,7 +103,7 @@ class Featured_Area_Control extends WP_Customize_Control {
 
 					$index++;
 				}
-					
+
 				if( $child_markup ){
 					$output = str_replace('closed', 'closed parent', $output );
 					$output = str_replace('<ul class="sortable connectable"></ul>', '<ul class="sortable connectable">'.implode( '', $child_markup ).'</ul>', $output);
@@ -144,7 +144,7 @@ class Featured_Area_Control extends WP_Customize_Control {
 				</div>
 				<div class="fcm-inside">
 					<fieldset name="post-' . $post->ID . '">';
-		if( $post_thumbnail ) { 
+		if( $post_thumbnail ) {
 			$output .= '<input type="hidden" name="post_thumbnail[' . $index . ']" value="' . $post_thumbnail->ID . '">';
 		} else {
 			$output .= '<input type="hidden" name="post_thumbnail[' . $index . ']" value="">';
@@ -171,7 +171,7 @@ class Featured_Area_Control extends WP_Customize_Control {
 								<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail">' . __( 'Delete thumbnail', $this->plugin_slug ) . '</a>
 							</p>
 						</div>';
-		} 
+		}
 		if ( is_array( $styles ) ) {
 			$output .= '<select name="style[' . $index . ']"">';
 			foreach ( $styles as $style ) {
@@ -186,7 +186,7 @@ class Featured_Area_Control extends WP_Customize_Control {
 							<input type="text" name="post_title[' . $index . ']" value="' . $post->post_title . '">
 						</p>
 						<p>
-							<input type="text" name="post_date[' . $index . ']" value="' . $post->post_date . '">
+							<input type="hidden" name="post_date[' . $index . ']" value="' . $post->post_date . '">
 						</p>
 						<p>
 							<textarea name="post_content[' . $index . ']">' . $post->post_content . '</textarea>
@@ -200,6 +200,6 @@ class Featured_Area_Control extends WP_Customize_Control {
 					<ul class="sortable connectable"></ul>
 				</div>
 			</li>';
-		return $output; 
+		return $output;
 	}
 }

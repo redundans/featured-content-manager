@@ -272,7 +272,7 @@ class Featured_Content_Manager_Customizer {
 						</p>
 						<# } #>
 					</div>
-					<?php	
+					<?php
 						if ( is_array( $styles ) ) {
 							$i = 0;
 							echo '<select name="style[{{data.index}}]">';
@@ -290,7 +290,7 @@ class Featured_Content_Manager_Customizer {
 						<input type="text" name="post_title[{{data.index}}]" value="{{data.post.post_title}}">
 					</p>
 					<p>
-						<input type="text" name="post_date[{{data.index}}]" value="{{data.post.post_date}}">
+						<input type="hidden" name="post_date[{{data.index}}]" value="{{data.post.post_date}}">
 					</p>
 					<p>
 						<textarea name="post_content[{{data.index}}]">{{data.post.post_content}}</textarea>
