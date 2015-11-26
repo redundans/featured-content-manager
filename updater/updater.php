@@ -11,27 +11,6 @@ if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 	include( dirname( __FILE__ ) . '/EDD_SL_Plugin_Updater.php' );
 }
 
-function fcm_plugin_updater() {
-
-	// retrieve our license key from the DB or from a defined one (if multisite)
-	if ( defined( 'FCM_LICENCE_KEY' ) ) :
-		$license_key = trim( FCM_LICENCE_KEY );
-	else :
-		$license_key = trim( get_option( 'fcm_license_key' ) );
-	endif;
-
-	// setup the updater
-	$fcm_updater = new EDD_SL_Plugin_Updater( FCM_STORE_URL, __FILE__, array(
-			'version' 	=> '0.20', 				// current version number
-			'license' 	=> $license_key, 		// license key (used get_option above to retrieve from DB)
-			'item_name' => FCM_PRODUCT_NAME, 	// name of this plugin
-			'author' 	=> 'Klandestino'  // author of this plugin
-		)
-	);
-
-}
-add_action( 'admin_init', 'fcm_plugin_updater', 0 );
-
 function fcm_settings_menu() {
 	if ( ! defined( 'FCM_LICENCE_KEY' ) ) :
 		add_plugins_page( 'Featured content manager settings', 'Featured content manager settings', 'manage_options', 'featured-content-manager-settings', 'fcm_settings_page' );
@@ -121,7 +100,7 @@ function fcm_activate_license() {
 
 		// data to send in our API request
 		$api_params = array(
-			'fcm_action'=> 'activate_license',
+			'edd_action'=> 'activate_license',
 			'license' 	=> $license,
 			'item_name' => urlencode( FCM_PRODUCT_NAME ), // the name of our product in fcm
 			'url'       => home_url()
@@ -166,7 +145,7 @@ function fcm_deactivate_license() {
 
 		// data to send in our API request
 		$api_params = array(
-			'fcm_action'=> 'deactivate_license',
+			'edd_action'=> 'deactivate_license',
 			'license' 	=> $license,
 			'item_name' => urlencode( FCM_PRODUCT_NAME ), // the name of our product in fcm
 			'url'       => home_url()
@@ -206,7 +185,7 @@ function fcm_check_license() {
 	$license = trim( get_option( 'fcm_license_key' ) );
 
 	$api_params = array(
-		'fcm_action' => 'check_license',
+		'edd_action' => 'check_license',
 		'license' => $license,
 		'item_name' => urlencode( FCM_PRODUCT_NAME ),
 		'url'       => home_url()
