@@ -4,7 +4,7 @@ Contributors: Jesper Nilsson <jesper@klandestino.se>
 Tags: featured items
 Requires at least: 4.0
 Tested up to: 4.3
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 
 ## Description
 
@@ -19,6 +19,9 @@ Featured Content is a WordPress plugin that lets users create featured items tha
 Find out how to use the plugin and how to optimize your theme for it at https://plugins.klandestino.se
 
 ## Changelog
+
+### 0.3.0
+* Adds autoupdater and license support
 
 ### 0.2.0
 * Alters main query if there is no theme support
