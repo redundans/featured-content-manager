@@ -35,6 +35,12 @@ if ( ! defined( 'WPINC' ) ) {
 require_once( plugin_dir_path( __FILE__ ) . 'public/class-featured-content-manager.php' );
 
 /*
+ * Include the plugin updater.
+ *
+ */
+require_once( plugin_dir_path( __FILE__ ) . 'updater/updater.php' );
+
+/*
  * Register hooks that are fired when the plugin is activated or deactivated.
  * When the plugin is deleted, the uninstall.php file is loaded.
  *
