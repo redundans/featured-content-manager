@@ -3,6 +3,10 @@ var $ = jQuery.noConflict(), timer;
 $(function() {
 
 	$('body').ready(function(){
+		connect_sortable();
+	});
+
+	function connect_sortable() {
 		$('.sortable').sortable({
 			connectWith: '.connectable',
 			opacity: 0.5,
@@ -27,7 +31,7 @@ $(function() {
 				changeState = true;
 			}
 		}).disableSelection();
-	});
+	}
 
 	function update_preview(){
 		$('ul.featured-area').each( function(index) {
@@ -164,6 +168,7 @@ $(function() {
 
 			$(target).append( output );
 			update_preview();
+			connect_sortable();
 		}, "JSON");
 	});
 
