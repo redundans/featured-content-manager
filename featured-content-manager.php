@@ -10,7 +10,7 @@
  * Plugin Name:       	Featured Content Manager
  * Plugin URI:       	https://plugins.klandestino.se
  * Description:       	Lets users create featured items that mirrors posts - then order them and edit their representation inside featured areas.
- * Version:           	0.1.0
+ * Version:           	0.2.0
  * Author:       		Klandestino AB
  * Author URI:      	https://klandestino.se
  * Text Domain:     	featured-content-manager
