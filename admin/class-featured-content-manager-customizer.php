@@ -273,7 +273,7 @@ class Featured_Content_Manager_Customizer {
 						<# } #>
 					</div>
 					<?php
-						if ( is_array( $styles ) ) {
+						if ( ! empty( $styles ) ) {
 							$i = 0;
 							echo '<select name="style[{{data.index}}]">';
 							foreach ($styles as $style) {

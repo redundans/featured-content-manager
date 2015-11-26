@@ -172,7 +172,7 @@ class Featured_Area_Control extends WP_Customize_Control {
 							</p>
 						</div>';
 		}
-		if ( is_array( $styles ) ) {
+		if ( ! empty( $styles ) ) {
 			$output .= '<select name="style[' . $index . ']"">';
 			foreach ( $styles as $style ) {
 				if ( $post_style != null && intval($post_style->term_id) === intval($style->term_id) )
