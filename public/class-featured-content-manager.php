@@ -583,9 +583,9 @@ class Featured_Content_Manager {
 		global $wp_customize;
 		if ( !current_theme_supports($this->plugin_slug) && term_exists( 'Main Area', Featured_Content_Manager::TAXONOMY ) && $query->is_main_query() && $query->is_home() ){
 
-			if ( isset( $wp_customize ) ) 
+			if ( isset( $wp_customize ) )
 				$query->set('post_status', 'draft');
-			
+
 			$taxquery = array(
 				array(
 					'taxonomy' => Featured_Content_Manager::TAXONOMY,
@@ -658,7 +658,7 @@ class Featured_Content_Manager {
 
 	/**
 	 * Adds the featured item style term as post class
-	 * 
+	 *
 	 * @param  array $classes  Predefined classes
 	 * @return array           Predefined plus new classes
 	 */
@@ -675,11 +675,11 @@ class Featured_Content_Manager {
 
 	public static function fcm_register_styles( $styles = array() ) {
 		global $fcm_registered_styles;
-        $fcm_registered_styles = array_merge( (array) $fcm_registered_styles, $styles );
+        		$fcm_registered_styles = array_merge( (array) $fcm_registered_styles, $styles );
 	}
 
-	public static function fcm_menu_page() {
-		add_menu_page( __('Feature Content Manager', 'featured-content-manager' ), __('Feature Content', 'featured-content-manager' ), 'featured-content-manager', '/wp-admin/customize.php?autofocus%5Bpanel%5D=featured_areas&return=%2Fwp-admin%2Findex.php', '', 'dashicons-exerpt-view', 61 );
+	public static function menu_page() {
+		add_menu_page( __('Featured Content Manager', 'featured-content-manager' ), __('Featured Content', 'featured-content-manager' ), 'featured-content-manager', '/wp-admin/customize.php?autofocus%5Bpanel%5D=featured_areas&return=%2Fwp-admin%2Findex.php', '', 'dashicons-exerpt-view', 61 );
 	}
 }
 
