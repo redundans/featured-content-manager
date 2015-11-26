@@ -42,6 +42,8 @@ require_once( plugin_dir_path( __FILE__ ) . 'updater/updater.php' );
 
 function fcm_plugin_updater() {
 
+	$license_key = trim( get_option( 'fcm_license_key' ) );
+
 	// setup the updater
 	$fcm_updater = new EDD_SL_Plugin_Updater( FCM_STORE_URL, __FILE__, array(
 			'version' 	=> '0.2.0', 				// current version number
