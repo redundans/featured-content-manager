@@ -29,7 +29,7 @@ function fcm_settings_page() {
 	?>
 	<div class="wrap">
 		<h2><?php _e('Plugin License Options'); ?></h2>
-		<form method="post" action="options.php">
+		<form method="post">
 
 			<?php settings_fields('fcm_license'); ?>
 
