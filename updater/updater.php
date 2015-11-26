@@ -11,17 +11,12 @@ if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 	include( dirname( __FILE__ ) . '/EDD_SL_Plugin_Updater.php' );
 }
 
-function fcm_network_settings_menu() {
-	add_submenu_page( 'settings.php', 'Featured content manager', 'Featured content', 'manage_options', 'featured-content-manager-settings', 'fcm_settings_page' );
-}
 function fcm_settings_menu() {
-	add_options_page( 'Featured content manager', 'Featured content', 'manage_options', 'featured-content-manager-settings', 'fcm_settings_page' );
+	if ( is_main_site() ) :
+		add_options_page( 'Featured content manager', 'Featured content', 'manage_options', 'featured-content-manager-settings', 'fcm_settings_page' );
+	endif;
 }
-if ( is_multisite() ) :
-	add_action('network_admin_menu', 'fcm_network_settings_menu');
-else :
-	add_action('admin_menu', 'fcm_settings_menu');
-endif;
+add_action('admin_menu', 'fcm_settings_menu');
 
 function fcm_settings_page() {
 	$license 	= get_option( 'fcm_license_key' );
@@ -29,7 +24,7 @@ function fcm_settings_page() {
 	?>
 	<div class="wrap">
 		<h2><?php _e('Plugin License Options'); ?></h2>
-		<form method="post">
+		<form method="post" action="options.php">
 
 			<?php settings_fields('fcm_license'); ?>
 
