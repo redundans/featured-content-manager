@@ -8,16 +8,15 @@
  *
  * @wordpress-plugin
  * Plugin Name:       	Featured Content Manager
- * Plugin URI:       	https://github.com/redundans/featured-content-manager
- * Description:       	Featured Content Manager is a plugin highly influenced by (the now dead projekt) wp-featured-content. It lets users create featured items that mirrors posts - then order them and edit their representation inside featured areas.
+ * Plugin URI:       	https://plugins.klandestino.se
+ * Description:       	Lets users create featured items that mirrors posts - then order them and edit their representation inside featured areas.
  * Version:           	0.1.0
- * Author:       		Jesper Nilsson
- * Author URI:      	https://github.com/redundans
+ * Author:       		Klandestino AB
+ * Author URI:      	https://klandestino.se
  * Text Domain:     	featured-content
  * License:         	GPL-2.0+
  * License URI:     	http://www.gnu.org/licenses/gpl-2.0.txt
  * Domain Path:       	/languages
- * GitHub Plugin URI: 	https://github.com/<owner>/<repo>
  */
 
 // If this file is called directly, abort.
@@ -50,7 +49,7 @@ register_deactivation_hook( __FILE__, array( 'Featured_Content_Manager', 'deacti
 add_action( 'plugins_loaded', array( 'Featured_Content_Manager', 'get_instance' ) );
 
 /*
- * Add style class for featured items 
+ * Add style class for featured items
  */
 add_filter( 'post_class', array( 'Featured_Content_Manager', 'fcm_style_post_class' ) );
 
@@ -59,10 +58,6 @@ add_filter( 'post_class', array( 'Featured_Content_Manager', 'fcm_style_post_cla
  * Dashboard and Administrative Functionality
  *----------------------------------------------------------------------------*/
 
-/*
- * The code below is intended to to give the lightest footprint possible.
- *
- */
 require_once( plugin_dir_path( __FILE__ ) . 'admin/class-featured-content-manager-customizer.php' );
 add_action( 'init', array( 'Featured_Content_Manager_Customizer', 'get_instance' ) );
 
