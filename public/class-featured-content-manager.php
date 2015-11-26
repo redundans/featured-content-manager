@@ -612,7 +612,7 @@ class Featured_Content_Manager {
 	 * @since    1.0
 	 */
 	function fcm_populate_children( $content ){
-		if ( !current_theme_supports($this->plugin_slug) )
+		if ( current_theme_supports($this->plugin_slug) )
 			return $content;
 		if( $GLOBALS['post']->post_type == self::POST_TYPE ){
 			$children = get_children( array( 'post_parent' => $GLOBALS['post']->ID, 'post_type' => Featured_Content_Manager::POST_TYPE, 'numberposts' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' ), ARRAY_A );
