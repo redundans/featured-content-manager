@@ -1,5 +1,5 @@
 <?php
-echo "Upload readme to Klandestino Plugins? (Y/n) ";
+echo "Upload plugin to Klandestino Plugins? (Y/n) ";
 	if ( 'Y' == trim( fgets( STDIN ) ) ) {
 		// system( 'git clone git@github.com:bradt/wp-migrate-db.git github1' );
 		// system( 'mkdir github' );
@@ -9,7 +9,7 @@ echo "Upload readme to Klandestino Plugins? (Y/n) ";
 		// chdir( 'github' );
 		// system( 'git add -A .' );
 		// system( 'git status' );
-		echo 'OK';
+		echo "Uploading... \n";
 
 		// echo "Commit and push to Github? (Y/n)? ";
 		// if ( 'Y' == trim( fgets( STDIN ) ) ) {
@@ -20,4 +20,8 @@ echo "Upload readme to Klandestino Plugins? (Y/n) ";
 		// }
 
 		// chdir( $tmp_dir );
+		echo "All done, have fun! \n";
+	} else {
+		echo "Allright, then you have to do it yourself\n";
 	}
+
