@@ -1,6 +1,6 @@
 <?php
-echo "Upload plugin to Klandestino Plugins? (Y/n) ";
-	if ( 'Y' == trim( fgets( STDIN ) ) ) {
+echo "Upload plugin to Klandestino Plugins? (yes/no) ";
+	if ( 'yes' == trim( fgets( STDIN ) ) ) {
 		echo "Uploading... \n";
 		chdir( $parent_dir );
 		system( 'scp readme.txt lakrisgubben@naturkontakt.se:/home/lakrisgubben' );
