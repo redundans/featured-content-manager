@@ -46,7 +46,7 @@ function fcm_plugin_updater() {
 
 	// setup the updater
 	$fcm_updater = new EDD_SL_Plugin_Updater( FCM_STORE_URL, __FILE__, array(
-			'version' 	=> '0.3.0', 				// current version number
+			'version' 	=> '0.3', 				// current version number
 			'license' 	=> $license_key, 		// license key (used get_option above to retrieve from DB)
 			'item_name' => FCM_PRODUCT_NAME, 	// name of this plugin
 			'author' 	=> 'Klandestino'  // author of this plugin
