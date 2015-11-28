@@ -29,10 +29,6 @@ Yes, all themes that use standard WordPress functionality works out of the box b
 
 Yes! If you don't want to network activate the plugin it has to be active on the main site for updates to work.
 
-== Screenshots ==
-
-1. This is how it looks in the customizer
-
 == Changelog ==
 
 = 0.3 =
