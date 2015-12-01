@@ -18,6 +18,17 @@ function fcm_settings_menu() {
 }
 add_action('admin_menu', 'fcm_settings_menu');
 
+function fcm_admin_notice() {
+	if ( is_main_site() ) :
+		$data 	= get_option( 'fcm_license_data' );
+		$status = $data->license;
+		if ( $status != 'valid' ) :
+			echo '<div class="error"><p>You need to enter a valid license for <a href="/wp-admin/options-general.php?page=featured-content-manager-settings">Featured Content Manager</a></p></div>';
+		endif;
+	endif;
+}
+add_action( 'admin_notices', 'fcm_admin_notice' );
+
 function fcm_settings_page() {
 	$license 	= get_option( 'fcm_license_key' );
 	$data 	= get_option( 'fcm_license_data' );
