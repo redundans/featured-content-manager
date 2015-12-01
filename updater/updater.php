@@ -129,8 +129,6 @@ function fcm_sanitize_license( $new ) {
 	return $new;
 }
 
-
-
 /************************************
 * this illustrates how to activate
 * a license key
@@ -232,8 +230,9 @@ add_action('admin_init', 'fcm_deactivate_license');
 *************************************/
 
 function fcm_check_license() {
-
-	global $wp_version;
+	if ( ! is_main_site() ) :
+		return;
+	endif;
 
 	$license = trim( get_option( 'fcm_license_key' ) );
 
@@ -252,11 +251,6 @@ function fcm_check_license() {
 
 	$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-	if( $license_data->license == 'valid' ) {
-		echo 'valid'; exit;
-		// this license is still valid
-	} else {
-		echo 'invalid'; exit;
-		// this license is no longer valid
-	}
+	update_option( 'fcm_license_data', $license_data );
 }
+add_action( 'wp_version_check', 'fcm_check_license' );
