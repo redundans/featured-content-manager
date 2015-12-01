@@ -255,23 +255,25 @@ class Featured_Content_Manager_Customizer {
 					<input type="hidden" name="post_id[{{data.index}}]" value="{{data.post.ID}}">
 					<input type="hidden" name="child[{{data.index}}]" value="{{data.child}}">
 					<input type="hidden" name="post_original[{{data.index}}]" value="{{data.post_original.ID}}">
-					<div class="uploader">
-						<# if( data.post_thumbnail.guid) { #>
-						<p>
-							<a href="#" title="Select thumbnail" class="edit-thumbnail"><img src="{{data.post_thumbnail.guid}}"></a>
-						</p>
-						<p>
-							<a href="#" title="Delete thumbnail" class="remove-thumbnail"><?php _e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
-						</p>
-						<# } else { #>
+					<?php if ( current_theme_supports( 'post-thumbnails' ) ) { ?>
+						<div class="uploader">
+							<# if( data.post_thumbnail.guid) { #>
 							<p>
-							<a href="#" title="Select thumbnail" class="edit-thumbnail"><?php _e( 'Select thumbnail', $this->plugin_slug ); ?></a>
-						</p>
-						<p>
-							<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail"><?php _e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
-						</p>
-						<# } #>
-					</div>
+								<a href="#" title="Select thumbnail" class="edit-thumbnail"><img src="{{data.post_thumbnail.guid}}"></a>
+							</p>
+							<p>
+								<a href="#" title="Delete thumbnail" class="remove-thumbnail"><?php _e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
+							</p>
+							<# } else { #>
+								<p>
+								<a href="#" title="Select thumbnail" class="edit-thumbnail"><?php _e( 'Select thumbnail', $this->plugin_slug ); ?></a>
+							</p>
+							<p>
+								<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail"><?php _e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
+							</p>
+							<# } #>
+						</div>
+					<?php } ?>
 					<?php
 						if ( ! empty( $styles ) ) {
 							$i = 0;

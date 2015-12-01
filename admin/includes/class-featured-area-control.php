@@ -155,22 +155,24 @@ class Featured_Area_Control extends WP_Customize_Control {
 						<input type="hidden" name="child[' . $index . ']" value="' . $child . '">
 						<input type="hidden" name="post_original[' . $index . ']" value="' . $post_original_id .'">
 						<div class="uploader">';
-		if( $post_thumbnail ) {
-			$output .= '	<p>
-								<a href="#" title="Select thumbnail" class="edit-thumbnail"><img src="' . $post_thumbnail->url . '"></a>
-							</p>
-							<p>
-								<a href="#" title="Delete thumbnail" class="remove-thumbnail">' . __( 'Delete thumbnail', $this->plugin_slug ) . '</a>
-							</p>';
+		if ( current_theme_supports( 'post-thumbnails' ) ) {
+			if( $post_thumbnail ) {
+				$output .= '	<p>
+									<a href="#" title="Select thumbnail" class="edit-thumbnail"><img src="' . $post_thumbnail->url . '"></a>
+								</p>
+								<p>
+									<a href="#" title="Delete thumbnail" class="remove-thumbnail">' . __( 'Delete thumbnail', $this->plugin_slug ) . '</a>
+								</p>';
 
-		} else {
-			$output .= '	<p>
-								<a href="#" title="Select thumbnail" class="edit-thumbnail">' . __( 'Select thumbnail', $this->plugin_slug ) . '</a>
-							</p>
-							<p>
-								<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail">' . __( 'Delete thumbnail', $this->plugin_slug ) . '</a>
-							</p>
-						</div>';
+			} else {
+				$output .= '	<p>
+									<a href="#" title="Select thumbnail" class="edit-thumbnail">' . __( 'Select thumbnail', $this->plugin_slug ) . '</a>
+								</p>
+								<p>
+									<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail">' . __( 'Delete thumbnail', $this->plugin_slug ) . '</a>
+								</p>
+							</div>';
+			}
 		}
 		if ( ! empty( $styles ) ) {
 			$output .= '<select name="style[' . $index . ']"">';
