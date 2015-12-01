@@ -20,10 +20,12 @@ add_action('admin_menu', 'fcm_settings_menu');
 
 function fcm_settings_page() {
 	$license 	= get_option( 'fcm_license_key' );
-	$status 	= get_option( 'fcm_license_status' );
+	$data 	= get_option( 'fcm_license_data' );
+	$status = $data->license;
 	?>
 	<div class="wrap">
-		<h2><?php _e('Plugin License Options'); ?></h2>
+		<h2><?php _e( 'Featured Content Manager License Options', 'featured-content-manager' ); ?></h2>
+
 		<form method="post" action="options.php">
 
 			<?php settings_fields('fcm_license'); ?>
@@ -32,35 +34,73 @@ function fcm_settings_page() {
 				<tbody>
 					<tr valign="top">
 						<th scope="row" valign="top">
-							<?php _e('License Key'); ?>
+							<?php _e( 'License Key', 'featured-content-manager' ); ?>
 						</th>
 						<td>
 							<input id="fcm_license_key" name="fcm_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />
-							<label class="description" for="fcm_license_key"><?php _e('Enter your license key'); ?></label>
+							<label class="description" for="fcm_license_key"><?php _e( 'Enter your license key', 'featured-content-manager' ); ?></label>
 						</td>
 					</tr>
-					<?php if( false !== $license ) { ?>
+					<?php if( false !== $license && ! empty( $license ) && ! empty( $status ) && $status == 'valid' ) { ?>
 						<tr valign="top">
 							<th scope="row" valign="top">
-								<?php _e('Activate License'); ?>
+								<span style="color: green;"><?php _e( 'License active', 'featured-content-manager' ); ?></span>
 							</th>
 							<td>
-								<?php if( $status !== false && $status == 'valid' ) { ?>
-									<span style="color:green;"><?php _e('active'); ?></span>
-									<?php wp_nonce_field( 'fcm_nonce', 'fcm_nonce' ); ?>
-									<input type="submit" class="button-secondary" name="fcm_license_deactivate" value="<?php _e('Deactivate License'); ?>"/>
-								<?php } else {
-									wp_nonce_field( 'fcm_nonce', 'fcm_nonce' ); ?>
-									<input type="submit" class="button-secondary" name="fcm_license_activate" value="<?php _e('Activate License'); ?>"/>
-								<?php } ?>
+								<span>Expires: <?php echo $data->expires; ?></span>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th scope="row" valign="top">
+								<?php _e( 'Deactivate License', 'featured-content-manager' ); ?>
+							</th>
+							<td>
+								<?php wp_nonce_field( 'fcm_nonce', 'fcm_nonce' ); ?>
+								<input type="submit" class="button-secondary" name="fcm_license_deactivate" value="<?php _e( 'Deactivate License', 'featured-content-manager' ); ?>"/>
+							</td>
+						</tr>
+					<?php } else { ?>
+						<tr valign="top">
+							<th scope="row" valign="top">
+								<span style="color: red;"><?php _e( 'License inactive', 'featured-content-manager' ); ?></span>
+							</th>
+							<?php if ( empty( $license ) ) { ?>
+								<td>
+									<span>Please enter your license key</span>
+								</td>
+							<?php } elseif ( $data->error == 'no_activations_left' ) { ?>
+								<td>
+									<span>You've reached your max number of active sites with this license. Upgrade your license at: <a href="https://plugins.klandestino.se" target="_blank">https://plugins.klandestino.se</a></span>
+								</td>
+							<?php } elseif ( $data->error == 'missing' ) { ?>
+								<td>
+									<span>Wrong license key, please check that you used the correct one.</span>
+								</td>
+							<?php } elseif ( strtotime( $data->expires ) < time() ) { ?>
+								<td>
+									<span>License has expired (at: <?php echo $data->expires; ?>)</span>
+								</td>
+							<?php } elseif ( $data->error ) { ?>
+								<td>
+									<span>Something went wrong, please try again or contact support at <a href="https://plugins.klandestino.se" target="_blank">https://plugins.klandestino.se</a> (error message: <?php echo $data->error; ?>)</span>
+								</td>
+							<?php } ?>
+						</tr>
+						<tr valign="top">
+							<th scope="row" valign="top">
+								<?php _e( 'Activate License', 'featured-content-manager' ); ?>
+							</th>
+							<td>
+								<?php wp_nonce_field( 'fcm_nonce', 'fcm_nonce' ); ?>
+								<input type="submit" class="button-secondary" name="fcm_license_activate" value="<?php _e( 'Activate License', 'featured-content-manager' ); ?>"/>
 							</td>
 						</tr>
 					<?php } ?>
 				</tbody>
 			</table>
-			<?php submit_button(); ?>
 
 		</form>
+	</div>
 	<?php
 }
 
@@ -73,7 +113,7 @@ add_action('admin_init', 'fcm_register_option');
 function fcm_sanitize_license( $new ) {
 	$old = get_option( 'fcm_license_key' );
 	if( $old && $old != $new ) {
-		delete_option( 'fcm_license_status' ); // new license has been entered, so must reactivate
+		delete_option( 'fcm_license_data' ); // new license has been entered, so must reactivate
 	}
 	return $new;
 }
@@ -97,6 +137,10 @@ function fcm_activate_license() {
 		// retrieve the license from the database
 		$license = trim( get_option( 'fcm_license_key' ) );
 
+		if ( empty( $license ) ) {
+			$license = trim( $_POST['fcm_license_key'] );
+		}
+
 
 		// data to send in our API request
 		$api_params = array(
@@ -116,9 +160,7 @@ function fcm_activate_license() {
 		// decode the license data
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-		// $license_data->license will be either "valid" or "invalid"
-
-		update_option( 'fcm_license_status', $license_data->license );
+		update_option( 'fcm_license_data', $license_data );
 
 	}
 }
@@ -163,7 +205,7 @@ function fcm_deactivate_license() {
 
 		// $license_data->license will be either "deactivated" or "failed"
 		if( $license_data->license == 'deactivated' )
-			delete_option( 'fcm_license_status' );
+			update_option( 'fcm_license_data', $license_data );
 
 	}
 }
