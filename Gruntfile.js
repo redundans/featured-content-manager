@@ -31,15 +31,28 @@ module.exports = function(grunt) {
                 tasks: ['sass'],
             },
         },
+        pot: {
+              options:{
+              text_domain: 'featured-content-manager', //Your text domain. Produces my-text-domain.pot
+              dest: 'languages/', //directory to place the pot file
+              keywords: ['gettext', '__'], //functions to look for
+            },
+            files:{
+              src:  [ '**/*.php' ], //Parse all php files
+              expand: true,
+               }
+          },
     });
 
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-pot');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.registerTask('default', [
         'sass:dist',
-        'uglify:dist'
+        'uglify:dist',
+        'pot',
     ]);
 
 };

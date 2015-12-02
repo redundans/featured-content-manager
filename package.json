@@ -1,5 +1,5 @@
 {
-  "name": "featured-content",
+  "name": "featured-content-manager",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,6 +16,7 @@
     "grunt-contrib-uglify": "~0.3.3",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-curl": "*",
+    "grunt-pot": "*",
     "grunt-phpdocumentor": "~0.4.1",
     "grunt-wp-i18n": "~0.4.0"
   }
