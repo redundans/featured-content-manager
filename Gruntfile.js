@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
- 
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         sass: {
@@ -8,15 +8,9 @@ module.exports = function(grunt) {
                     banner: '/*! <%= pkg.name %> <%= pkg.version %> filename.min.css <%= grunt.template.today("yyyy-mm-dd h:MM:ss TT") %> */\n',
                     style: 'compressed'
                 },
-                files: [{
-                    expand: true,
-                    cwd: 'scss',
-                    src: [
-                        'admin/assets/sass/*.scss'
-                    ],
-                    dest: 'admin/assets/css',
-                    ext: '.min.css'
-                }]
+                files: {
+                    'admin/assets/css/customizer.min.css': 'admin/assets/sass/customizer.scss',
+                }
             }
         },
         uglify: {
@@ -33,19 +27,19 @@ module.exports = function(grunt) {
         },
         watch: {
             all: {
-                files: 'scss/*.scss',
+                files: 'admin/assets/sass/*.scss',
                 tasks: ['sass'],
             },
         },
     });
- 
+
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
- 
+
     grunt.registerTask('default', [
         'sass:dist',
         'uglify:dist'
     ]);
- 
+
 };
