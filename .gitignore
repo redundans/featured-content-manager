@@ -1,3 +1,7 @@
 *.zip
 build/tmp
 build/featured-content-manager
+node_modules/
+admin/assets/css/customizer.css.map
+admin/assets/css/customizer.css
+admin/assets/js/customizer.min.js
