@@ -514,7 +514,7 @@ class Featured_Content_Manager {
 						if( $parent == 0 ) {
 							$parent_id = $featured_content_id;
 						}
-						update_post_meta( $featured_content_id, 'cfm_post_parent', $values['post_original'][$index] );
+						update_post_meta( $featured_content_id, 'fcm_post_parent', $values['post_original'][$index] );
 						wp_set_post_terms( $featured_content_id, array( $featured_area ), self::TAXONOMY, TRUE );
 						if ( $values['post_thumbnail'][$index] != '' ) {
 							set_post_thumbnail( $featured_content_id, $values['post_thumbnail'][$index] );
@@ -616,7 +616,7 @@ class Featured_Content_Manager {
 				foreach ( $children as $child ) {
 					$featured_children .= sprintf(
 						'<li><a href="%s">%s</a></li>',
-						get_permalink( get_post_meta( $child['post_parent'], 'cfm_post_parent', true ) ),
+						get_permalink( get_post_meta( $child['post_parent'], 'fcm_post_parent', true ) ),
 						$child['post_title']
 					);
 				}
@@ -647,7 +647,7 @@ class Featured_Content_Manager {
 		if ( $post->post_type === Featured_Content_Manager::POST_TYPE ) {
 
 			// Get original post id
-			$post_parent = get_post_meta( $post->ID, 'cfm_post_parent', TRUE );
+			$post_parent = get_post_meta( $post->ID, 'fcm_post_parent', TRUE );
 
 			// If original post is a featured item this will loop infinitly, halt.
 			if( get_post_type( $post_parent ) != 'featured_item' ){

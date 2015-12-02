@@ -82,7 +82,7 @@ class Featured_Area_Control extends WP_Customize_Control {
 					$post_thumbnail->url = $post_thumbnail->url[0];
 				}
 
-				$post_original_id = get_post_meta( $post->ID, 'cfm_post_parent', TRUE );
+				$post_original_id = get_post_meta( $post->ID, 'fcm_post_parent', TRUE );
 
 				$output = $this->render_featured_item( $index, $post, $post_original_id, 'false', $post_thumbnail );
 
