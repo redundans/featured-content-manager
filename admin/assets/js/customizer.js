@@ -211,7 +211,7 @@ $(function() {
 					$('#featured-items-filter-result ul').append(output);
 				});
 			} else {
-				$('#featured-items-filter-result ul').append('<li class="error">'+response.message+'</li>');
+				$('#featured-items-filter-result ul').html('<li class="error">'+response.message+'</li>');
 			}
 		}, "JSON");
 	}
