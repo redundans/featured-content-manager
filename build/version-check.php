@@ -7,4 +7,7 @@ $version_checks = array(
 	"readme.txt" => array(
 		'@Stable tag:\s+(.*)\n@' => 'Readme.txt'
 	),
+	"public/class-featured-content-manager.php" => array(
+		"@const VERSION = '(.*)'@" => 'Version CONSTANT',
+	),
 );
