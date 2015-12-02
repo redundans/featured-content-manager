@@ -15,3 +15,8 @@
 // 	} else {
 // 		echo "Alright, then you have to do it yourself\n";
 // 	}
+echo "Tag version on Github? (yes/no) ";
+	if ( 'yes' == trim( fgets( STDIN ) ) ) {
+		system( "git tag $version" );
+		system( 'git push origin --tags' );
+	}
