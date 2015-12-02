@@ -2,6 +2,13 @@
 
 This README is for development info only, will be removed during plugin build. Public info should go in readme.txt!
 
+## Install
+1. Clone project
+2. cd to project folder
+3. $ npm install
+4. $ grunt
+5. that's it
+
 ## Release
 1. Install the build script 'plugin-build' in your path
 2. cd to /build
