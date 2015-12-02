@@ -494,6 +494,7 @@ class Featured_Content_Manager {
 			}
 			return $content;
 		}
+		return $content;
 	}
 
 	/**
