@@ -13,7 +13,7 @@ if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 
 function fcm_settings_menu() {
 	if ( is_main_site() ) :
-		add_options_page( 'Featured content manager', 'Featured content', 'manage_options', 'featured-content-manager-settings', 'fcm_settings_page' );
+		add_options_page( __( 'Featured content manager', 'featured-content-manager' ), __( 'Featured content', 'featured-content-manager' ), 'manage_options', 'featured-content-manager-settings', 'fcm_settings_page' );
 	endif;
 }
 add_action('admin_menu', 'fcm_settings_menu');
@@ -23,7 +23,9 @@ function fcm_admin_notice() {
 		$data 	= get_option( 'fcm_license_data' );
 		$status = $data->license;
 		if ( $status != 'valid' ) :
-			echo '<div class="error"><p>You need to enter a valid license for <a href="/wp-admin/options-general.php?page=featured-content-manager-settings">Featured Content Manager</a></p></div>';
+			echo '<div class="error"><p><a href="/wp-admin/options-general.php?page=featured-content-manager-settings">';
+			esc_html_e( 'You need to enter a valid license for Featured Content Manager', 'featured-content-manager' );
+			echo '</a></p></div>';
 		endif;
 	endif;
 }
@@ -35,7 +37,7 @@ function fcm_settings_page() {
 	$status = $data->license;
 	?>
 	<div class="wrap">
-		<h2><?php _e( 'Featured Content Manager License Options', 'featured-content-manager' ); ?></h2>
+		<h2><?php esc_html_e( 'Featured Content Manager License Options', 'featured-content-manager' ); ?></h2>
 
 		<form method="post" action="options.php">
 
@@ -45,65 +47,65 @@ function fcm_settings_page() {
 				<tbody>
 					<tr valign="top">
 						<th scope="row" valign="top">
-							<?php _e( 'License Key', 'featured-content-manager' ); ?>
+							<?php esc_html_e( 'License Key', 'featured-content-manager' ); ?>
 						</th>
 						<td>
 							<input id="fcm_license_key" name="fcm_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />
-							<label class="description" for="fcm_license_key"><?php _e( 'Enter your license key', 'featured-content-manager' ); ?></label>
+							<label class="description" for="fcm_license_key"><?php esc_attr_e( 'Enter your license key', 'featured-content-manager' ); ?></label>
 						</td>
 					</tr>
 					<?php if( false !== $license && ! empty( $license ) && ! empty( $status ) && $status == 'valid' ) { ?>
 						<tr valign="top">
 							<th scope="row" valign="top">
-								<span style="color: green;"><?php _e( 'License active', 'featured-content-manager' ); ?></span>
+								<span style="color: green;"><?php esc_html_e( 'License active', 'featured-content-manager' ); ?></span>
 							</th>
 							<td>
-								<span>Expires: <?php echo $data->expires; ?></span>
+								<span><?php esc_html_e( 'Expires:', 'featured-content-manager' ); ?> <?php echo $data->expires; ?></span>
 							</td>
 						</tr>
 						<tr valign="top">
 							<th scope="row" valign="top">
-								<?php _e( 'Deactivate License', 'featured-content-manager' ); ?>
+								<?php esc_html_e( 'Deactivate License', 'featured-content-manager' ); ?>
 							</th>
 							<td>
 								<?php wp_nonce_field( 'fcm_nonce', 'fcm_nonce' ); ?>
-								<input type="submit" class="button-secondary" name="fcm_license_deactivate" value="<?php _e( 'Deactivate License', 'featured-content-manager' ); ?>"/>
+								<input type="submit" class="button-secondary" name="fcm_license_deactivate" value="<?php esc_attr_e( 'Deactivate License', 'featured-content-manager' ); ?>"/>
 							</td>
 						</tr>
 					<?php } else { ?>
 						<tr valign="top">
 							<th scope="row" valign="top">
-								<span style="color: red;"><?php _e( 'License inactive', 'featured-content-manager' ); ?></span>
+								<span style="color: red;"><?php esc_html_e( 'License inactive', 'featured-content-manager' ); ?></span>
 							</th>
 							<?php if ( empty( $license ) ) { ?>
 								<td>
-									<span>Please enter your license key</span>
+									<span><?php esc_html_e( 'Please enter your license key', 'featured-content-manager' ); ?></span>
 								</td>
 							<?php } elseif ( $data->error == 'no_activations_left' ) { ?>
 								<td>
-									<span>You've reached your max number of active sites with this license. Upgrade your license at: <a href="https://plugins.klandestino.se" target="_blank">https://plugins.klandestino.se</a></span>
+									<span><?php esc_html_e( 'You have reached your max number of active sites with this license. Upgrade your license at:', 'featured-content-manager' ); ?> <a href="https://plugins.klandestino.se" target="_blank">https://plugins.klandestino.se</a></span>
 								</td>
 							<?php } elseif ( $data->error == 'missing' ) { ?>
 								<td>
-									<span>Wrong license key, please check that you used the correct one.</span>
+									<span><?php esc_html_e( 'Wrong license key, please check that you used the correct one.', 'featured-content-manager' ); ?></span>
 								</td>
 							<?php } elseif ( strtotime( $data->expires ) < time() ) { ?>
 								<td>
-									<span>License has expired (at: <?php echo $data->expires; ?>)</span>
+									<span><?php esc_html_e( 'License has expired', 'featured-content-manager' ); ?> (at: <?php echo $data->expires; ?>)</span>
 								</td>
 							<?php } elseif ( $data->error ) { ?>
 								<td>
-									<span>Something went wrong, please try again or contact support at <a href="https://plugins.klandestino.se" target="_blank">https://plugins.klandestino.se</a> (error message: <?php echo $data->error; ?>)</span>
+									<span><?php esc_html_e( 'Something went wrong, please try again or contact support at', 'featured-content-manager' ); ?> <a href="https://plugins.klandestino.se" target="_blank">https://plugins.klandestino.se</a> (<?php esc_html_e( 'error message:', 'featured-content-manager' ); ?> <?php echo $data->error; ?>)</span>
 								</td>
 							<?php } ?>
 						</tr>
 						<tr valign="top">
 							<th scope="row" valign="top">
-								<?php _e( 'Activate License', 'featured-content-manager' ); ?>
+								<?php esc_html_e( 'Activate License', 'featured-content-manager' ); ?>
 							</th>
 							<td>
 								<?php wp_nonce_field( 'fcm_nonce', 'fcm_nonce' ); ?>
-								<input type="submit" class="button-secondary" name="fcm_license_activate" value="<?php _e( 'Activate License', 'featured-content-manager' ); ?>"/>
+								<input type="submit" class="button-secondary" name="fcm_license_activate" value="<?php esc_attr_e( 'Activate License', 'featured-content-manager' ); ?>"/>
 							</td>
 						</tr>
 					<?php } ?>

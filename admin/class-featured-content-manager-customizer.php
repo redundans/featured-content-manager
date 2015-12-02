@@ -220,8 +220,8 @@ class Featured_Content_Manager_Customizer {
 	?>
 		<div id="available-featured-items" class="accordion-container">
 			<div id="available-featured-items-filter">
-				<label class="screen-reader-text" for="featured-items-search">Search Content</label>
-				<input type="search" id="featured-items-search" placeholder="<?php _e( 'Search content', $this->plugin_slug ); ?>">
+				<label class="screen-reader-text" for="featured-items-search"><?php esc_html_e( 'Search Content' , $this->plugin_slug ); ?></label>
+				<input type="search" id="featured-items-search" placeholder="<?php esc_attr_e( 'Search content', $this->plugin_slug ); ?>">
 			</div>
 			<div id="featured-items-filter-result">
 				<ul>
@@ -262,14 +262,14 @@ class Featured_Content_Manager_Customizer {
 								<a href="#" title="Select thumbnail" class="edit-thumbnail"><img src="{{data.post_thumbnail.guid}}"></a>
 							</p>
 							<p>
-								<a href="#" title="Delete thumbnail" class="remove-thumbnail"><?php _e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
+								<a href="#" title="Delete thumbnail" class="remove-thumbnail"><?php esc_html_e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
 							</p>
 							<# } else { #>
 								<p>
-								<a href="#" title="Select thumbnail" class="edit-thumbnail"><?php _e( 'Select thumbnail', $this->plugin_slug ); ?></a>
+								<a href="#" title="Select thumbnail" class="edit-thumbnail"><?php esc_html_e( 'Select thumbnail', $this->plugin_slug ); ?></a>
 							</p>
 							<p>
-								<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail"><?php _e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
+								<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail"><?php esc_html_e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
 							</p>
 							<# } #>
 						</div>
@@ -298,7 +298,7 @@ class Featured_Content_Manager_Customizer {
 						<textarea name="post_content[{{data.index}}]">{{data.post.post_content}}</textarea>
 					</p>
 					<p>
-						<a href="#" class="remove"><?php _e( 'Delete', $this->plugin_slug ); ?></a>
+						<a href="#" class="remove"><?php esc_html_e( 'Delete', $this->plugin_slug ); ?></a>
 					</p>
 				</fieldset>
 			</div>

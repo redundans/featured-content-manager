@@ -221,11 +221,6 @@ class Featured_Content_Manager {
 			$area = $area->term_id;
 		}
 
-		if ( ! did_action( 'init' ) ) {
-			_doing_it_wrong( 'wp_get_featured_content()', "Cannot be called before the 'init' action.", '3.8' );
-			return array();
-		}
-
 		$args = array(
 			'post_type' => self::POST_TYPE,
 			'post_parent' => 0,
@@ -621,7 +616,7 @@ class Featured_Content_Manager {
 				$content = sprintf(
 					'%s <h2>%s</h2><p><a href="%s">%s</a></p>',
 	            	$content,
-	            	__('Related posts', $this->plugin_slug ),
+	            	esc_html( 'Related posts', $this->plugin_slug ),
 	            	get_permalink($parent_id),
 	            	$child['post_title']
 	        	);
@@ -643,7 +638,7 @@ class Featured_Content_Manager {
 	public function filter_featured_item_permalink( $url, $post ){
 
 		// Only do this if post type is featured item
-		if ( $post->post_type == 'featured_item' ) {
+		if ( $post->post_type === Featured_Content_Manager::POST_TYPE ) {
 
 			// Get original post id
 			$post_parent = get_post_meta( $post->ID, 'cfm_post_parent', TRUE );
