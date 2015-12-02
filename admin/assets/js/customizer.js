@@ -213,8 +213,14 @@ $(function() {
 		}, "JSON");
 	}
 
+	function update_sortable_title(event){
+		var title = $(event.currentTarget).val();
+		$(event.currentTarget).closest('li').find('.fcm-title h4').eq(0).text( title );
+	}
+
 	$(document).on('keyup', '#featured-items-search', start_search_timer );
 	$(document).on('keyup', '.sortable li input[type=text], .sortable li textarea', start_update_preview_timer );
+	$(document).on('keyup', '.sortable li input[name^=post_title]', update_sortable_title );
 	$(document).on('change', '.sortable li input[type=hidden], .sortable li select', start_update_preview_timer );
 
 });
