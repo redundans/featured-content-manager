@@ -5,6 +5,6 @@ $version_checks = array(
 		"@'version' 	=> '(.*)'@" => 'EDD updater',
 	),
 	"readme.txt" => array(
-		'@Stable tag:\s+(.*)\n@' => 'Readme.txt',
+		'@Stable tag:\s+(.*)\n@' => 'Readme.txt'
 	),
 );
