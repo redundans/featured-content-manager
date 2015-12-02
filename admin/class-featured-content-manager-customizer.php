@@ -207,7 +207,7 @@ class Featured_Content_Manager_Customizer {
 				die();
 			}
 		}
-		echo json_encode( array( 'error' => TRUE ) );
+		echo json_encode( array( 'error' => TRUE, 'message' => __( 'Nothing found.' , $this->plugin_slug ) ) );
 		die();
 	}
 

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Featured Content Manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-02 18:07+0100\n"
-"PO-Revision-Date: 2015-12-02 12:45+0100\n"
+"POT-Creation-Date: 2015-12-02 21:57+0100\n"
+"PO-Revision-Date: 2015-12-02 21:57+0100\n"
 "Last-Translator: Jesper Nilsson <jesper@klandestino.se>\n"
 "Language-Team: Klandestino AB <kontakt@klandestino.se>\n"
 "Language: sv_SE\n"
@@ -38,7 +38,11 @@ msgstr ""
 #: public/class-featured-content-manager.php:139
 #: public/class-featured-content-manager.php:148
 msgid "Featured Area"
-msgstr "Utvalt Område"
+msgstr "Utvalt område"
+
+#: admin/class-featured-content-manager-customizer.php:210
+msgid "Nothing found."
+msgstr "Hittade tyvärr ingenting."
 
 #: admin/class-featured-content-manager-customizer.php:223
 #, fuzzy
@@ -188,11 +192,11 @@ msgstr ""
 msgid "Related posts"
 msgstr ""
 
-#: public/class-featured-content-manager.php:548 updater/updater.php:16
+#: public/class-featured-content-manager.php:549 updater/updater.php:16
 msgid "Featured Content Manager"
 msgstr "Hantering av Utvalt Innehåll"
 
-#: public/class-featured-content-manager.php:548 updater/updater.php:16
+#: public/class-featured-content-manager.php:549 updater/updater.php:16
 msgid "Featured Content"
 msgstr "Utvalt Innehåll"
 
@@ -284,6 +288,9 @@ msgstr ""
 
 #~ msgid "Drag and drop to reorder the featured items."
 #~ msgstr "Drag och släpp för att ordna om utvalda objekt."
+
+#~ msgid "Add item"
+#~ msgstr "Lägg till"
 
 #~ msgid "New Featured Area"
 #~ msgstr "Nytt område"
