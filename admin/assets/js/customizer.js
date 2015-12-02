@@ -152,6 +152,8 @@ $(function() {
 		var post_id = $(this).data('id');
 		var target = $('.adding-featured-items-target');
 
+		$(this).addClass('added');
+
 		var data = {
 			action: 'get_post',
 			post_id: post_id,

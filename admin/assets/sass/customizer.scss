@@ -303,7 +303,7 @@ ul.sortable {
 			li.featured-area-search-result-item {
 				position: relative;
 				margin: 0;
-				padding: 20px 15px 20px 60px;
+				padding: 20px 15px 20px 40px;
 				border-bottom: 1px solid #e4e4e4;
 				cursor: pointer;
 
@@ -313,7 +313,7 @@ ul.sortable {
 
 				h4 {
 					margin: 0;
-					padding: 0 0 5px;
+					padding: 0;
 					font-size: 14px;
 				}
 
@@ -326,10 +326,10 @@ ul.sortable {
 					position: absolute;
 					top: -1px;
 					right: 100%;
-					margin-right: 20px;
+					margin-right: 6px;
 					width: 20px;
 					height: 20px;
-					color: #333;
+					color: #82878c;
 					font: 400 20px/1 dashicons;
 					text-align: center;
 					-webkit-box-sizing: border-box;
@@ -339,12 +339,17 @@ ul.sortable {
 					-moz-osx-font-smoothing: grayscale;
 				}
 
-				&.post .featured-area-search-item-title:before {
-					content: "\f109";
-				}
+				&.added {
+					.featured-area-search-item-title {
+						color: #82878c;
 
-				&.page .featured-area-search-item-title:before {
-					content: "\f105";
+						&:before {
+							content: "\f147";
+						}
+					}
+					.featured-area-search-item-content {
+						color: #82878c;
+					}
 				}
 			}
 		}
