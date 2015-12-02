@@ -143,6 +143,7 @@ $(function() {
 			// console.log($(event.target).parent().children('ul.featured-area'));
 			$(event.target).parent().parent().children('ul.featured-area').addClass('adding-featured-items-target');
 			$('body').addClass('adding-featured-items');
+			$('#featured-items-search').focus();
 		}
 	});
 
