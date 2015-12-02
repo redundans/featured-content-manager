@@ -8,9 +8,15 @@ module.exports = function(grunt) {
                     banner: '/*! <%= pkg.name %> <%= pkg.version %> filename.min.css <%= grunt.template.today("yyyy-mm-dd h:MM:ss TT") %> */\n',
                     style: 'compressed'
                 },
-                files: {
-                    'admin/assets/css/customizer.min.css': 'admin/assets/sass/customizer.scss',
-                }
+                files: [{
+                    expand: true,
+                    cwd: 'admin/assets/sass',
+                    src: [
+                        '*.scss'
+                    ],
+                    dest: 'admin/assets/css',
+                    ext: '.min.css'
+                }]
             }
         },
         uglify: {
