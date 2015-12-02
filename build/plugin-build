@@ -108,6 +108,10 @@ if ( file_exists( $filter_hook ) ) {
 	include $filter_hook;
 }
 
+echo 'running Grunt...';
+`Grunt`;
+echo 'Grunt done';
+
 `rsync -r --filter=". $filter_file" "$src_dir"/* "$dest_dir"`;
 
 chdir( $tmp_dir );
