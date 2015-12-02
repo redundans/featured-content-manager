@@ -1,7 +1,7 @@
 === Featured Content Manager ===
 Contributors: klandestino
 Tags: featured content
-Requires at least: 4.0
+Requires at least: 4.1
 Tested up to: 4.4
 Stable tag: 0.3
 License: GPLv2 or later
@@ -17,7 +17,8 @@ Featured Content is a WordPress plugin that lets users create featured items tha
 
 1. Download the plugin and upload the zip-file via Plugins -> Add new in WordPress
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Now you are ready to use Featured Content Manager
+3. Add your license under Settings->Featured Content
+4. Now you are ready to use Featured Content Manager
 
 == Frequently Asked Questions ==
 
