@@ -5,6 +5,9 @@ $version_checks = array(
 		"@'version' 	=> '(.*)'@" => 'EDD updater',
 	),
 	"readme.txt" => array(
-		'@Stable tag:\s+(.*)\n@' => 'Readme.txt',
+		'@Stable tag:\s+(.*)\n@' => 'Readme.txt'
+	),
+	"public/class-featured-content-manager.php" => array(
+		"@const VERSION = '(.*)'@" => 'Version CONSTANT',
 	),
 );

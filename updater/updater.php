@@ -13,7 +13,7 @@ if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 
 function fcm_settings_menu() {
 	if ( is_main_site() ) :
-		add_options_page( __( 'Featured content manager', 'featured-content-manager' ), __( 'Featured content', 'featured-content-manager' ), 'manage_options', 'featured-content-manager-settings', 'fcm_settings_page' );
+		add_options_page( __( 'Featured Content Manager', 'featured-content-manager' ), __( 'Featured Content', 'featured-content-manager' ), 'manage_options', 'featured-content-manager-settings', 'fcm_settings_page' );
 	endif;
 }
 add_action('admin_menu', 'fcm_settings_menu');
