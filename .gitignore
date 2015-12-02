@@ -2,6 +2,7 @@
 build/tmp
 build/featured-content-manager
 node_modules/
-admin/assets/css/customizer.css.map
-admin/assets/css/customizer.css
+admin/assets/css/customizer.min.css.map
+admin/assets/css/customizer.min.css
 admin/assets/js/customizer.min.js
+.sass-cache

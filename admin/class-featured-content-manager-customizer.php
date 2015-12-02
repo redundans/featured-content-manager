@@ -75,7 +75,7 @@ class Featured_Content_Manager_Customizer {
 	 */
 	public function enqueue_admin_styles() {
 
-		wp_enqueue_style( $this->plugin_slug .'-customizer-styles', plugins_url( 'assets/css/customizer.css', __FILE__ ), array(), Featured_Content_Manager::VERSION );
+		wp_enqueue_style( $this->plugin_slug .'-customizer-styles', plugins_url( 'assets/css/customizer.min.css', __FILE__ ), array(), Featured_Content_Manager::VERSION );
 
 	}
 
@@ -86,7 +86,7 @@ class Featured_Content_Manager_Customizer {
 	 */
 	public function enqueue_admin_scripts() {
 
-		wp_enqueue_script( $this->plugin_slug . '-customizer-script', plugins_url( 'assets/js/customizer.js', __FILE__ ), array( 'jquery', 'jquery-ui-sortable' ), Featured_Content_Manager::VERSION );
+		wp_enqueue_script( $this->plugin_slug . '-customizer-script', plugins_url( 'assets/js/customizer.min.js', __FILE__ ), array( 'jquery', 'jquery-ui-sortable' ), Featured_Content_Manager::VERSION );
 
 	}
 

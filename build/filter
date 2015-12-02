@@ -9,3 +9,7 @@
 - /admin/assets/sass
 - phpunit.xml
 - /bin
+- /node_modules
+- /admin/assets/js/customizer.js
+- Gruntfile.js
+- package.json
