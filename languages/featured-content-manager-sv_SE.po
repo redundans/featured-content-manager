@@ -1,7 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Featured Content Manager\n"
-"POT-Creation-Date: 2015-12-02 12:41+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-12-02 18:07+0100\n"
 "PO-Revision-Date: 2015-12-02 12:45+0100\n"
 "Last-Translator: Jesper Nilsson <jesper@klandestino.se>\n"
 "Language-Team: Klandestino AB <kontakt@klandestino.se>\n"
@@ -33,143 +34,256 @@ msgstr ""
 "sidor och poster."
 
 #: admin/class-featured-content-manager-customizer.php:170
-#: public/class-featured-content-manager.php:147
+#: public/class-featured-content-manager.php:138
+#: public/class-featured-content-manager.php:139
+#: public/class-featured-content-manager.php:148
 msgid "Featured Area"
 msgstr "Utvalt Område"
 
-#: admin/includes/class-featured-area-control.php:49
-msgid "Drag and drop to reorder the featured items."
-msgstr "Drag och släpp för att ordna om utvalda objekt."
+#: admin/class-featured-content-manager-customizer.php:223
+#, fuzzy
+msgid "Search Content"
+msgstr "Sök innehåll"
 
-#: admin/includes/class-featured-area-control.php:118
-msgid "Add item"
-msgstr "Lägg till"
+#: admin/class-featured-content-manager-customizer.php:224
+msgid "Search content"
+msgstr "Sök innehåll"
 
-#: admin/includes/class-featured-area-control.php:165
-#: admin/includes/class-featured-area-control.php:173
+#: admin/class-featured-content-manager-customizer.php:265
+#: admin/class-featured-content-manager-customizer.php:272
 msgid "Delete thumbnail"
 msgstr "Ta bort tumnagel"
 
-#: admin/includes/class-featured-area-control.php:170
+#: admin/class-featured-content-manager-customizer.php:269
 msgid "Select thumbnail"
 msgstr "Välj tumnagel"
 
-#: admin/includes/class-featured-area-control.php:198
+#: admin/class-featured-content-manager-customizer.php:301
 msgid "Delete"
 msgstr "Ta bort"
 
+#: public/class-featured-content-manager.php:116
+#, fuzzy
+msgid "Featured Items"
+msgstr "Nytt område"
+
+#: public/class-featured-content-manager.php:117
+#, fuzzy
+msgid "Featured Item"
+msgstr "Nytt område"
+
 #: public/class-featured-content-manager.php:118
-msgid "Add New Featured Item"
+#, fuzzy
+msgid "Add New"
 msgstr "Lägg till"
 
 #: public/class-featured-content-manager.php:119
+msgid "Add New Featured Item"
+msgstr "Lägg till"
+
+#: public/class-featured-content-manager.php:120
 msgid "Edit Featured Item"
 msgstr "Ändra"
 
-#: public/class-featured-content-manager.php:120
+#: public/class-featured-content-manager.php:121
 msgid "New Featured Item"
 msgstr "Nytt område"
 
-#: public/class-featured-content-manager.php:121
+#: public/class-featured-content-manager.php:122
 msgid "View Featured Item"
 msgstr "Se utvalt innehåll"
 
-#: public/class-featured-content-manager.php:122
+#: public/class-featured-content-manager.php:123
 msgid "Search Featured Items"
 msgstr "Sök utvalt innehåll"
 
-#: public/class-featured-content-manager.php:123
+#: public/class-featured-content-manager.php:124
 msgid "No Featured Items found"
 msgstr "Inget utvalt innehåll hittades"
 
-#: public/class-featured-content-manager.php:124
+#: public/class-featured-content-manager.php:125
 msgid "No Featured Items found in Trash"
 msgstr "Inget utvalt innehåll hittades i papperskorgen"
 
-#: public/class-featured-content-manager.php:135
-#: public/class-featured-content-manager.php:158
+#: public/class-featured-content-manager.php:136
+#: public/class-featured-content-manager.php:159
 msgid "This is some text explaining that the theme has this featured location."
 msgstr ""
 
-#: public/class-featured-content-manager.php:139
+#: public/class-featured-content-manager.php:140
 msgid "Search Featured Areas"
 msgstr "Sök utvalda områden"
 
-#: public/class-featured-content-manager.php:140
+#: public/class-featured-content-manager.php:141
 msgid "All Featured Areas"
 msgstr "Alla utvalda områden"
 
-#: public/class-featured-content-manager.php:141
+#: public/class-featured-content-manager.php:142
 msgid "Parent Featured Area"
 msgstr "Förälder till utvalt område"
 
-#: public/class-featured-content-manager.php:142
+#: public/class-featured-content-manager.php:143
 msgid "Parent Featured Area:"
 msgstr "Förälder till utvalt område:"
 
-#: public/class-featured-content-manager.php:143
+#: public/class-featured-content-manager.php:144
 msgid "Edit Featured Area"
 msgstr "Ändra utvalt område"
 
-#: public/class-featured-content-manager.php:144
+#: public/class-featured-content-manager.php:145
 msgid "Update Featured Area"
 msgstr "Uppdater utvalt område"
 
-#: public/class-featured-content-manager.php:145
+#: public/class-featured-content-manager.php:146
 msgid "Add New Featured Area"
 msgstr "Skapa nytt anpassat område"
 
-#: public/class-featured-content-manager.php:146
+#: public/class-featured-content-manager.php:147
 msgid "New Featured Area Name"
 msgstr "Nytt anpassat område"
 
+#: public/class-featured-content-manager.php:161
 #: public/class-featured-content-manager.php:162
-msgid "Search Featured Content Styles"
-msgstr "Sök stil för utvalt innehåll"
-
-#: public/class-featured-content-manager.php:163
-msgid "All Featured Content Styles"
-msgstr "Alla stilar för utvalt innehåll"
-
-#: public/class-featured-content-manager.php:164
-msgid "Parent Featured Content Style"
-msgstr "Förälder till stil för utvalt innehåll"
-
-#: public/class-featured-content-manager.php:165
-msgid "Parent Featured Content Style:"
-msgstr "Förälder till stil för utvalt innehåll:"
-
-#: public/class-featured-content-manager.php:166
-msgid "Edit Featured Content Style"
-msgstr "Ändra stil för utvalt innehåll"
-
-#: public/class-featured-content-manager.php:167
-msgid "Update Featured Content Style"
-msgstr "Uppdatera stil för utvalt innehåll"
-
-#: public/class-featured-content-manager.php:168
-msgid "Add New Featured Content Style"
-msgstr "Lägg till ny stil för utvalt innehåll"
-
-#: public/class-featured-content-manager.php:169
-msgid "New Featured Content Style Name"
-msgstr "Nytt namn till stil för utvalt innehåll"
-
-#: public/class-featured-content-manager.php:170
+#: public/class-featured-content-manager.php:171
 msgid "Featured Content Style"
 msgstr "Stil för utvalt innehåll"
 
-#: public/class-featured-content-manager.php:180
+#: public/class-featured-content-manager.php:163
+msgid "Search Featured Content Styles"
+msgstr "Sök stil för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:164
+msgid "All Featured Content Styles"
+msgstr "Alla stilar för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:165
+msgid "Parent Featured Content Style"
+msgstr "Förälder till stil för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:166
+msgid "Parent Featured Content Style:"
+msgstr "Förälder till stil för utvalt innehåll:"
+
+#: public/class-featured-content-manager.php:167
+msgid "Edit Featured Content Style"
+msgstr "Ändra stil för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:168
+msgid "Update Featured Content Style"
+msgstr "Uppdatera stil för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:169
+msgid "Add New Featured Content Style"
+msgstr "Lägg till ny stil för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:170
+msgid "New Featured Content Style Name"
+msgstr "Nytt namn till stil för utvalt innehåll"
+
+#: public/class-featured-content-manager.php:181
 msgid "A default and predefined term for the Featured Area taxonomy."
 msgstr ""
 
-#: public/class-featured-content-manager.php:545
+#: public/class-featured-content-manager.php:491
+msgid "Related posts"
+msgstr ""
+
+#: public/class-featured-content-manager.php:548 updater/updater.php:16
 msgid "Featured Content Manager"
 msgstr "Hantering av Utvalt Innehåll"
 
-#: public/class-featured-content-manager.php:545
+#: public/class-featured-content-manager.php:548 updater/updater.php:16
 msgid "Featured Content"
 msgstr "Utvalt Innehåll"
+
+#: updater/EDD_SL_Plugin_Updater.php:181
+#, php-format
+msgid ""
+"There is a new version of %1$s available. <a target=\"_blank\" class="
+"\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
+msgstr ""
+
+#: updater/EDD_SL_Plugin_Updater.php:188
+#, php-format
+msgid ""
+"There is a new version of %1$s available. <a target=\"_blank\" class="
+"\"thickbox\" href=\"%2$s\">View version %3$s details</a> or <a href=\"%4$s"
+"\">update now</a>."
+msgstr ""
+
+#: updater/EDD_SL_Plugin_Updater.php:326
+msgid "You do not have permission to install plugin updates"
+msgstr ""
+
+#: updater/EDD_SL_Plugin_Updater.php:326
+msgid "Error"
+msgstr ""
+
+#: updater/updater.php:27
+msgid "You need to enter a valid license for Featured Content Manager"
+msgstr ""
+
+#: updater/updater.php:40
+#, fuzzy
+msgid "Featured Content Manager License Options"
+msgstr "Hantering av Utvalt Innehåll"
+
+#: updater/updater.php:50
+msgid "License Key"
+msgstr ""
+
+#: updater/updater.php:54
+msgid "Enter your license key"
+msgstr ""
+
+#: updater/updater.php:60
+msgid "License active"
+msgstr ""
+
+#: updater/updater.php:63
+msgid "Expires:"
+msgstr ""
+
+#: updater/updater.php:68 updater/updater.php:72
+msgid "Deactivate License"
+msgstr ""
+
+#: updater/updater.php:78
+msgid "License inactive"
+msgstr ""
+
+#: updater/updater.php:82
+msgid "Please enter your license key"
+msgstr ""
+
+#: updater/updater.php:86
+msgid ""
+"You have reached your max number of active sites with this license. Upgrade "
+"your license at:"
+msgstr ""
+
+#: updater/updater.php:90
+msgid "Wrong license key, please check that you used the correct one."
+msgstr ""
+
+#: updater/updater.php:94
+msgid "License has expired"
+msgstr ""
+
+#: updater/updater.php:98
+msgid "Something went wrong, please try again or contact support at"
+msgstr ""
+
+#: updater/updater.php:98
+msgid "error message:"
+msgstr ""
+
+#: updater/updater.php:104 updater/updater.php:108
+msgid "Activate License"
+msgstr ""
+
+#~ msgid "Drag and drop to reorder the featured items."
+#~ msgstr "Drag och släpp för att ordna om utvalda objekt."
 
 #~ msgid "New Featured Area"
 #~ msgstr "Nytt område"
@@ -177,9 +291,6 @@ msgstr "Utvalt Innehåll"
 #, fuzzy
 #~ msgid "Create Featured Area"
 #~ msgstr "Drag och släpp för att ordna om utvalda objekt."
-
-#~ msgid "Search content"
-#~ msgstr "Sök innehåll"
 
 #~ msgid "Drop Here!"
 #~ msgstr "Släpp här"

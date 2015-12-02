@@ -42,6 +42,7 @@ module.exports = function(grunt) {
               text_domain: 'featured-content-manager', //Your text domain. Produces my-text-domain.pot
               dest: 'languages/', //directory to place the pot file
               keywords: ['gettext', '__', 'esc_html_e', 'esc_html', 'esc_attr_e', 'esc_attr', '_e', '_x'], //functions to look for
+              msgmerge: true,
             },
             files:{
               src:  [ 'admin/*.php', 'public/*.php', 'updater/*.php' ], //Parse all php files
