@@ -95,6 +95,7 @@ class Featured_Content_Manager {
 		 * Add action for population children.
 		 *
 		 */
+		add_filter( 'the_excerpt', array( $this, 'fcm_populate_children' ) );
 		add_filter( 'the_content', array( $this, 'fcm_populate_children' ) );
 
 	}
@@ -296,6 +297,7 @@ class Featured_Content_Manager {
 		$target = $_POST['target'];
 
 		$post = get_post( $post_id );
+		$post->post_content = wp_trim_words( $post->post_content );
 		$post_thumbnail_id = get_post_thumbnail_id( $post_id );
 		$post_thumbnail = get_post( $post_thumbnail_id );
 		if(!$post_thumbnail){
@@ -369,6 +371,7 @@ class Featured_Content_Manager {
 								'ID' => '',
 								'post_title' => $values['post_title'][$index],
 								'post_content' => $values['post_content'][$index],
+								'post_excerpt' => $values['post_content'][$index],
 								'menu_order' => $values['menu_order'][$index],
 								'post_parent' => $parent,
 								'post_type' => self::POST_TYPE,
@@ -486,7 +489,7 @@ class Featured_Content_Manager {
 					);
 				}
 				$content = sprintf(
-					'%s <h2>%s</h2><ul>%s</ul>',
+					'%s <div class="featured-content-children"><h2>%s</h2><ul>%s</ul></div>',
 		            			$content,
 		            			esc_html( 'Related posts', 'featured-content-manager' ),
 		            			$featured_children
