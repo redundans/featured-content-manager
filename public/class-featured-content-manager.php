@@ -609,20 +609,26 @@ class Featured_Content_Manager {
 	function fcm_populate_children( $content ){
 		if ( current_theme_supports($this->plugin_slug) )
 			return $content;
-		if( $GLOBALS['post']->post_type == self::POST_TYPE ){
+		if( $GLOBALS['post']->post_type == Featured_Content_Manager::POST_TYPE ){
 			$children = get_children( array( 'post_parent' => $GLOBALS['post']->ID, 'post_type' => Featured_Content_Manager::POST_TYPE, 'numberposts' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' ), ARRAY_A );
-			foreach ($children as $child) {
-				$parent_id = wp_get_post_parent_id($child['ID']);
+			if ( $children ) {
+				$featured_children = '';
+				foreach ( $children as $child ) {
+					$featured_children .= sprintf(
+						'<li><a href="%s">%s</a></li>',
+						get_permalink( get_post_meta( $child['post_parent'], 'cfm_post_parent', true ) ),
+						$child['post_title']
+					);
+				}
 				$content = sprintf(
-					'%s <h2>%s</h2><p><a href="%s">%s</a></p>',
-	            	$content,
-	            	esc_html( 'Related posts', $this->plugin_slug ),
-	            	get_permalink($parent_id),
-	            	$child['post_title']
-	        	);
+					'%s <h2>%s</h2><ul>%s</ul>',
+		            			$content,
+		            			esc_html( 'Related posts', 'featured-content-manager' ),
+		            			$featured_children
+		            		);
 			}
+			return $content;
 		}
-		return $content;
 	}
 
 	/**
