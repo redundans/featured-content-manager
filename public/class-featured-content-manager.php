@@ -481,7 +481,7 @@ class Featured_Content_Manager {
 				foreach ( $children as $child ) {
 					$featured_children .= sprintf(
 						'<li><a href="%s">%s</a></li>',
-						get_permalink( get_post_meta( $child['post_parent'], 'fcm_post_parent', true ) ),
+						get_permalink( get_post_meta( $child['ID'], 'fcm_post_parent', true ) ),
 						$child['post_title']
 					);
 				}
