@@ -94,6 +94,7 @@ class Featured_Area_Control extends WP_Customize_Control {
 					$child_post = get_post( $child["ID"] );
 					$post_thumbnail_id = get_post_thumbnail_id( $child["ID"] );
 					$post_thumbnail = ( $post_thumbnail_id != '' ? get_post( $post_thumbnail_id ) : false );
+					$post_original_id = get_post_meta( $child_post->ID, 'fcm_post_parent', TRUE );
 
 					if( $post_thumbnail ) {
 						$post_thumbnail->url = wp_get_attachment_thumb_url( $post_thumbnail_id );
