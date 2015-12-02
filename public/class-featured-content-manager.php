@@ -76,9 +76,6 @@ class Featured_Content_Manager {
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
-		// Activate plugin when new blog is added
-		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
-
 		// If the theme supports it, register post_type and taxonomy
 		add_action( 'init', array( $this, 'init' ) );
 
