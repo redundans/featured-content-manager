@@ -205,11 +205,21 @@ ul.sortable {
     box-sizing: border-box; }
     #available-featured-items #available-featured-items-filter input#featured-items-search {
       width: 100%; }
+      #available-featured-items #available-featured-items-filter input#featured-items-search.loading {
+        background-image: url("/wp-admin/images/wpspin_light.gif");
+        background-repeat: no-repeat;
+        background-position: right 5px center; }
   #available-featured-items #featured-items-filter-result {
     padding: 0; }
     #available-featured-items #featured-items-filter-result ul {
       margin: 0;
       padding: 0; }
+      #available-featured-items #featured-items-filter-result ul li.error {
+        position: relative;
+        margin: 0;
+        padding: 20px 15px 20px 60px;
+        border-bottom: 1px solid #e4e4e4;
+        text-align: center; }
       #available-featured-items #featured-items-filter-result ul li.featured-area-search-result-item {
         position: relative;
         margin: 0;
@@ -282,5 +292,11 @@ body.adding-featured-items .sidebar-delete-icon {
   display: inline-block !important; }
 body.adding-featured-items .sidebar-name-arrow {
   display: none; }
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none; }
 
 /*# sourceMappingURL=customizer.css.map */

@@ -76,9 +76,6 @@ class Featured_Content_Manager {
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
-		// Activate plugin when new blog is added
-		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
-
 		// If the theme supports it, register post_type and taxonomy
 		add_action( 'init', array( $this, 'init' ) );
 
@@ -308,63 +305,6 @@ class Featured_Content_Manager {
 	}
 
 	/**
-	 * Fired when the plugin is deactivated.
-	 *
-	 * @since    0.1.0
-	 *
-	 * @param    boolean    $network_wide    True if WPMU superadmin uses
-	 *                                       "Network Deactivate" action, false if
-	 *                                       WPMU is disabled or plugin is
-	 *                                       deactivated on an individual blog.
-	 */
-	public static function deactivate( $network_wide ) {
-
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-
-			if ( $network_wide ) {
-
-				// Get all blog ids
-				$blog_ids = self::get_blog_ids();
-
-				foreach ( $blog_ids as $blog_id ) {
-
-					switch_to_blog( $blog_id );
-					self::single_deactivate();
-
-				}
-
-				restore_current_blog();
-
-			} else {
-				self::single_deactivate();
-			}
-
-		} else {
-			self::single_deactivate();
-		}
-
-	}
-
-	/**
-	 * Fired when a new site is activated with a WPMU environment.
-	 *
-	 * @since    0.1.0
-	 *
-	 * @param    int    $blog_id    ID of the new blog.
-	 */
-	public function activate_new_site( $blog_id ) {
-
-		if ( 1 !== did_action( 'wpmu_new_blog' ) ) {
-			return;
-		}
-
-		switch_to_blog( $blog_id );
-		self::single_activate();
-		restore_current_blog();
-
-	}
-
-	/**
 	 * Get all blog ids of blogs in the current network that are:
 	 * - not archived
 	 * - not spam
@@ -385,24 +325,6 @@ class Featured_Content_Manager {
 
 		return $wpdb->get_col( $sql );
 
-	}
-
-	/**
-	 * Fired for each blog when the plugin is activated.
-	 *
-	 * @since    0.1.0
-	 */
-	private static function single_activate() {
-		// @TODO: Define activation functionality here
-	}
-
-	/**
-	 * Fired for each blog when the plugin is deactivated.
-	 *
-	 * @since    0.1.0
-	 */
-	private static function single_deactivate() {
-		// @TODO: Define deactivation functionality here
 	}
 
 	/**

@@ -187,12 +187,19 @@ $(function() {
 		if( search_term.length <= 2 )
 			return;
 
+		// Shows a loading symbol in input field
+		$('#featured-items-search').addClass('loading');
+
 		var data = {
 			action: 'search_content',
 			search_term: search_term
 		};
 
 		$.post( ajaxurl, data, function(response) {
+
+			// Hides a loading symbol in input field
+			$('#featured-items-search').removeClass('loading');
+
 			if( !response.error ){
 				$('#featured-items-filter-result ul').html('');
 				template = wp.template( 'featured-area-search-result-item' );
@@ -200,6 +207,8 @@ $(function() {
 					output = template( this );
 					$('#featured-items-filter-result ul').append(output);
 				});
+			} else {
+				$('#featured-items-filter-result ul').append('<li class="error">Hittade inga inlägg.</li>');
 			}
 		}, "JSON");
 	}
