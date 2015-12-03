@@ -329,9 +329,8 @@ class Featured_Content_Manager {
 		if( $post_status == '' ) {
 			$post_status = 'publish';
 		}
-		if(isset($values['_wpnonce']) && isset($values['post_id']) ) {
+		if(isset($values['_wpnonce']) ) {
 			if( wp_verify_nonce( $values['_wpnonce'], 'fcm_save_posts' ) ) {
-				$post_ids = $values['post_id'];
 				$featured_area = $values['featured_area'];
 
 				$trash_posts = new WP_Query(
@@ -357,39 +356,42 @@ class Featured_Content_Manager {
 					wp_reset_postdata();
 				}
 
-				$index = 0;
-				$parent_id = '';
-				if( is_array( $post_ids ) ) {
-					foreach ($post_ids as $post_id) {
-						$index++;
-						$parent = 0;
-						if( $values['child'][$index] == 'true' ) {
-							$parent = $parent_id;
-						}
-						$post =
-							array(
-								'ID' => '',
-								'post_title' => $values['post_title'][$index],
-								'post_content' => $values['post_content'][$index],
-								'post_excerpt' => $values['post_content'][$index],
-								'menu_order' => $values['menu_order'][$index],
-								'post_parent' => $parent,
-								'post_type' => self::POST_TYPE,
-								'post_status' => $post_status,
-								'post_date' => date( 'Y-m-d H:i:s', strtotime( $values['post_date'][$index] ) )
-							);
-						$featured_content_id = wp_insert_post( $post );
-						if( $parent == 0 ) {
-							$parent_id = $featured_content_id;
-						}
-						update_post_meta( $featured_content_id, 'fcm_post_parent', $values['post_original'][$index] );
-						wp_set_post_terms( $featured_content_id, array( $featured_area ), self::TAXONOMY, TRUE );
-						if ( $values['post_thumbnail'][$index] != '' ) {
-							set_post_thumbnail( $featured_content_id, $values['post_thumbnail'][$index] );
-						}
+				if( isset($values['post_id']) ) {
+					$post_ids = $values['post_id'];
+					$index = 0;
+					$parent_id = '';
+					if( is_array( $post_ids ) ) {
+						foreach ($post_ids as $post_id) {
+							$index++;
+							$parent = 0;
+							if( $values['child'][$index] == 'true' ) {
+								$parent = $parent_id;
+							}
+							$post =
+								array(
+									'ID' => '',
+									'post_title' => $values['post_title'][$index],
+									'post_content' => $values['post_content'][$index],
+									'post_excerpt' => $values['post_content'][$index],
+									'menu_order' => $values['menu_order'][$index],
+									'post_parent' => $parent,
+									'post_type' => self::POST_TYPE,
+									'post_status' => $post_status,
+									'post_date' => date( 'Y-m-d H:i:s', strtotime( $values['post_date'][$index] ) )
+								);
+							$featured_content_id = wp_insert_post( $post );
+							if( $parent == 0 ) {
+								$parent_id = $featured_content_id;
+							}
+							update_post_meta( $featured_content_id, 'fcm_post_parent', $values['post_original'][$index] );
+							wp_set_post_terms( $featured_content_id, array( $featured_area ), self::TAXONOMY, TRUE );
+							if ( $values['post_thumbnail'][$index] != '' ) {
+								set_post_thumbnail( $featured_content_id, $values['post_thumbnail'][$index] );
+							}
 
-						if ( isset( $values['style'][$index] ) && $values['style'][$index] != '' ){
-							wp_set_post_terms( $featured_content_id, array( $values['style'][$index] ), self::STYLE_TAXONOMY, TRUE );
+							if ( isset( $values['style'][$index] ) && $values['style'][$index] != '' ){
+								wp_set_post_terms( $featured_content_id, array( $values['style'][$index] ), self::STYLE_TAXONOMY, TRUE );
+							}
 						}
 					}
 				}
