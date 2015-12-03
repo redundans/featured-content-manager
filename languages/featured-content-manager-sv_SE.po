@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Featured Content Manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-02 21:57+0100\n"
+"POT-Creation-Date: 2015-12-03 11:42+0100\n"
 "PO-Revision-Date: 2015-12-02 21:57+0100\n"
 "Last-Translator: Jesper Nilsson <jesper@klandestino.se>\n"
 "Language-Team: Klandestino AB <kontakt@klandestino.se>\n"
@@ -188,15 +188,15 @@ msgstr "Nytt namn till stil för utvalt innehåll"
 msgid "A default and predefined term for the Featured Area taxonomy."
 msgstr ""
 
-#: public/class-featured-content-manager.php:491
+#: public/class-featured-content-manager.php:494
 msgid "Related posts"
 msgstr ""
 
-#: public/class-featured-content-manager.php:549 updater/updater.php:16
+#: public/class-featured-content-manager.php:552 updater/updater.php:16
 msgid "Featured Content Manager"
 msgstr "Hantering av Utvalt Innehåll"
 
-#: public/class-featured-content-manager.php:549 updater/updater.php:16
+#: public/class-featured-content-manager.php:552 updater/updater.php:16
 msgid "Featured Content"
 msgstr "Utvalt Innehåll"
 
@@ -223,66 +223,70 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: updater/updater.php:27
+#: updater/updater.php:26
 msgid "You need to enter a valid license for Featured Content Manager"
 msgstr ""
 
-#: updater/updater.php:40
+#: updater/updater.php:43
 #, fuzzy
 msgid "Featured Content Manager License Options"
 msgstr "Hantering av Utvalt Innehåll"
 
-#: updater/updater.php:50
+#: updater/updater.php:53
 msgid "License Key"
 msgstr ""
 
-#: updater/updater.php:54
+#: updater/updater.php:57
 msgid "Enter your license key"
 msgstr ""
 
-#: updater/updater.php:60
+#: updater/updater.php:63
 msgid "License active"
 msgstr ""
 
-#: updater/updater.php:63
+#: updater/updater.php:66
 msgid "Expires:"
 msgstr ""
 
-#: updater/updater.php:68 updater/updater.php:72
+#: updater/updater.php:71 updater/updater.php:75
 msgid "Deactivate License"
 msgstr ""
 
-#: updater/updater.php:78
+#: updater/updater.php:81
 msgid "License inactive"
 msgstr ""
 
-#: updater/updater.php:82
+#: updater/updater.php:85
 msgid "Please enter your license key"
 msgstr ""
 
-#: updater/updater.php:86
+#: updater/updater.php:89
+msgid "Please activate your license"
+msgstr ""
+
+#: updater/updater.php:93
 msgid ""
 "You have reached your max number of active sites with this license. Upgrade "
 "your license at:"
 msgstr ""
 
-#: updater/updater.php:90
+#: updater/updater.php:97
 msgid "Wrong license key, please check that you used the correct one."
 msgstr ""
 
-#: updater/updater.php:94
+#: updater/updater.php:101
 msgid "License has expired"
 msgstr ""
 
-#: updater/updater.php:98
+#: updater/updater.php:105
 msgid "Something went wrong, please try again or contact support at"
 msgstr ""
 
-#: updater/updater.php:98
+#: updater/updater.php:105
 msgid "error message:"
 msgstr ""
 
-#: updater/updater.php:104 updater/updater.php:108
+#: updater/updater.php:111 updater/updater.php:115
 msgid "Activate License"
 msgstr ""
 
