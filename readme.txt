@@ -3,7 +3,7 @@ Contributors: klandestino
 Tags: featured content
 Requires at least: 4.1
 Tested up to: 4.4
-Stable tag: 0.4.1
+Stable tag: 0.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,6 +31,10 @@ Yes, all themes that use standard WordPress functionality works out of the box b
 Yes! If you don't want to network activate the plugin it has to be active on the main site for updates to work.
 
 == Changelog ==
+
+= 0.4.2 =
+
+* Bugfix: last featured content is now being deleted correctly
 
 = 0.4.1 =
 
