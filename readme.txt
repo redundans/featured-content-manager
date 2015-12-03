@@ -32,6 +32,11 @@ Yes! If you don't want to network activate the plugin it has to be active on the
 
 == Changelog ==
 
+= 0.4.1 =
+
+* Make sure menu item is always visible
+* Strip tags and shortcode from content before inserting into customizer
+
 = 0.4 =
 
 * UX improvements

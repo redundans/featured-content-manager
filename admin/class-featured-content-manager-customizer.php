@@ -200,7 +200,7 @@ class Featured_Content_Manager_Customizer {
 					$output[$i]['ID'] = get_the_id();
 					$output[$i]['post_title'] = get_the_title();
 					$output[$i]['post_type'] = get_post_type();
-					$output[$i]['post_content'] = wp_trim_words( get_the_content(), 12, '...' );
+					$output[$i]['post_content'] = wp_trim_words( wp_strip_all_tags( strip_shortcodes( get_the_content() ) ), 12, '...' );
 					$i++;
 				}
 				echo json_encode( array( 'error' => FALSE, 'result' => $output ) );

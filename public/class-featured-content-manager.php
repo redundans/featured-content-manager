@@ -295,10 +295,12 @@ class Featured_Content_Manager {
 		$target = $_POST['target'];
 
 		$post = get_post( $post_id );
-		if( has_excerpt($post_id) )
+		if( has_excerpt( $post_id ) ) {
 			$post->post_content = $post->post_excerpt;
-		else
-			$post->post_content = wp_trim_words( $post->post_content );
+		} else {
+
+			$post->post_content = wp_trim_words( wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
+		}
 		$post_thumbnail_id = get_post_thumbnail_id( $post_id );
 		$post_thumbnail = get_post( $post_thumbnail_id );
 		if(!$post_thumbnail){
@@ -549,7 +551,7 @@ class Featured_Content_Manager {
 	}
 
 	public static function menu_page() {
-		add_menu_page( __('Featured Content Manager', 'featured-content-manager' ), __('Featured Content', 'featured-content-manager' ), 'featured-content-manager', '/customize.php?autofocus%5Bpanel%5D=featured_areas&return=%2Fwp-admin%2Findex.php', '', 'dashicons-exerpt-view', 61 );
+		add_menu_page( __('Featured Content Manager', 'featured-content-manager' ), __('Featured Content', 'featured-content-manager' ), 'manage_options', '/customize.php?autofocus%5Bpanel%5D=featured_areas&return=%2Fwp-admin%2Findex.php', '', 'dashicons-exerpt-view', 61 );
 	}
 }
 
