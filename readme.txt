@@ -3,7 +3,7 @@ Contributors: klandestino
 Tags: featured content
 Requires at least: 4.1
 Tested up to: 4.4
-Stable tag: 0.3
+Stable tag: 0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,6 +31,12 @@ Yes, all themes that use standard WordPress functionality works out of the box b
 Yes! If you don't want to network activate the plugin it has to be active on the main site for updates to work.
 
 == Changelog ==
+
+= 0.4 =
+
+* UX improvements
+* WP 4.1 support
+* Use excerpt if it exists
 
 = 0.3 =
 * Adds autoupdater and license support
