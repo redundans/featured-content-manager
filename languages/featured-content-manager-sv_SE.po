@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Featured Content Manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-03 11:42+0100\n"
+"POT-Creation-Date: 2015-12-03 12:55+0100\n"
 "PO-Revision-Date: 2015-12-02 21:57+0100\n"
 "Last-Translator: Jesper Nilsson <jesper@klandestino.se>\n"
 "Language-Team: Klandestino AB <kontakt@klandestino.se>\n"
@@ -188,15 +188,15 @@ msgstr "Nytt namn till stil för utvalt innehåll"
 msgid "A default and predefined term for the Featured Area taxonomy."
 msgstr ""
 
-#: public/class-featured-content-manager.php:494
+#: public/class-featured-content-manager.php:496
 msgid "Related posts"
 msgstr ""
 
-#: public/class-featured-content-manager.php:552 updater/updater.php:16
+#: public/class-featured-content-manager.php:554 updater/updater.php:16
 msgid "Featured Content Manager"
 msgstr "Hantering av Utvalt Innehåll"
 
-#: public/class-featured-content-manager.php:552 updater/updater.php:16
+#: public/class-featured-content-manager.php:554 updater/updater.php:16
 msgid "Featured Content"
 msgstr "Utvalt Innehåll"
 
