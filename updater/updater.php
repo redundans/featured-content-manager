@@ -20,9 +20,8 @@ add_action('admin_menu', 'fcm_settings_menu');
 
 function fcm_admin_notice() {
 	if ( is_main_site() ) :
-		$data 	= get_option( 'fcm_license_data' );
-		$status = $data->license;
-		if ( $status != 'valid' ) :
+		$data 	= get_option( 'fcm_license_data', '' );
+		if ( empty( $data ) || $data->license != 'valid' ) :
 			echo '<div class="error"><p><a href="/wp-admin/options-general.php?page=featured-content-manager-settings">';
 			esc_html_e( 'You need to enter a valid license for Featured Content Manager', 'featured-content-manager' );
 			echo '</a></p></div>';
@@ -33,8 +32,12 @@ add_action( 'admin_notices', 'fcm_admin_notice' );
 
 function fcm_settings_page() {
 	$license 	= get_option( 'fcm_license_key' );
-	$data 	= get_option( 'fcm_license_data' );
-	$status = $data->license;
+	$data 	= get_option( 'fcm_license_data', '' );
+	if ( ! empty( $data ) ) {
+		$status = $data->license;
+	} else {
+		$status = '';
+	}
 	?>
 	<div class="wrap">
 		<h2><?php esc_html_e( 'Featured Content Manager License Options', 'featured-content-manager' ); ?></h2>
@@ -80,6 +83,10 @@ function fcm_settings_page() {
 							<?php if ( empty( $license ) ) { ?>
 								<td>
 									<span><?php esc_html_e( 'Please enter your license key', 'featured-content-manager' ); ?></span>
+								</td>
+							<?php } elseif ( empty( $data->error ) ) { ?>
+								<td>
+									<span><?php esc_html_e( 'Please activate your license', 'featured-content-manager' ); ?></span>
 								</td>
 							<?php } elseif ( $data->error == 'no_activations_left' ) { ?>
 								<td>
