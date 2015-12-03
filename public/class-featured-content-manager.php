@@ -179,6 +179,7 @@ class Featured_Content_Manager {
 				self::TAXONOMY,
 				array(
 					'description'=> __( 'A default and predefined term for the Featured Area taxonomy.', $this->plugin_slug ),
+					'slug' => 'fcm-main-area',
 				)
 			);
 
@@ -451,8 +452,8 @@ class Featured_Content_Manager {
 			$taxquery = array(
 				array(
 					'taxonomy' => Featured_Content_Manager::TAXONOMY,
-					'field' => 'name',
-					'terms' => 'Main Area',
+					'field' => 'slug',
+					'terms' => 'fcm-main-area',
 					'operator'=> 'IN'
 				)
 			);
