@@ -5,6 +5,6 @@ echo "Tag version on Github? (yes/no) ";
 		system( 'git add .' );
 		system( "git commit -m 'Deploying version $version'" );
 		system( 'git push origin master' );
-		// system( "git tag $version" );
-		// system( 'git push origin --tags' );
+		system( "git tag $version" );
+		system( 'git push origin --tags' );
 	}
