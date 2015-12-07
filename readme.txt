@@ -3,7 +3,7 @@ Contributors: klandestino
 Tags: featured content
 Requires at least: 4.1
 Tested up to: 4.4
-Stable tag: 0.4.2
+Stable tag: 0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,7 +32,7 @@ Yes! If you don't want to network activate the plugin it has to be active on the
 
 == Changelog ==
 
-= 0.5.0 =
+= 0.5 =
 
 * Introduce fcm_get_children() for getting children of a specified post
 * Only check if terms exists when opening customizer, makes it faster
