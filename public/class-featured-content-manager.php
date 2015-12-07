@@ -79,6 +79,9 @@ class Featured_Content_Manager {
 		// If the theme supports it, register post_type and taxonomy
 		add_action( 'init', array( $this, 'init' ) );
 
+		//Maybe add terms
+		add_action( 'customize_register', array( $this, 'maybe_add_terms' ) );
+
 		// Add filter for featured item permalink.
 		add_filter( 'post_type_link', array( $this, 'filter_featured_item_permalink'), 10, 3 );
 
@@ -103,7 +106,6 @@ class Featured_Content_Manager {
 	 * @since     0.1.0
 	 */
 	function init() {
-		global $fcm_registered_styles;
 
 		// Register the featured item post type.
 		register_post_type( self::POST_TYPE, array(
@@ -171,6 +173,14 @@ class Featured_Content_Manager {
 				'menu_name'         => __( 'Featured Content Style' ),
 			),
 		) );
+	}
+
+	/**
+	 * Maybe insert terms for featured_areas and featured_styles
+	 * @since 0.5.0
+	 */
+	public function maybe_add_terms() {
+		global $fcm_registered_styles;
 
 		// If featured area taxonomy is registred add Main Area term.
 		if ( ! term_exists( 'Main Area', self::TAXONOMY ) )
@@ -236,6 +246,34 @@ class Featured_Content_Manager {
 					'terms'    => $area,
 				),
 			);
+
+		$query = new WP_Query( $args );
+		return $query;
+	}
+
+	/**
+	 * Return featured content children for a specified featured item.
+	 *
+	 * @uses $wp_query
+	 * @param string/int $post_id
+	 * @return object
+	 *
+	 * @since     0.5.0
+	 */
+	public static function get_children( $post_id ) {
+		if( isset($_REQUEST['wp_customize']) ) {
+			$post_status = 'draft';
+		} else {
+			$post_status = 'publish';
+		}
+
+		$args = array(
+			'post_type' => self::POST_TYPE,
+			'post_parent' => $post_id,
+			'post_status' => $post_status,
+			'orderby'   => 'menu_order',
+			'order'		=> 'ASC',
+		);
 
 		$query = new WP_Query( $args );
 		return $query;
@@ -567,10 +605,17 @@ class Featured_Content_Manager {
  *
  * @since    0.1.0
  */
-function get_featured_content( $area, $post_status = array( 'publish' ) ){
+function fcm_get_content( $area, $post_status = array( 'publish' ) ){
 	return Featured_Content_Manager::get_featured_content( $area, $post_status );
 }
 
-function register_featured_content_styles(  $styles = array() ){
+function fcm_register_styles( $styles = array() ){
 	Featured_Content_Manager::fcm_register_styles( $styles );
+}
+
+function fcm_get_children( $post_id = '' ) {
+	if ( ! $post_id ) {
+		$post_id = get_the_ID();
+	}
+	return Featured_Content_Manager::get_children( $post_id );
 }

@@ -32,6 +32,11 @@ Yes! If you don't want to network activate the plugin it has to be active on the
 
 == Changelog ==
 
+= 0.5.0 =
+
+* Introduce fcm_get_children() for getting children of a specified post
+* Only check if terms exists when opening customizer, makes it faster
+
 = 0.4.2 =
 
 * Bugfix: last featured content is now being deleted correctly
