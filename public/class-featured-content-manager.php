@@ -587,7 +587,7 @@ class Featured_Content_Manager {
 
 	public static function fcm_register_styles( $styles = array() ) {
 		global $fcm_registered_styles;
-        		$fcm_registered_styles = array_merge( (array) $fcm_registered_styles, $styles );
+        	$fcm_registered_styles = array_merge( (array) $fcm_registered_styles, $styles );
 	}
 
 	public static function menu_page() {
