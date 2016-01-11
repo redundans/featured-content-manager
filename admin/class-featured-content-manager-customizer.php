@@ -265,19 +265,18 @@ class Featured_Content_Manager_Customizer {
 								<a href="#" title="Delete thumbnail" class="remove-thumbnail"><?php esc_html_e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
 							</p>
 							<# } else { #>
-								<p>
+							<p>
 								<a href="#" title="Select thumbnail" class="edit-thumbnail"><?php esc_html_e( 'Select thumbnail', $this->plugin_slug ); ?></a>
 							</p>
 							<p>
 								<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail"><?php esc_html_e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
 							</p>
 							<# } #>
-						</div>
 					<?php } ?>
 					<?php
 						if ( ! empty( $styles ) ) {
 							$i = 0;
-							echo '<select name="style[{{data.index}}]">';
+							echo '<select class="widefat" name="style[{{data.index}}]">';
 							foreach ($styles as $style) {
 								if($i==0)
 									echo '<option value="' . $style->term_id . '" selected>' . $style->name . '</option>';
