@@ -14,7 +14,7 @@ class Featured_Content_Manager {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.5';
+	const VERSION = '0.5.1';
 
 	/**
 	 * Unique identifier for featured item post type.
