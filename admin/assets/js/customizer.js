@@ -30,7 +30,7 @@ $(function() {
 				update_preview();
 				changeState = true;
 			}
-		}).disableSelection();
+		});
 	}
 
 	function update_preview(){
