@@ -58,6 +58,7 @@ class Featured_Area_Control extends WP_Customize_Control {
 		$posts_array = get_posts(
 			array(
 				'post_type' => 'featured_item',
+				'post_status' => 'publish',
 				'tax_query' => array(
 					array(
 						'taxonomy' => 'featured_area',

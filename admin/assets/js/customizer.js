@@ -95,12 +95,12 @@ $(function() {
 
 	$(document).on('click', '.remove', function(){
 		$(this).closest('li').remove();
-		update_preview();
+		start_update_preview_timer();
 	});
 
 	$(document).on('click', '.sidebar-delete-icon', function(){
 		$(this).closest('li').remove();
-		update_preview();
+		start_update_preview_timer();
 	});
 
 	$('body').on('click', '.edit-thumbnail', function(e) {
@@ -170,7 +170,7 @@ $(function() {
 			var output = template( response );
 
 			$(target).append( output );
-			update_preview();
+			start_update_preview_timer();
 			connect_sortable();
 		}, "JSON");
 	});
