@@ -9,6 +9,13 @@ This README is for development info only, will be removed during plugin build. P
 4. $ grunt
 5. that's it
 
+## Tests
+Tests are runned with PHPUnit and with mock objects by WP_Mock (https://github.com/10up/wp_mock).
+1. Install WP_Mock with Composer in a terminal: ```composer require --dev 10up/wp_mock:dev-master```
+
+* To run the test locally, install PHPUnit.
+* To run the tests on a Docker container, use the provided Dockunit.json with Dockunit (https://github.com/tlovett1/dockunit). Install with npm: ```npm install -g dockunit```
+
 ## Release
 1. Install the build script 'plugin-build' in your path
 2. cd to /build

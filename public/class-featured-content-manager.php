@@ -14,7 +14,7 @@ class Featured_Content_Manager {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.5.2';
+	const VERSION = '0.5.3';
 
 	/**
 	 * Unique identifier for featured item post type.
@@ -369,35 +369,16 @@ class Featured_Content_Manager {
 	 * @since    1.0
 	 */
 	public static function save_order( $post_status = 'publish', $values ){
+		global $wpdb;
 		if( $post_status == '' ) {
 			$post_status = 'publish';
 		}
+
 		if(isset($values['_wpnonce']) ) {
 			if( wp_verify_nonce( $values['_wpnonce'], 'fcm_save_posts' ) ) {
 				$featured_area = $values['featured_area'];
 
-				$trash_posts = new WP_Query(
-					array(
-						'post_status' => $post_status,
-						'post_type' => self::POST_TYPE,
-						'tax_query' => array(
-							array(
-								'taxonomy' => self::TAXONOMY,
-								'field'    => 'id',
-								'terms'    => $featured_area,
-							)
-						)
-					)
-				);
-
-				if ( $trash_posts->have_posts() ) {
-					while ( $trash_posts->have_posts() ) {
-						$trash_posts->the_post();
-						wp_delete_post( get_the_ID(), true );
-						wp_delete_object_term_relationships( get_the_ID(), self::TAXONOMY, TRUE );
-					}
-					wp_reset_postdata();
-				}
+				$wpdb->query( "DELETE a,b,c FROM $wpdb->posts a LEFT JOIN $wpdb->term_relationships b ON (a.ID = b.object_id) LEFT JOIN $wpdb->postmeta c ON (a.ID = c.post_id) LEFT JOIN $wpdb->term_taxonomy d ON (b.term_taxonomy_id = d.term_taxonomy_id) WHERE d.term_id = '" . $featured_area . "' AND a.post_type = '" . self::POST_TYPE . "' AND a.post_status = '" . $post_status . "'" );
 
 				if( isset($values['post_id']) ) {
 					$post_ids = $values['post_id'];
@@ -433,6 +414,7 @@ class Featured_Content_Manager {
 							}
 
 							if ( isset( $values['style'][$index] ) && $values['style'][$index] != '' ){
+								error_log($values['style'][$index] );
 								wp_set_post_terms( $featured_content_id, array( $values['style'][$index] ), self::STYLE_TAXONOMY, TRUE );
 							}
 						}
