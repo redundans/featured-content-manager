@@ -187,7 +187,7 @@ class Featured_Area_Control extends WP_Customize_Control {
 			$output .= '</select><p>';
 		}
 		$output .= '	<p>
-							<input type="text" name="post_title[' . $index . ']" value="' . $post->post_title . '">
+							<input type="text" name="post_title[' . $index . ']" value="' . esc_js( $post->post_title ) . '">
 						</p>
 						<p>
 							<input type="hidden" name="post_date[' . $index . ']" value="' . $post->post_date . '">
