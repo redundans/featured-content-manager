@@ -55,6 +55,25 @@ class Featured_Content_Tests extends WP_UnitTestCase {
 		$this->assertObjectHasAttribute( 'posts', $query );
 	}
 
+	function test_get_featured_content_query_contains_taxonomi_query_with_correct_term_id() {
+		// Arrange
+		$area = new \stdClass();
+		$area->term_id = 5;
+
+		\WP_Mock::wpFunction( 'get_term_by', array(
+			'times' => 1,
+			'args' => array( 'name', 'Main Area', 'featured_area' ),
+			'return' => $area,
+		) );
+
+		// Act
+		$query = $this->plugin->get_featured_content( 'Main Area' );
+
+		// Assert
+		$this->assertObjectHasAttribute( 'tax_query', $query );
+		$this->assertEquals( 5, $query->tax_query->queries[0]['terms'][0] );
+	}
+
 	function test_get_plugin_slug_returns_slug() {
 		$slug = $this->plugin->get_plugin_slug();
 		$expected_slug = 'featured-content-manager';

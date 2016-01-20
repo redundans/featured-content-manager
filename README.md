@@ -11,6 +11,7 @@ This README is for development info only, will be removed during plugin build. P
 
 ## Tests
 Tests are runned with PHPUnit and with mock objects by WP_Mock (https://github.com/10up/wp_mock).
+
 1. Install WP_Mock with Composer in a terminal: ```composer require --dev 10up/wp_mock:dev-master```
 
 * To run the test locally, install PHPUnit.
