@@ -14,7 +14,7 @@ class Featured_Content_Manager {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.5.2';
+	const VERSION = '0.5.3';
 
 	/**
 	 * Unique identifier for featured item post type.
@@ -333,10 +333,12 @@ class Featured_Content_Manager {
 		$target = $_POST['target'];
 
 		$post = get_post( $post_id );
+		if( isset( $post->post_title ) ) {
+			$post->post_title = html_entity_decode( $post->post_title );
+		}
 		if( has_excerpt( $post_id ) ) {
 			$post->post_content = $post->post_excerpt;
 		} else {
-
 			$post->post_content = wp_trim_words( wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
 		}
 		$post_thumbnail_id = get_post_thumbnail_id( $post_id );

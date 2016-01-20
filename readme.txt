@@ -3,7 +3,7 @@ Contributors: klandestino
 Tags: featured content
 Requires at least: 4.1
 Tested up to: 4.4
-Stable tag: 0.5.2
+Stable tag: 0.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,8 +32,11 @@ Yes! If you don't want to network activate the plugin it has to be active on the
 
 == Changelog ==
 
-= 0.5.2 =
+= 0.5.3 =
 
+* Bugfix: Escapes post title correctly in customizer
+
+= 0.5.2 =
 * A faster function for deleting old drafts when updating featured items in the customizer
 
 = 0.5.1 =

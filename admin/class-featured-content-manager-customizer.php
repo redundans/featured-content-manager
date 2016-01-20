@@ -198,7 +198,7 @@ class Featured_Content_Manager_Customizer {
 				while ( $search_query->have_posts() ) {
 					$search_query->the_post();
 					$output[$i]['ID'] = get_the_id();
-					$output[$i]['post_title'] = get_the_title();
+					$output[$i]['post_title'] = html_entity_decode(get_the_title());
 					$output[$i]['post_type'] = get_post_type();
 					$output[$i]['post_content'] = wp_trim_words( wp_strip_all_tags( strip_shortcodes( get_the_content() ) ), 12, '...' );
 					$i++;
@@ -245,7 +245,7 @@ class Featured_Content_Manager_Customizer {
 				<div class="sidebar-name-arrow"><span class="toggle-indicator" aria-hidden="true"></span></div>
 				<div class="sidebar-parent-arrow"></div>
 				<div class="sidebar-delete-icon"></div>
-				<h4>{{data.post.post_title}}</h4>
+				<h4>{{{data.post.post_title}}}</h4>
 			</div>
 			<div class="fcm-inside">
 				<fieldset name="post-{{data.post.ID}}">
