@@ -81,9 +81,10 @@ class Featured_Content_Manager {
 
 		//Maybe add terms
 		add_action( 'customize_register', array( $this, 'maybe_add_terms' ) );
-
-		// Add filter for featured item permalink.
-		add_filter( 'post_type_link', array( $this, 'filter_featured_item_permalink'), 10, 3 );
+		
+		// Add featured content to post object
+		add_action( 'the_post', array( $this, 'populate_the_post'), 10, 2 );
+		add_action( 'get_post_metadata', array( $this, 'populate_the_thumbnail'), 10, 4 );
 
 		/*
 		 * Add action for altering main query.
@@ -227,7 +228,8 @@ class Featured_Content_Manager {
 		if( isset($_REQUEST['wp_customize']) ) $post_status = 'draft';
 		if( !is_int( $area ) ) {
 			$area = get_term_by( 'name', $area, self::TAXONOMY );
-			$area = $area->term_id;
+		} else {
+			$area = get_term_by( 'id', $area, self::TAXONOMY );
 		}
 
 		$args = array(
@@ -243,11 +245,41 @@ class Featured_Content_Manager {
 				array(
 					'taxonomy' => self::TAXONOMY,
 					'field'    => 'id',
-					'terms'    => $area,
+					'terms'    => $area->term_id,
 				),
 			);
 
-		$query = new WP_Query( $args );
+
+		$taxquery = array(
+			array(
+				'taxonomy' => self::TAXONOMY,
+				'field'    => 'id',
+				'terms'    => $area->term_id,
+				'operator'=> 'IN'
+			)
+		);
+
+		$posts = get_posts( array(
+			'post_type' => self::POST_TYPE,
+			'post_status' => $post_status,
+			$taxquery,
+			'post_parent' => 0,
+			'posts_per_page' => -1,
+			'orderby' => 'menu_order',
+			'order' => 'ASC'
+		) );
+
+		foreach ( wp_list_pluck( $posts, 'ID' ) as $id ) {
+            $post_ids[] = get_post_meta( $id, 'fcm_post_parent', TRUE );
+        }
+        $args2 = array(
+			'post__in' => $post_ids,
+			'orderby' => 'post__in',
+			'fcm' => true,
+			'fcm_area'   => $area->slug
+		);
+
+		$query = new WP_Query( $args2 );
 		return $query;
 	}
 
@@ -414,7 +446,6 @@ class Featured_Content_Manager {
 							}
 
 							if ( isset( $values['style'][$index] ) && $values['style'][$index] != '' ){
-								error_log($values['style'][$index] );
 								wp_set_post_terms( $featured_content_id, array( $values['style'][$index] ), self::STYLE_TAXONOMY, TRUE );
 							}
 						}
@@ -469,11 +500,9 @@ class Featured_Content_Manager {
 	 * @since    1.0
 	 */
 	function fcm_alter_main_query( $query ) {
-
 		if ( !current_theme_supports($this->plugin_slug) && term_exists( 'Main Area', Featured_Content_Manager::TAXONOMY ) && $query->is_main_query() && $query->is_home() ){
 			global $wp_customize;
-			if ( isset( $wp_customize ) )
-				$query->set('post_status', 'draft');
+			$post_status = (isset( $wp_customize )) ? 'draft' : 'publish';
 
 			$taxquery = array(
 				array(
@@ -484,12 +513,83 @@ class Featured_Content_Manager {
 				)
 			);
 
-			$query->set('post_type', Featured_Content_Manager::POST_TYPE);
-			$query->set('tax_query', $taxquery );
-			$query->set('post_parent', 0);
-			$query->set('orderby', 'menu_order');
-			$query->set('order', 'ASC');
+			$posts = get_posts( array(
+				'post_type' => Featured_Content_Manager::POST_TYPE,
+				'post_status' => $post_status,
+				$taxquery,
+				'post_parent' => 0,
+				'posts_per_page' => -1,
+				'orderby' => 'menu_order',
+				'order' => 'ASC'
+			) );
+
+			$post_ids = array();
+			foreach ( wp_list_pluck( $posts, 'ID' ) as $id ) {
+				$post_ids[] = get_post_meta( $id, 'fcm_post_parent', TRUE );
+			}
+			$query->set( 'post__in', $post_ids );
+			$query->set( 'orderby', 'post__in' );
+			$query->set( 'fcm', true );
+			$query->set( 'fcm_area', 'fcm-main-area' );
 		}
+	}
+
+	/**
+	 * A functions to populate the post object with the featured item title, content and excerpt
+	 * @param  [type] $post  [description]
+	 * @param  [type] $query [description]
+	 * @return [type]        [description]
+	 */
+	function populate_the_post( $post, $query ) {
+		if ( isset( $query->query_vars['fcm'] ) ) :
+			global $wp_customize;
+			$post_status = (isset( $wp_customize )) ? 'draft' : 'publish';
+
+			$org = get_posts( array(
+				'post_type' => 'featured_item',
+				'post_parent' => 0,
+				'post_status' => $post_status,
+				'tax_query' => array(
+					array(
+						'taxonomy' => Featured_Content_Manager::TAXONOMY,
+						'field' => 'slug',
+						'terms' => $query->query_vars['fcm_area'],
+						'operator'=> 'IN'
+					)
+				),
+				'menu_order' => $query->current_post,
+
+			) );
+			if( isset($org[0]) ){
+				$post->post_excerpt = $org[0]->post_excerpt;
+				$post->post_title = $org[0]->post_title;
+				$post->post_content = $org[0]->post_content;
+				$post->fcm_org_ID = $org[0]->ID;
+			}
+		endif;
+	}
+
+	/**
+	 * A function to populate the post object with the featured item thumbnail
+	 * @param  [type] $value     [description]
+	 * @param  [type] $object_id [description]
+	 * @param  [type] $meta_key  [description]
+	 * @param  [type] $single    [description]
+	 * @return [type]            [description]
+	 */
+	function populate_the_thumbnail( $value, $object_id, $meta_key, $single ) {
+		global $post;
+
+		if ( $meta_key !== '_thumbnail_id' ) {
+			return;
+		}
+
+		if( isset($post->ID)):
+
+		if ( $post->ID == $object_id && isset( $post->fcm_org_ID ) ) {
+			return get_post_thumbnail_id( $post->fcm_org_ID );
+		}
+		endif;
 	}
 
 
@@ -516,40 +616,14 @@ class Featured_Content_Manager {
 				}
 				$content = sprintf(
 					'%s <div class="featured-content-children"><h2>%s</h2><ul>%s</ul></div>',
-		            			$content,
-		            			esc_html( 'Related posts', 'featured-content-manager' ),
-		            			$featured_children
-		            		);
+								$content,
+								esc_html( 'Related posts', 'featured-content-manager' ),
+								$featured_children
+							);
 			}
 			return $content;
 		}
 		return $content;
-	}
-
-	/**
-	 * Filter that returns the original post url when permalink for featured
-	 * item is requested.
-	 *
-	 * @param string $url
-	 * @param string $post
-	 * @return string
-	 *
-	 * @since    0.1.0
-	 */
-	public function filter_featured_item_permalink( $url, $post ){
-
-		// Only do this if post type is featured item
-		if ( $post->post_type === Featured_Content_Manager::POST_TYPE ) {
-
-			// Get original post id
-			$post_parent = get_post_meta( $post->ID, 'fcm_post_parent', TRUE );
-
-			// If original post is a featured item this will loop infinitly, halt.
-			if( get_post_type( $post_parent ) != 'featured_item' ){
-				$url = get_permalink( $post_parent );
-			}
-		}
-		return $url;
 	}
 
 	/**
@@ -558,20 +632,22 @@ class Featured_Content_Manager {
 	 * @param  array $classes  Predefined classes
 	 * @return array           Predefined plus new classes
 	 */
-	public static function fcm_style_post_class( $classes ) {
-		global $post;
-		if( get_post_type($post->ID) === self::POST_TYPE && taxonomy_exists(self::STYLE_TAXONOMY) ) {
-			$style_list = wp_get_post_terms($post->ID, self::STYLE_TAXONOMY);
-			foreach($style_list as $style) {
-				$classes[] = $style->slug;
+	public static function fcm_style_post_class( $classes, $class, $post_id ) {
+		global $post, $query;
+
+			if ( isset( $post->fcm_org_ID ) ) {
+				$style_list = wp_get_post_terms($post->fcm_org_ID, self::STYLE_TAXONOMY);
+					foreach($style_list as $style) {
+					$classes[] = $style->slug;
+				}
 			}
-		}
+
 		return $classes;
 	}
 
 	public static function fcm_register_styles( $styles = array() ) {
 		global $fcm_registered_styles;
-        	$fcm_registered_styles = array_merge( (array) $fcm_registered_styles, $styles );
+			$fcm_registered_styles = array_merge( (array) $fcm_registered_styles, $styles );
 	}
 
 	public static function menu_page() {

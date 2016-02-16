@@ -65,7 +65,7 @@ add_action( 'plugins_loaded', array( 'Featured_Content_Manager', 'get_instance' 
 /*
  * Add style class for featured items
  */
-add_filter( 'post_class', array( 'Featured_Content_Manager', 'fcm_style_post_class' ) );
+add_filter( 'post_class', array( 'Featured_Content_Manager', 'fcm_style_post_class' ), 10, 3 );
 
 
 /*----------------------------------------------------------------------------*
