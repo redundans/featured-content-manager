@@ -262,7 +262,7 @@ class Featured_Content_Manager {
 		$posts = get_posts( array(
 			'post_type' => self::POST_TYPE,
 			'post_status' => $post_status,
-			$taxquery,
+			'tax_query' => $taxquery,
 			'post_parent' => 0,
 			'posts_per_page' => -1,
 			'orderby' => 'menu_order',
@@ -560,6 +560,7 @@ class Featured_Content_Manager {
 				'menu_order' => $query->current_post,
 
 			) );
+			
 			if( isset($org[0]) ){
 				$post->post_excerpt = $org[0]->post_excerpt;
 				$post->post_title = $org[0]->post_title;
