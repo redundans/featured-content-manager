@@ -60,11 +60,10 @@ class Featured_Content_Manager_Customizer {
 	 */
 	public static function get_instance() {
 
-		// If the single instance hasn't been set, set it now.
+		// If the single instance hasn't been set, set it now
 		if ( null == self::$instance ) {
 			self::$instance = new self;
 		}
-
 		return self::$instance;
 	}
 
@@ -74,9 +73,7 @@ class Featured_Content_Manager_Customizer {
 	 * @since     0.1.0
 	 */
 	public function enqueue_admin_styles() {
-
 		wp_enqueue_style( $this->plugin_slug .'-customizer-styles', plugins_url( 'assets/css/customizer.min.css', __FILE__ ), array(), Featured_Content_Manager::VERSION );
-
 	}
 
 	/**
@@ -85,9 +82,7 @@ class Featured_Content_Manager_Customizer {
 	 * @since     0.1.0
 	 */
 	public function enqueue_admin_scripts() {
-
 		wp_enqueue_script( $this->plugin_slug . '-customizer-script', plugins_url( 'assets/js/customizer.min.js', __FILE__ ), array( 'jquery', 'jquery-ui-sortable' ), Featured_Content_Manager::VERSION );
-
 	}
 
 	/**
@@ -107,13 +102,19 @@ class Featured_Content_Manager_Customizer {
 	 * @since    0.1.0
 	 */
 	public function featured_area_customize_save($wp_customize){
+
+		// Get a insance of the featured content class
 		Featured_Content_Manager::get_instance();
+
+		// Save each featured area setting
 		foreach ( $wp_customize->settings() as $setting ) {
 			if( strpos($setting->id,'featured_area_') !== false ){
 				$form = $wp_customize->get_setting( $setting->id )->value();
 
 				$values = array();
 				parse_str($form, $values);
+
+				// Send form values to private save_order function
 				Featured_Content_Manager::save_order('publish', $values);
 			}
 		}
@@ -135,20 +136,25 @@ class Featured_Content_Manager_Customizer {
 	 */
 	public function featured_area_customize_register( $wp_customize ){
 
+		// Include Featured_Area_Control class
 		require( plugin_dir_path( __FILE__ ) . 'includes/class-featured-area-control.php' );
 
+		// Add customizer panel for featured areas
 		$wp_customize->add_panel( 'featured_areas', array(
 			'title'       => __('Feature Content Manager', $this->plugin_slug ),
 			'description' => '<p>' . __( 'This panel is used for managing featured areas. You can add pages and posts.', $this->plugin_slug ) . '</p>',
 			'priority'    => 20
 		) );
 
+		// Get all featured areas created by the template or the plugin
 		$featured_areas = get_terms( Featured_Content_Manager::TAXONOMY, array( 'hide_empty' => false, 'orderby' => 'id', 'order' => 'DESC' ) );
 
+		// For each featured area term registred
 		foreach ($featured_areas as $featured_area) :
 			$section_id = 'featured_area_' . $featured_area->term_id;
 			$area_name_setting_id = $section_id . '[name]';
 
+			// Add customizer section
 			$wp_customize->add_section( $section_id,
 				array(
 					'title' => $featured_area->name,
@@ -157,6 +163,7 @@ class Featured_Content_Manager_Customizer {
 				)
 			);
 
+			// Add customizer setting
 			$wp_customize->add_setting( $area_name_setting_id,
 				array(
 					'default' => '',
@@ -164,6 +171,7 @@ class Featured_Content_Manager_Customizer {
 				)
 			);
 
+			// And last add a controller
 			$wp_customize->add_control(
 				new Featured_Area_Control( $wp_customize, 'featured-area-'.$featured_area->term_id,
 					array(
@@ -185,13 +193,18 @@ class Featured_Content_Manager_Customizer {
 	 */
 	function featured_content_search(){
 
+		// Return error if no search term was found
 		if( isset($_REQUEST['search_term']) ){
+
+			// Create query for the search
 			$search_query = new WP_Query( array(
 					's' => $_REQUEST['search_term'],
 					'post_type' => array('post','page'),
 					'post_per_page' => '10'
 				)
 			);
+
+			// Populate the output and return as JSON
 			if ( $search_query->have_posts() ) {
 				$output = array();
 				$i = 0;

@@ -86,16 +86,10 @@ class Featured_Content_Manager {
 		add_action( 'the_post', array( $this, 'populate_the_post'), 10, 2 );
 		add_action( 'get_post_metadata', array( $this, 'populate_the_thumbnail'), 10, 4 );
 
-		/*
-		 * Add action for altering main query.
-		 *
-		 */
+		// Add action for altering main query.
 		add_action( 'pre_get_posts', array( $this, 'fcm_alter_main_query' ) );
 
-		/*
-		 * Add action for population children.
-		 *
-		 */
+		// Add action for population children.
 		add_filter( 'the_excerpt', array( $this, 'fcm_populate_children' ) );
 		add_filter( 'the_content', array( $this, 'fcm_populate_children' ) );
 
@@ -110,35 +104,35 @@ class Featured_Content_Manager {
 
 		// Register the featured item post type.
 		register_post_type( self::POST_TYPE, array(
-			'public'               => false,
-			'show_ui'              => true,
+			'public'     => false,
+			'show_ui'    => true,
 			'show_in_menu'         => false,
-			'taxonomies'           => array( self::TAXONOMY ),
-			'supports'             => array( 'title', 'thumbnail', 'excerpt' ),
-			'labels'               => array(
-				'name'               => _x( 'Featured Items', 'post type general name', $this->plugin_slug ),
+			'taxonomies' => array( self::TAXONOMY ),
+			'supports'   => array( 'title', 'thumbnail', 'excerpt' ),
+			'labels'     => array(
+				'name'     => _x( 'Featured Items', 'post type general name', $this->plugin_slug ),
 				'singular_name'      => _x( 'Featured Item', 'post type singular name', $this->plugin_slug ),
-				'add_new'            => _x( 'Add New', 'Featured Item' ),
+				'add_new'  => _x( 'Add New', 'Featured Item' ),
 				'add_new_item'       => __( 'Add New Featured Item', $this->plugin_slug ),
-				'edit_item'          => __( 'Edit Featured Item', $this->plugin_slug ),
-				'new_item'           => __( 'New Featured Item', $this->plugin_slug ),
-				'view_item'          => __( 'View Featured Item', $this->plugin_slug ),
+				'edit_item'=> __( 'Edit Featured Item', $this->plugin_slug ),
+				'new_item' => __( 'New Featured Item', $this->plugin_slug ),
+				'view_item'=> __( 'View Featured Item', $this->plugin_slug ),
 				'search_items'       => __( 'Search Featured Items', $this->plugin_slug ),
-				'not_found'          => __( 'No Featured Items found', $this->plugin_slug ),
+				'not_found'=> __( 'No Featured Items found', $this->plugin_slug ),
 				'not_found_in_trash' => __( 'No Featured Items found in Trash', $this->plugin_slug ),
 			),
 		) );
 
 		// Register the featured area taxonomy.
 		register_taxonomy( self::TAXONOMY, array( self::POST_TYPE, 'post' ), array(
-			'public'            => false,
+			'public'  => false,
 			'hierarchical'      => true,
-			'show_ui'           => false,
+			'show_ui' => false,
 			'show_admin_column' => false,
 			'show_in_menu'      => false,
 			'description'       => __( 'This is some text explaining that the theme has this featured location.' ),
-			'labels'            => array(
-				'name'              => _x( 'Featured Area', 'taxonomy general name', $this->plugin_slug ),
+			'labels'  => array(
+				'name'    => _x( 'Featured Area', 'taxonomy general name', $this->plugin_slug ),
 				'singular_name'     => _x( 'Featured Area', 'taxonomy singular name', $this->plugin_slug ),
 				'search_items'      => __( 'Search Featured Areas', $this->plugin_slug ),
 				'all_items'         => __( 'All Featured Areas', $this->plugin_slug ),
@@ -154,14 +148,14 @@ class Featured_Content_Manager {
 
 		// Register the featured content style
 		register_taxonomy( self::STYLE_TAXONOMY, array( self::POST_TYPE ), array(
-			'public'            => false,
+			'public'  => false,
 			'hierarchical'      => true,
-			'show_ui'           => false,
+			'show_ui' => false,
 			'show_admin_column' => false,
 			'show_in_menu'      => false,
 			'description'       => __( 'This is some text explaining that the theme has this featured location.' ),
-			'labels'            => array(
-				'name'              => _x( 'Featured Content Style', 'taxonomy general name', $this->plugin_slug ),
+			'labels'  => array(
+				'name'    => _x( 'Featured Content Style', 'taxonomy general name', $this->plugin_slug ),
 				'singular_name'     => _x( 'Featured Content Style', 'taxonomy singular name', $this->plugin_slug ),
 				'search_items'      => __( 'Search Featured Content Styles', $this->plugin_slug ),
 				'all_items'         => __( 'All Featured Content Styles', $this->plugin_slug ),
@@ -269,8 +263,10 @@ class Featured_Content_Manager {
 			'order' => 'ASC'
 		) );
 
+		$post_ids = array();
+
 		foreach ( wp_list_pluck( $posts, 'ID' ) as $id ) {
-            $post_ids[] = get_post_meta( $id, 'fcm_post_parent', TRUE );
+  $post_ids[] = get_post_meta( $id, 'fcm_post_parent', TRUE );
         }
         $args2 = array(
 			'post__in' => $post_ids,
@@ -536,15 +532,19 @@ class Featured_Content_Manager {
 
 	/**
 	 * A functions to populate the post object with the featured item title, content and excerpt
-	 * @param  [type] $post  [description]
-	 * @param  [type] $query [description]
-	 * @return [type]        [description]
+	 * @param  object $post
+	 * @param  object $query
 	 */
 	function populate_the_post( $post, $query ) {
+
+		// Stop if query_vars does not includes a fcm parameter
 		if ( isset( $query->query_vars['fcm'] ) ) :
 			global $wp_customize;
+
+			// Set post status to query
 			$post_status = (isset( $wp_customize )) ? 'draft' : 'publish';
 
+			// Build our query
 			$org = get_posts( array(
 				'post_type' => 'featured_item',
 				'post_parent' => 0,
@@ -561,6 +561,7 @@ class Featured_Content_Manager {
 
 			) );
 			
+			// If query return posts, populate the post object with the featured item title, content and excerpt
 			if( isset($org[0]) ){
 				$post->post_excerpt = $org[0]->post_excerpt;
 				$post->post_title = $org[0]->post_title;
@@ -571,26 +572,28 @@ class Featured_Content_Manager {
 	}
 
 	/**
-	 * A function to populate the post object with the featured item thumbnail
-	 * @param  [type] $value     [description]
-	 * @param  [type] $object_id [description]
-	 * @param  [type] $meta_key  [description]
-	 * @param  [type] $single    [description]
-	 * @return [type]            [description]
+	 * A function that returns the featurd item thumbnail
+	 * @param  [type] $value
+	 * @param  integer $object_id
+	 * @param  string $meta_key
+	 * @param  bool $single
+	 *
+	 * @since  0.5
 	 */
 	function populate_the_thumbnail( $value, $object_id, $meta_key, $single ) {
 		global $post;
 
+		// Stop if the meta key is not that of a thumbnail
 		if ( $meta_key !== '_thumbnail_id' ) {
 			return;
 		}
 
-		if( isset($post->ID)):
-
-		if ( $post->ID == $object_id && isset( $post->fcm_org_ID ) ) {
-			return get_post_thumbnail_id( $post->fcm_org_ID );
+		// If the global post_object exist and has a fcm_org_ID parameter return the featured item thumbnail 
+		if ( isset( $post->ID ) ) {
+			if ( $post->ID == $object_id && isset( $post->fcm_org_ID ) ) {
+				return get_post_thumbnail_id( $post->fcm_org_ID );
+			}
 		}
-		endif;
 	}
 
 
@@ -599,13 +602,21 @@ class Featured_Content_Manager {
 	 *
 	 * @param string $content
 	 *
-	 * @since    1.0
+	 * @since 0.5
 	 */
 	function fcm_populate_children( $content ){
-		if ( current_theme_supports($this->plugin_slug) )
+
+		// Stop if current theme manualy configure Featured Items
+		if ( current_theme_supports( $this->plugin_slug ) )
 			return $content;
+
+		// Stop if the post_type is not Featured Item
 		if( $GLOBALS['post']->post_type == Featured_Content_Manager::POST_TYPE ){
+
+			// Get all the children post objects 
 			$children = get_children( array( 'post_parent' => $GLOBALS['post']->ID, 'post_type' => Featured_Content_Manager::POST_TYPE, 'numberposts' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' ), ARRAY_A );
+
+			// If there is children add Markup to the parent post_content
 			if ( $children ) {
 				$featured_children = '';
 				foreach ( $children as $child ) {
@@ -631,26 +642,37 @@ class Featured_Content_Manager {
 	 * Adds the featured item style term as post class
 	 *
 	 * @param  array $classes  Predefined classes
-	 * @return array           Predefined plus new classes
+	 * @return array Predefined plus new classes
+	 * 
 	 */
 	public static function fcm_style_post_class( $classes, $class, $post_id ) {
 		global $post, $query;
 
-			if ( isset( $post->fcm_org_ID ) ) {
-				$style_list = wp_get_post_terms($post->fcm_org_ID, self::STYLE_TAXONOMY);
-					foreach($style_list as $style) {
-					$classes[] = $style->slug;
-				}
+		// If the global post object has a fcm_org_ID parameter populate the class array with each of the featured item styles term slug
+		if ( isset( $post->fcm_org_ID ) ) {
+			$style_list = wp_get_post_terms($post->fcm_org_ID, self::STYLE_TAXONOMY);
+			foreach($style_list as $style) {
+				$classes[] = $style->slug;
 			}
-
+		}
 		return $classes;
 	}
 
+	/**
+	 * A function that merges an array to the global fcm_registered_styles
+	 * 
+	 * @param  array  $styles
+	 * 
+	 */
 	public static function fcm_register_styles( $styles = array() ) {
 		global $fcm_registered_styles;
-			$fcm_registered_styles = array_merge( (array) $fcm_registered_styles, $styles );
+		$fcm_registered_styles = array_merge( (array) $fcm_registered_styles, $styles );
 	}
 
+	/**
+	 * A function that adds the a menu objevt for the featured content panel in the customizer
+	 * 
+	 */
 	public static function menu_page() {
 		add_menu_page( __('Featured Content Manager', 'featured-content-manager' ), __('Featured Content', 'featured-content-manager' ), 'manage_options', '/customize.php?autofocus%5Bpanel%5D=featured_areas&return=%2Fwp-admin%2Findex.php', '', 'dashicons-exerpt-view', 61 );
 	}
@@ -670,10 +692,25 @@ function fcm_get_content( $area, $post_status = array( 'publish' ) ){
 	return Featured_Content_Manager::get_featured_content( $area, $post_status );
 }
 
+/**
+ * A public function for the register style function
+ * 
+ * @param  array  $styles
+ *
+ * @since    0.5
+ */
 function fcm_register_styles( $styles = array() ){
 	Featured_Content_Manager::fcm_register_styles( $styles );
 }
 
+/**
+ * A public function that returns a WP_Query object from public
+ * 
+ * @param  string $post_id 
+ * @return object WP_Query
+ *
+ * @since    0.5
+ */
 function fcm_get_children( $post_id = '' ) {
 	if ( ! $post_id ) {
 		$post_id = get_the_ID();
