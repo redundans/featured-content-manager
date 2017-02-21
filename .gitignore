@@ -7,3 +7,4 @@ admin/assets/css/customizer.min.css
 admin/assets/js/customizer.min.js
 .sass-cache
 languages/featured-content-manager.pot
+vendor/*

@@ -1,5 +1,25 @@
 {
-    "require-dev": {
-        "10up/wp_mock": "dev-master"
-    }
+	"name": "redundans/featured-content-manager",
+	"description": "Featured Content Manager lets users create featured items that mirrors posts - then order them and edit their representation inside featured areas.",
+	"keywords": [
+		"wordpress",
+		"customizer",
+		"klandestino"
+	],
+	"homepage": "https://klandestino.se",
+	"license": "GPLv2 or later",
+	"authors": [
+		{
+			"name": "Klandestino AB",
+			"homepage": "https://klandestino.se"
+		}
+	],
+	"type": "wordpress-plugin",
+	"require": {
+		"php": ">=5.6",
+		"composer/installers": "~v1.0.12"
+	},
+	"require-dev": {
+		"10up/wp_mock": "dev-master"
+	}
 }
