@@ -14,7 +14,7 @@ class Featured_Content_Manager {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.5.3';
+	const VERSION = '0.6';
 
 	/**
 	 * Unique identifier for featured item post type.
@@ -81,7 +81,7 @@ class Featured_Content_Manager {
 
 		//Maybe add terms
 		add_action( 'customize_register', array( $this, 'maybe_add_terms' ) );
-		
+
 		// Add featured content to post object
 		add_action( 'the_post', array( $this, 'populate_the_post'), 10, 2 );
 		add_action( 'get_post_metadata', array( $this, 'populate_the_thumbnail'), 10, 4 );
@@ -560,7 +560,7 @@ class Featured_Content_Manager {
 				'menu_order' => $query->current_post,
 
 			) );
-			
+
 			// If query return posts, populate the post object with the featured item title, content and excerpt
 			if( isset($org[0]) ){
 				$post->post_excerpt = $org[0]->post_excerpt;
@@ -588,7 +588,7 @@ class Featured_Content_Manager {
 			return;
 		}
 
-		// If the global post_object exist and has a fcm_org_ID parameter return the featured item thumbnail 
+		// If the global post_object exist and has a fcm_org_ID parameter return the featured item thumbnail
 		if ( isset( $post->ID ) ) {
 			if ( $post->ID == $object_id && isset( $post->fcm_org_ID ) ) {
 				return get_post_thumbnail_id( $post->fcm_org_ID );
@@ -613,7 +613,7 @@ class Featured_Content_Manager {
 		// Stop if the post_type is not Featured Item
 		if( $GLOBALS['post']->post_type == Featured_Content_Manager::POST_TYPE ){
 
-			// Get all the children post objects 
+			// Get all the children post objects
 			$children = get_children( array( 'post_parent' => $GLOBALS['post']->ID, 'post_type' => Featured_Content_Manager::POST_TYPE, 'numberposts' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' ), ARRAY_A );
 
 			// If there is children add Markup to the parent post_content
@@ -643,7 +643,7 @@ class Featured_Content_Manager {
 	 *
 	 * @param  array $classes  Predefined classes
 	 * @return array Predefined plus new classes
-	 * 
+	 *
 	 */
 	public static function fcm_style_post_class( $classes, $class, $post_id ) {
 		global $post, $query;
@@ -660,9 +660,9 @@ class Featured_Content_Manager {
 
 	/**
 	 * A function that merges an array to the global fcm_registered_styles
-	 * 
+	 *
 	 * @param  array  $styles
-	 * 
+	 *
 	 */
 	public static function fcm_register_styles( $styles = array() ) {
 		global $fcm_registered_styles;
@@ -671,7 +671,7 @@ class Featured_Content_Manager {
 
 	/**
 	 * A function that adds the a menu objevt for the featured content panel in the customizer
-	 * 
+	 *
 	 */
 	public static function menu_page() {
 		add_menu_page( __('Featured Content Manager', 'featured-content-manager' ), __('Featured Content', 'featured-content-manager' ), 'manage_options', '/customize.php?autofocus%5Bpanel%5D=featured_areas&return=%2Fwp-admin%2Findex.php', '', 'dashicons-exerpt-view', 61 );
@@ -694,7 +694,7 @@ function fcm_get_content( $area, $post_status = array( 'publish' ) ){
 
 /**
  * A public function for the register style function
- * 
+ *
  * @param  array  $styles
  *
  * @since    0.5
@@ -705,8 +705,8 @@ function fcm_register_styles( $styles = array() ){
 
 /**
  * A public function that returns a WP_Query object from public
- * 
- * @param  string $post_id 
+ *
+ * @param  string $post_id
  * @return object WP_Query
  *
  * @since    0.5
