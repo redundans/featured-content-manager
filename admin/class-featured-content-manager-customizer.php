@@ -215,6 +215,8 @@ class Featured_Content_Manager_Customizer {
 					$output[$i]['ID'] = get_the_id();
 					if ( isset( $post->site_id ) ) {
 						$output[$i]['site_id'] = $post->site_id;
+					} else {
+						$output[$i]['site_id'] = '';
 					}
 					$output[$i]['post_title'] = html_entity_decode(get_the_title());
 					$output[$i]['post_type'] = get_post_type();
