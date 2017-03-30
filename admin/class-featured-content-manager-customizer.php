@@ -194,15 +194,16 @@ class Featured_Content_Manager_Customizer {
 	function featured_content_search(){
 
 		// Return error if no search term was found
-		if( isset($_REQUEST['search_term']) ){
+		if ( isset( $_REQUEST['search_term'] ) ) {
 
 			// Create query for the search
-			$search_query = new WP_Query( array(
-					's' => $_REQUEST['search_term'],
-					'post_type' => array('post','page'),
-					'post_per_page' => '10'
-				)
-			);
+			$search_args = apply_filters( 'fcm_search_args', array(
+				's' => $_REQUEST['search_term'],
+				'post_type' => array( 'post', 'page' ),
+				'post_per_page' => '10',
+			) );
+
+			$search_query = new WP_Query( $search_args );
 
 			// Populate the output and return as JSON
 			if ( $search_query->have_posts() ) {
@@ -210,7 +211,11 @@ class Featured_Content_Manager_Customizer {
 				$i = 0;
 				while ( $search_query->have_posts() ) {
 					$search_query->the_post();
+					global $post;
 					$output[$i]['ID'] = get_the_id();
+					if ( isset( $post->site_id ) ) {
+						$output[$i]['site_id'] = $post->site_id;
+					}
 					$output[$i]['post_title'] = html_entity_decode(get_the_title());
 					$output[$i]['post_type'] = get_post_type();
 					$output[$i]['post_content'] = wp_trim_words( wp_strip_all_tags( strip_shortcodes( get_the_content() ) ), 12, '...' );
@@ -266,6 +271,7 @@ class Featured_Content_Manager_Customizer {
 					<input type="hidden" name="area[{{data.index}}]" value="{{data.term}}">
 					<input type="hidden" name="menu_order[{{data.index}}]" value="{{data.post.menu_order}}">
 					<input type="hidden" name="post_id[{{data.index}}]" value="{{data.post.ID}}">
+					<input type="hidden" name="site_id[{{data.index}}]" value="{{data.site_id}}">
 					<input type="hidden" name="child[{{data.index}}]" value="{{data.child}}">
 					<input type="hidden" name="post_original[{{data.index}}]" value="{{data.post_original.ID}}">
 					<?php if ( current_theme_supports( 'post-thumbnails' ) ) { ?>
@@ -330,7 +336,7 @@ class Featured_Content_Manager_Customizer {
 	public function search_result_templates(){
 	?>
 		<script type="text/html" id="tmpl-featured-area-search-result-item">
-			<li class="featured-area-search-result-item {{data.post_type}}" data-id="{{data.ID}}">
+			<li class="featured-area-search-result-item {{data.post_type}}" data-id="{{data.ID}}" data-site_id="{{data.site_id}}">
 				<div class="featured-area-search-item-title">
 					<h4>{{data.post_title}}</h4>
 				</div>

@@ -150,6 +150,10 @@ $(function() {
 
 	$('body').on('click', 'li.featured-area-search-result-item', function(event){
 		var post_id = $(this).data('id');
+		var site_id = '';
+		if ( $(this).data('site_id') ) {
+			site_id = $(this).data('site_id');
+		}
 		var target = $('.adding-featured-items-target');
 
 		$(this).addClass('added');
@@ -157,6 +161,7 @@ $(function() {
 		var data = {
 			action: 'get_post',
 			post_id: post_id,
+			site_id: site_id,
 			target: ''
 		};
 
