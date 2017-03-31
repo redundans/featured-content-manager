@@ -153,7 +153,8 @@ class Featured_Area_Control extends WP_Customize_Control {
 		}
 		$output .= '	<input type="hidden" name="area[' . $index . ']" value="{{term}}">
 						<input type="hidden" name="menu_order[' . $index . ']" value="' . $post->menu_order . '">
-						<input type="hidden" name="post_id[' . $index . ']" value="' .$post->ID .'">
+						<input type="hidden" name="site_id[' . $index . ']" value="' . get_post_meta( $post->ID, 'fcm_site_id', true ) .'">
+						<input type="hidden" name="post_id[' . $index . ']" value="' . $post->ID .'">
 						<input type="hidden" name="child[' . $index . ']" value="' . $child . '">
 						<input type="hidden" name="post_original[' . $index . ']" value="' . $post_original_id .'">
 						<div class="uploader">';
