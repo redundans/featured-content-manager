@@ -366,7 +366,7 @@ class Featured_Content_Manager {
 		$post_id = $_POST['post_id'];
 		$target = $_POST['target'];
 
-		if ( isset( $_POST['site_id'] ) && ! empty( $_POST['site_id'] ) ) {
+		if ( fcm_is_multisite_elasticsearch_enabled() && isset( $_POST['site_id'] ) && ! empty( $_POST['site_id'] ) ) {
 			$site_id = $_POST['site_id'];
 			switch_to_blog( absint( $_POST['site_id'] ) );
 		} else {
@@ -398,7 +398,7 @@ class Featured_Content_Manager {
 			'site_id' => $site_id,
 		);
 
-		if ( isset( $_POST['site_id'] ) && ! empty( $_POST['site_id'] ) ) {
+		if ( fcm_is_multisite_elasticsearch_enabled() && isset( $_POST['site_id'] ) && ! empty( $_POST['site_id'] ) ) {
 			restore_current_blog();
 		}
 
@@ -737,4 +737,17 @@ function fcm_get_children( $post_id = '' ) {
 		$post_id = get_the_ID();
 	}
 	return Featured_Content_Manager::get_children( $post_id );
+}
+
+/**
+ * If your site uses elasticpress on multisite you can return true in this filter
+ * to be able to search and get content from all sites.
+ * Do this at your own risk, you'll also need to filter ` `
+ * and roll your own frontend output using switch_to_blog etc.
+ */
+function fcm_is_multisite_elasticsearch_enabled() {
+	if ( ! is_multisite() ) {
+		return false;
+	}
+	return apply_filters( 'fcm_is_multisite_elasticsearch_enabled', false );
 }
