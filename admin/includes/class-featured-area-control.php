@@ -71,19 +71,24 @@ class Featured_Area_Control extends WP_Customize_Control {
 				'order' => 'ASC'
 			)
 		);
-		foreach ($posts_array as $post) {
-			if( wp_get_post_parent_id($post->ID) === 0 ):
+		foreach ( $posts_array as $post ) {
+			if ( wp_get_post_parent_id( $post->ID ) === 0 ) :
 				$child_markup = null;
-				$post_thumbnail_id = get_post_thumbnail_id( $post->ID );
 				$post = get_post( $post->ID );
-				$post_thumbnail = ($post_thumbnail_id != '' ? get_post( $post_thumbnail_id ) : false);
+				$post_original_id = get_post_meta( $post->ID, 'fcm_post_parent', true );
+				$post_thumbnail = '';
 
-				if($post_thumbnail) {
-					$post_thumbnail->url = wp_get_attachment_image_src( $post_thumbnail_id, 'large' );
-					$post_thumbnail->url = $post_thumbnail->url[0];
+				if ( has_post_thumbnail( $post ) ) {
+					$post_thumbnail = get_post( get_post_thumbnail_id( $post ) );
+					$post_thumbnail->url = set_url_scheme( get_the_post_thumbnail_url( $post, 'large' ) );
+				} elseif ( $site_id = get_post_meta( $post->ID, 'fcm_site_id', true ) ) {
+					switch_to_blog( $site_id );
+					if ( has_post_thumbnail( $post_original_id ) ) {
+						$post_thumbnail = get_post( get_post_thumbnail_id( $post_original_id ) );
+						$post_thumbnail->url = set_url_scheme( get_the_post_thumbnail_url( $post_original_id, 'large' ) );
+					}
+					restore_current_blog();
 				}
-
-				$post_original_id = get_post_meta( $post->ID, 'fcm_post_parent', TRUE );
 
 				$output = $this->render_featured_item( $index, $post, $post_original_id, 'false', $post_thumbnail );
 
@@ -92,12 +97,12 @@ class Featured_Area_Control extends WP_Customize_Control {
 				$index++;
 
 				foreach ( $children as $child ) {
-					$child_post = get_post( $child["ID"] );
-					$post_thumbnail_id = get_post_thumbnail_id( $child["ID"] );
+					$child_post = get_post( $child['ID'] );
+					$post_thumbnail_id = get_post_thumbnail_id( $child['ID'] );
 					$post_thumbnail = ( $post_thumbnail_id != '' ? get_post( $post_thumbnail_id ) : false );
-					$post_original_id = get_post_meta( $child_post->ID, 'fcm_post_parent', TRUE );
+					$post_original_id = get_post_meta( $child_post->ID, 'fcm_post_parent', true );
 
-					if( $post_thumbnail ) {
+					if ( $post_thumbnail ) {
 						$post_thumbnail->url = wp_get_attachment_thumb_url( $post_thumbnail_id );
 					}
 
