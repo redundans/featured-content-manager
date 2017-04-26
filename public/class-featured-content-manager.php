@@ -467,7 +467,7 @@ class Featured_Content_Manager {
 							}
 							update_post_meta( $featured_content_id, 'fcm_post_parent', $values['post_original'][$index] );
 							wp_set_post_terms( $featured_content_id, array( $featured_area ), self::TAXONOMY, TRUE );
-							if ( $values['post_thumbnail'][$index] != '' ) {
+							if ( $values['post_thumbnail'][$index] != '' && get_current_blog_id() == $values['site_id'][$index]) {
 								set_post_thumbnail( $featured_content_id, $values['post_thumbnail'][$index] );
 							}
 							if ( $values['site_id'][$index] != '' ) {
