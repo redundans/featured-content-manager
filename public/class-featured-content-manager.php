@@ -365,9 +365,13 @@ class Featured_Content_Manager {
 	public static function get_featured_content_post() {
 		$post_id = $_POST['post_id'];
 		$target = $_POST['target'];
+		$fcm_has_switched = false;
 
 		if ( fcm_is_multisite_elasticsearch_enabled() && isset( $_POST['site_id'] ) && ! empty( $_POST['site_id'] ) ) {
 			$site_id = $_POST['site_id'];
+			if ( absint( $site_id) !== get_current_blog_id() ) {
+				$fcm_has_switched = true;
+			}
 			switch_to_blog( absint( $_POST['site_id'] ) );
 		} else {
 			$site_id = '';
@@ -386,6 +390,11 @@ class Featured_Content_Manager {
 		$post_thumbnail = get_post( $post_thumbnail_id );
 		if(!$post_thumbnail){
 			$post_thumbnail = new stdClass();
+			$post_thumbnail->ID = '';
+		}
+
+		//If post thumbnail is from another site, do not return the id, only the url
+		if ( fcm_is_multisite_elasticsearch_enabled() && $fcm_has_switched ) {
 			$post_thumbnail->ID = '';
 		}
 
