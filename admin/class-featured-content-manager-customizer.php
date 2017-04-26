@@ -208,6 +208,16 @@ class Featured_Content_Manager_Customizer {
 			// Populate the output and return as JSON
 			if ( $search_query->have_posts() ) {
 				$output = array();
+				// Add empty url post
+				// global $post;
+				// 	$output[0]['ID'] = 0;
+				// 	if ( isset( $post->site_id ) ) {
+				// 		$output[$i]['site_id'] = $post->site_id;
+				// 	} else {
+				// 		$output[$i]['site_id'] = '';
+				// 	}
+				// 	$output[$i]['post_title'] = html_entity_decode('Enter Title here...');
+				
 				$i = 0;
 				while ( $search_query->have_posts() ) {
 					$search_query->the_post();
@@ -239,6 +249,13 @@ class Featured_Content_Manager_Customizer {
 	public function available_featured_items_panel() {
 	?>
 		<div id="available-featured-items" class="accordion-container">
+		<?php if(true) : ?>
+			<div id="available-featured-items-filter">
+				<!--<label class="screen-reader-text" for="featured-items-search2"><?php esc_html_e( 'Search Content' , $this->plugin_slug ); ?></label>
+				<input type="search" id="featured-items-search2" placeholder="<?php esc_attr_e( 'Search content', $this->plugin_slug ); ?>">-->
+				<button class="btn btn-default featured-item-add-url-item"><?php esc_attr_e( 'Add url-item', $this->plugin_slug ); ?></button>
+			</div>
+		<?php endif; ?>
 			<div id="available-featured-items-filter">
 				<label class="screen-reader-text" for="featured-items-search"><?php esc_html_e( 'Search Content' , $this->plugin_slug ); ?></label>
 				<input type="search" id="featured-items-search" placeholder="<?php esc_attr_e( 'Search content', $this->plugin_slug ); ?>">
@@ -316,6 +333,59 @@ class Featured_Content_Manager_Customizer {
 					</p>
 					<p>
 						<textarea name="post_content[{{data.index}}]">{{data.post.post_content}}</textarea>
+					</p>
+					<p>
+						<a href="#" class="remove"><?php esc_html_e( 'Delete', $this->plugin_slug ); ?></a>
+					</p>
+				</fieldset>
+			</div>
+			<div class="fcm-children">
+				<ul class="sortable connectable"></ul>
+			</div>
+		</li>
+	</script>
+	<script type="text/html" id="tmpl-featured-item-url">
+		<li class="closed">
+			<div class="fcm-title">
+				<div class="sidebar-name-arrow"><span class="toggle-indicator" aria-hidden="true"></span></div>
+				<div class="sidebar-parent-arrow"></div>
+				<div class="sidebar-delete-icon"></div>
+				<h4>{{{data.post.post_title}}}</h4>
+			</div>
+			<div class="fcm-inside">
+				<fieldset name="post-{{data.post.ID}}">
+					<input type="hidden" name="post_thumbnail[{{data.index}}]" value="{{data.post_thumbnail.ID}}">
+					<input type="hidden" name="area[{{data.index}}]" value="{{data.term}}">
+					<input type="hidden" name="menu_order[{{data.index}}]" value="{{data.post.menu_order}}">
+					<input type="hidden" name="post_id[{{data.index}}]" value="{{data.post.ID}}">
+					<input type="hidden" name="site_id[{{data.index}}]" value="{{data.site_id}}">
+					<input type="hidden" name="child[{{data.index}}]" value="{{data.child}}">
+					<input type="hidden" name="post_original[{{data.index}}]" value="{{data.post_original.ID}}">
+					<?php
+						if ( ! empty( $styles ) ) {
+							$i = 0;
+							echo '<select class="widefat" name="style[{{data.index}}]">';
+							foreach ($styles as $style) {
+								if($i==0)
+									echo '<option value="' . $style->term_id . '" selected>' . $style->name . '</option>';
+								else
+									echo '<option value="' . $style->term_id . '">' . $style->name . '</option>';
+								$i++;
+							}
+							echo '</select>';
+						}
+					?>
+					<p>
+						<input type="text" name="post_title[{{data.index}}]" value="{{data.post.post_title}}">
+					</p>
+					<p>
+						<input type="hidden" name="post_date[{{data.index}}]" value="{{data.post.post_date}}">
+					</p>
+					<p>
+						<input type="hidden" name="post_content[{{data.index}}]" value="{{data.post.post_content}}">
+					</p>
+					<p>
+						<input type="text" name="url[{{data.index}}]" value="{{data.post.url}}">
 					</p>
 					<p>
 						<a href="#" class="remove"><?php esc_html_e( 'Delete', $this->plugin_slug ); ?></a>

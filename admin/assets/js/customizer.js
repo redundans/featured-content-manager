@@ -180,6 +180,41 @@ $(function() {
 		}, "JSON");
 	});
 
+	$('body').on('click', 'button.featured-item-add-url-item', function(event){
+		var post_id = 0;
+		var new_index = $('.adding-featured-items-target li').length+1, template;
+		template = wp.template( 'featured-item-url' );
+		var target = $('.adding-featured-items-target');
+
+		var site_id = 1;
+
+		// $output = array(
+		// 	'error' => 0,
+		// 	'post' => $post,
+		// 	'post_original' => array( 'ID' => $post_id ),
+		// 	'post_thumbnail' => $post_thumbnail,
+		// 	'term' => $target,
+		// 	'site_id' => $site_id,
+		// );
+		var response = {
+			post: {
+				'ID': 'new',
+				'post_title': 'test'
+			},
+			post_original: {'ID': 0},
+			post_thumbnail: '',
+			index: new_index,
+			site_id: site_id,
+			url: ''
+		};
+
+		var output = template( response );
+
+		$(target).append( output );
+		start_update_preview_timer();
+		connect_sortable();
+	});
+
 	function start_search_timer(){
 		clearTimeout(timer);
 		var ms = 500; // milliseconds

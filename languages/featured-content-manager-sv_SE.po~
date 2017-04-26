@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Featured Content Manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-19 15:36+0200\n"
+"POT-Creation-Date: 2017-04-19 13:29+0200\n"
 "PO-Revision-Date: 2016-01-20 15:49+0100\n"
 "Last-Translator: Jesper Nilsson <jesper@klandestino.se>\n"
 "Language-Team: Klandestino AB <kontakt@klandestino.se>\n"
@@ -69,7 +69,7 @@ msgid "Select thumbnail"
 msgstr "Välj tumnagel"
 
 #: admin/class-featured-content-manager-customizer.php:338
-#: admin/class-featured-content-manager-customizer.php:391
+#: admin/class-featured-content-manager-customizer.php:382
 msgid "Delete"
 msgstr "Ta bort"
 
