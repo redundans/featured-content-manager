@@ -71,19 +71,24 @@ class Featured_Area_Control extends WP_Customize_Control {
 				'order' => 'ASC'
 			)
 		);
-		foreach ($posts_array as $post) {
-			if( wp_get_post_parent_id($post->ID) === 0 ):
+		foreach ( $posts_array as $post ) {
+			if ( wp_get_post_parent_id( $post->ID ) === 0 ) :
 				$child_markup = null;
-				$post_thumbnail_id = get_post_thumbnail_id( $post->ID );
 				$post = get_post( $post->ID );
-				$post_thumbnail = ($post_thumbnail_id != '' ? get_post( $post_thumbnail_id ) : false);
+				$post_original_id = get_post_meta( $post->ID, 'fcm_post_parent', true );
+				$post_thumbnail = '';
 
-				if($post_thumbnail) {
-					$post_thumbnail->url = wp_get_attachment_image_src( $post_thumbnail_id, 'large' );
-					$post_thumbnail->url = $post_thumbnail->url[0];
+				if ( has_post_thumbnail( $post ) ) {
+					$post_thumbnail = get_post( get_post_thumbnail_id( $post ) );
+					$post_thumbnail->url = set_url_scheme( get_the_post_thumbnail_url( $post, 'large' ) );
+				} elseif ( fcm_is_multisite_elasticsearch_enabled() && $site_id = get_post_meta( $post->ID, 'fcm_site_id', true ) ) {
+					switch_to_blog( $site_id );
+					if ( has_post_thumbnail( $post_original_id ) ) {
+						$post_thumbnail = get_post( get_post_thumbnail_id( $post_original_id ) );
+						$post_thumbnail->url = set_url_scheme( get_the_post_thumbnail_url( $post_original_id, 'large' ) );
+					}
+					restore_current_blog();
 				}
-
-				$post_original_id = get_post_meta( $post->ID, 'fcm_post_parent', TRUE );
 
 				$output = $this->render_featured_item( $index, $post, $post_original_id, 'false', $post_thumbnail );
 
@@ -92,12 +97,12 @@ class Featured_Area_Control extends WP_Customize_Control {
 				$index++;
 
 				foreach ( $children as $child ) {
-					$child_post = get_post( $child["ID"] );
-					$post_thumbnail_id = get_post_thumbnail_id( $child["ID"] );
+					$child_post = get_post( $child['ID'] );
+					$post_thumbnail_id = get_post_thumbnail_id( $child['ID'] );
 					$post_thumbnail = ( $post_thumbnail_id != '' ? get_post( $post_thumbnail_id ) : false );
-					$post_original_id = get_post_meta( $child_post->ID, 'fcm_post_parent', TRUE );
+					$post_original_id = get_post_meta( $child_post->ID, 'fcm_post_parent', true );
 
-					if( $post_thumbnail ) {
+					if ( $post_thumbnail ) {
 						$post_thumbnail->url = wp_get_attachment_thumb_url( $post_thumbnail_id );
 					}
 
@@ -127,14 +132,15 @@ class Featured_Area_Control extends WP_Customize_Control {
 	 *
 	 * @since     0.1.0
 	 */
-	public function render_featured_item( $index, $post, $post_original_id, $child, $post_thumbnail ){
-		$styles = get_terms( Featured_Content_Manager::STYLE_TAXONOMY, array('hide_empty' => 0) );
-		$post_style = wp_get_post_terms($post->ID, Featured_Content_Manager::STYLE_TAXONOMY);
+	public function render_featured_item( $index, $post, $post_original_id, $child, $post_thumbnail ) {
+		$styles = get_terms( Featured_Content_Manager::STYLE_TAXONOMY, array( 'hide_empty' => 0 ) );
+		$post_style = wp_get_post_terms( $post->ID, Featured_Content_Manager::STYLE_TAXONOMY );
 
-		if ( count($post_style)!=0 )
+		if ( 0 !== count( $post_style ) ) {
 			$post_style = $post_style[0];
-		else
+		} else {
 			$post_style = null;
+		}
 
 		$output = '
 			<li class="closed">
@@ -146,64 +152,77 @@ class Featured_Area_Control extends WP_Customize_Control {
 				</div>
 				<div class="fcm-inside">
 					<fieldset name="post-' . $post->ID . '">';
-		if( $post_thumbnail ) {
+		if ( $post_thumbnail ) {
 			$output .= '<input type="hidden" name="post_thumbnail[' . $index . ']" value="' . $post_thumbnail->ID . '">';
 		} else {
 			$output .= '<input type="hidden" name="post_thumbnail[' . $index . ']" value="">';
 		}
 		$output .= '	<input type="hidden" name="area[' . $index . ']" value="{{term}}">
-						<input type="hidden" name="menu_order[' . $index . ']" value="' . $post->menu_order . '">
-						<input type="hidden" name="post_id[' . $index . ']" value="' .$post->ID .'">
-						<input type="hidden" name="child[' . $index . ']" value="' . $child . '">
-						<input type="hidden" name="post_original[' . $index . ']" value="' . $post_original_id .'">
-						<div class="uploader">';
+				<input type="hidden" name="menu_order[' . $index . ']" value="' . $post->menu_order . '">
+				<input type="hidden" name="site_id[' . $index . ']" value="' . get_post_meta( $post->ID, 'fcm_site_id', true ) . '">
+				<input type="hidden" name="post_id[' . $index . ']" value="' . $post->ID . '">
+				<input type="hidden" name="child[' . $index . ']" value="' . $child . '">
+				<input type="hidden" name="post_original[' . $index . ']" value="' . $post_original_id . '">';
 		if ( current_theme_supports( 'post-thumbnails' ) ) {
-			if( $post_thumbnail ) {
-				$output .= '	<p>
-									<a href="#" title="Select thumbnail" class="edit-thumbnail"><img src="' . $post_thumbnail->url . '"></a>
-								</p>
-								<p>
-									<a href="#" title="Delete thumbnail" class="remove-thumbnail">' . __( 'Delete thumbnail', $this->plugin_slug ) . '</a>
-								</p>
-							</div>';
+			if ( $post_thumbnail ) {
+				$output .= '
+					<div class="uploader">
+						<p>
+							<a href="#" title="Select thumbnail" class="edit-thumbnail"><img src="' . $post_thumbnail->url . '"></a>
+						</p>
+						<p>
+							<a href="#" title="Delete thumbnail" class="remove-thumbnail">' . __( 'Delete thumbnail', $this->plugin_slug ) . '</a>
+						</p>
+					</div>';
 
 			} else {
-				$output .= '	<p>
-									<a href="#" title="Select thumbnail" class="edit-thumbnail">' . __( 'Select thumbnail', $this->plugin_slug ) . '</a>
-								</p>
-								<p>
-									<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail">' . __( 'Delete thumbnail', $this->plugin_slug ) . '</a>
-								</p>
-							</div>';
+				$output .= '
+					<div class="uploader">
+						<p>
+							<a href="#" title="Select thumbnail" class="edit-thumbnail">' . __( 'Select thumbnail', $this->plugin_slug ) . '</a>
+						</p>
+						<p>
+							<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail">' . __( 'Delete thumbnail', $this->plugin_slug ) . '</a>
+						</p>
+					</div>';
 			}
 		}
 		if ( ! empty( $styles ) ) {
 			$output .= '<p><select class="widefat" name="style[' . $index . ']">';
 			foreach ( $styles as $style ) {
-				if ( $post_style != null && intval($post_style->term_id) === intval($style->term_id) )
+				if ( null !== $post_style && intval( $post_style->term_id ) === intval( $style->term_id ) ) {
 					$output .= '<option value="' . $style->term_id . '" selected>' . $style->name . '</option>';
-				else
+				} else {
 					$output .= '<option value="' . $style->term_id . '">' . $style->name . '</option>';
+				}
 			}
 			$output .= '</select><p>';
 		}
-		$output .= '	<p>
-							<input type="text" name="post_title[' . $index . ']" value="' . esc_js( $post->post_title ) . '">
-						</p>
-						<p>
-							<input type="hidden" name="post_date[' . $index . ']" value="' . $post->post_date . '">
-						</p>
-						<p>
-							<textarea name="post_content[' . $index . ']">' . $post->post_content . '</textarea>
-						</p>
-						<p>
-							<a href="#" class="remove">' . __( 'Delete', $this->plugin_slug ) . '</a>
-						</p>
-					</fieldset>
-				</div>
-				<div class="fcm-children">
-					<ul class="sortable connectable"></ul>
-				</div>
+		$output .= '
+			<p>
+				<label>' . esc_html_x( 'Title', '', 'featured-content-manager' ) . '<input type="text" name="post_title[' . $index . ']" value="' . esc_js( $post->post_title ) . '"></label>
+			</p>
+			<p>
+				<input type="hidden" name="post_date[' . $index . ']" value="' . $post->post_date . '">
+			</p>
+			<p>
+				<label>' . esc_html_x( 'Excerpt', '', 'featured-content-manager' ) . '<textarea name="post_content[' . $index . ']">' . $post->post_content . '</textarea></label>
+			</p>';
+		if ( get_post_meta( $post->ID, 'fcm_blurb', true ) ) :
+			$output .=
+			'<p>
+				<label>' . esc_html_x( 'URL', '', 'featured-content-manager' ) . '<input type="url" name="url[' . $index . ']" value="' . get_post_meta( $post->ID, 'fcm_blurb_url', true ) . '"></label>
+			</p>';
+		endif;
+		$output .=
+			'<p>
+				<a href="#" class="remove">' . __( 'Delete', 'featured-content-manager' ) . '</a>
+			</p>
+			</fieldset>
+			</div>
+			<div class="fcm-children">
+				<ul class="sortable connectable"></ul>
+			</div>
 			</li>';
 		return $output;
 	}

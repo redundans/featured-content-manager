@@ -150,6 +150,10 @@ $(function() {
 
 	$('body').on('click', 'li.featured-area-search-result-item', function(event){
 		var post_id = $(this).data('id');
+		var site_id = '';
+		if ( $(this).data('site_id') ) {
+			site_id = $(this).data('site_id');
+		}
 		var target = $('.adding-featured-items-target');
 
 		$(this).addClass('added');
@@ -157,6 +161,7 @@ $(function() {
 		var data = {
 			action: 'get_post',
 			post_id: post_id,
+			site_id: site_id,
 			target: ''
 		};
 
@@ -173,6 +178,34 @@ $(function() {
 			start_update_preview_timer();
 			connect_sortable();
 		}, "JSON");
+	});
+
+	$('body').on('click', 'a.featured-item-add-url-item', function(event){
+		event.preventDefault();
+		var post_id = 0;
+		var new_index = $('.adding-featured-items-target li').length+1, template;
+		template = wp.template( 'featured-item-url' );
+		var target = $('.adding-featured-items-target');
+
+		var site_id = 1;
+
+		var response = {
+			post: {
+				'ID': 'new',
+				'post_title': ''
+			},
+			post_original: {'ID': 0},
+			post_thumbnail: '',
+			index: new_index,
+			site_id: site_id,
+			url: ''
+		};
+
+		var output = template( response );
+
+		$(target).append( output );
+		start_update_preview_timer();
+		connect_sortable();
 	});
 
 	function start_search_timer(){
@@ -222,7 +255,7 @@ $(function() {
 	}
 
 	$(document).on('keyup', '#featured-items-search', start_search_timer );
-	$(document).on('keyup', '.sortable li input[type=text], .sortable li textarea', start_update_preview_timer );
+	$(document).on('keyup', '.sortable li input[type=text], .sortable li textarea, .sortable li input[type=url]', start_update_preview_timer );
 	$(document).on('keyup', '.sortable li input[name^=post_title]', update_sortable_title );
 	$(document).on('change', '.sortable li input[type=hidden], .sortable li select', start_update_preview_timer );
 

@@ -358,7 +358,8 @@ ul.sortable {
 	}
 }
 
-a.add-featured-items {
+a.add-featured-items,
+a.featured-item-add-url-item {
 	cursor: pointer;
 	float: right;
 	margin-left: 10px;
@@ -376,6 +377,10 @@ a.add-featured-items {
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 	}
+}
+a.featured-item-add-url-item {
+	float: left;
+	margin: 14px !important;
 }
 
 body.adding-featured-items {

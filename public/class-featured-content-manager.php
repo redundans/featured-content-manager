@@ -14,7 +14,7 @@ class Featured_Content_Manager {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.6';
+	const VERSION = '0.7';
 
 	/**
 	 * Unique identifier for featured item post type.
@@ -218,9 +218,15 @@ class Featured_Content_Manager {
 	 * @since     0.1.0
 	 */
 	public static function get_featured_content( $area, $post_status = 'publish' ) {
-		if( $post_status == '' ) $post_status = 'publish';
-		if( isset($_REQUEST['wp_customize']) ) $post_status = 'draft';
-		if( !is_int( $area ) ) {
+		if ( $post_status === '' ) {
+			$post_status = 'publish';
+		}
+
+		if ( isset( $_REQUEST['wp_customize'] ) ) {
+			$post_status = 'draft';
+		}
+
+		if ( ! is_int( $area ) ) {
 			$area = get_term_by( 'name', $area, self::TAXONOMY );
 		} else {
 			$area = get_term_by( 'id', $area, self::TAXONOMY );
@@ -234,7 +240,7 @@ class Featured_Content_Manager {
 			'order'		=> 'ASC',
 		);
 
-		if ( ! empty( $area ) )
+		if ( ! empty( $area ) ) {
 			$args['tax_query'] = array(
 				array(
 					'taxonomy' => self::TAXONOMY,
@@ -242,15 +248,15 @@ class Featured_Content_Manager {
 					'terms'    => $area->term_id,
 				),
 			);
-
+		}
 
 		$taxquery = array(
 			array(
 				'taxonomy' => self::TAXONOMY,
 				'field'    => 'id',
 				'terms'    => $area->term_id,
-				'operator'=> 'IN'
-			)
+				'operator' => 'IN',
+			),
 		);
 
 		$posts = get_posts( array(
@@ -260,20 +266,20 @@ class Featured_Content_Manager {
 			'post_parent' => 0,
 			'posts_per_page' => -1,
 			'orderby' => 'menu_order',
-			'order' => 'ASC'
+			'order' => 'ASC',
 		) );
 
 		$post_ids = array();
 
 		foreach ( wp_list_pluck( $posts, 'ID' ) as $id ) {
-  $post_ids[] = get_post_meta( $id, 'fcm_post_parent', TRUE );
-        }
-        $args2 = array(
+			$post_ids[] = get_post_meta( $id, 'fcm_post_parent', true );
+		}
+		$args2 = apply_filters( 'fcm_query_args', array(
 			'post__in' => $post_ids,
 			'orderby' => 'post__in',
 			'fcm' => true,
-			'fcm_area'   => $area->slug
-		);
+			'fcm_area'   => $area->slug,
+		) );
 
 		$query = new WP_Query( $args2 );
 		return $query;
@@ -356,9 +362,16 @@ class Featured_Content_Manager {
 	 *
 	 * @since    0.1.0
 	 */
-	public static function get_featured_content_post( ) {
+	public static function get_featured_content_post() {
 		$post_id = $_POST['post_id'];
 		$target = $_POST['target'];
+
+		if ( fcm_is_multisite_elasticsearch_enabled() && isset( $_POST['site_id'] ) && ! empty( $_POST['site_id'] ) ) {
+			$site_id = $_POST['site_id'];
+			switch_to_blog( absint( $_POST['site_id'] ) );
+		} else {
+			$site_id = '';
+		}
 
 		$post = get_post( $post_id );
 		if( isset( $post->post_title ) ) {
@@ -381,8 +394,13 @@ class Featured_Content_Manager {
 			'post' => $post,
 			'post_original' => array( 'ID' => $post_id ),
 			'post_thumbnail' => $post_thumbnail,
-			'term' => $target
+			'term' => $target,
+			'site_id' => $site_id,
 		);
+
+		if ( fcm_is_multisite_elasticsearch_enabled() && isset( $_POST['site_id'] ) && ! empty( $_POST['site_id'] ) ) {
+			restore_current_blog();
+		}
 
 		echo json_encode( $output );
 
@@ -396,14 +414,11 @@ class Featured_Content_Manager {
 	 *
 	 * @since    1.0
 	 */
-	public static function save_order( $post_status = 'publish', $values ){
+	public static function save_order( $post_status = 'publish', $values ) {
 		global $wpdb;
-		if( $post_status == '' ) {
-			$post_status = 'publish';
-		}
 
-		if(isset($values['_wpnonce']) ) {
-			if( wp_verify_nonce( $values['_wpnonce'], 'fcm_save_posts' ) ) {
+		if ( isset( $values['_wpnonce'] ) ) {
+			if ( wp_verify_nonce( $values['_wpnonce'], 'fcm_save_posts' ) ) {
 				$featured_area = $values['featured_area'];
 
 				$wpdb->query( "DELETE a,b,c FROM $wpdb->posts a LEFT JOIN $wpdb->term_relationships b ON (a.ID = b.object_id) LEFT JOIN $wpdb->postmeta c ON (a.ID = c.post_id) LEFT JOIN $wpdb->term_taxonomy d ON (b.term_taxonomy_id = d.term_taxonomy_id) WHERE d.term_id = '" . $featured_area . "' AND a.post_type = '" . self::POST_TYPE . "' AND a.post_status = '" . $post_status . "'" );
@@ -432,13 +447,22 @@ class Featured_Content_Manager {
 									'post_date' => date( 'Y-m-d H:i:s', strtotime( $values['post_date'][$index] ) )
 								);
 							$featured_content_id = wp_insert_post( $post );
-							if( $parent == 0 ) {
+							if ( 0 === $parent ) {
 								$parent_id = $featured_content_id;
+							}
+							if ( isset( $values['url'][ $index ] ) ) {
+								update_post_meta( $featured_content_id, 'fcm_blurb', true );
+								if ( ! empty( $values['url'][ $index ] ) ) {
+									update_post_meta( $featured_content_id, 'fcm_blurb_url', esc_url( $values['url'][ $index ] ) );
+								}
 							}
 							update_post_meta( $featured_content_id, 'fcm_post_parent', $values['post_original'][$index] );
 							wp_set_post_terms( $featured_content_id, array( $featured_area ), self::TAXONOMY, TRUE );
 							if ( $values['post_thumbnail'][$index] != '' ) {
 								set_post_thumbnail( $featured_content_id, $values['post_thumbnail'][$index] );
+							}
+							if ( $values['site_id'][$index] != '' ) {
+								update_post_meta( $featured_content_id, 'fcm_site_id', $values['site_id'][$index] );
 							}
 
 							if ( isset( $values['style'][$index] ) && $values['style'][$index] != '' ){
@@ -716,4 +740,24 @@ function fcm_get_children( $post_id = '' ) {
 		$post_id = get_the_ID();
 	}
 	return Featured_Content_Manager::get_children( $post_id );
+}
+
+/**
+ * If your site uses elasticpress on multisite you can return true in this filter
+ * to be able to search and get content from all sites.
+ * Do this at your own risk and roll your own frontend output using switch_to_blog etc.
+ */
+function fcm_is_multisite_elasticsearch_enabled() {
+	if ( ! is_multisite() ) {
+		return false;
+	}
+	return apply_filters( 'fcm_is_multisite_elasticsearch_enabled', false );
+}
+
+/**
+ * Add support for custom blurb functionality.
+ * Do this at your own risk and roll your own frontend output.
+ */
+function fcm_enable_blurbs() {
+	return apply_filters( 'fcm_is_blurbs_enabled', false );
 }

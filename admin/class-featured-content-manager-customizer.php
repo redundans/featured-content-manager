@@ -194,15 +194,16 @@ class Featured_Content_Manager_Customizer {
 	function featured_content_search(){
 
 		// Return error if no search term was found
-		if( isset($_REQUEST['search_term']) ){
+		if ( isset( $_REQUEST['search_term'] ) ) {
 
 			// Create query for the search
-			$search_query = new WP_Query( array(
-					's' => $_REQUEST['search_term'],
-					'post_type' => array('post','page'),
-					'post_per_page' => '10'
-				)
-			);
+			$search_args = apply_filters( 'fcm_search_args', array(
+				's' => $_REQUEST['search_term'],
+				'post_type' => array( 'post', 'page' ),
+				'post_per_page' => '10',
+			) );
+
+			$search_query = new WP_Query( $search_args );
 
 			// Populate the output and return as JSON
 			if ( $search_query->have_posts() ) {
@@ -210,7 +211,13 @@ class Featured_Content_Manager_Customizer {
 				$i = 0;
 				while ( $search_query->have_posts() ) {
 					$search_query->the_post();
+					global $post;
 					$output[$i]['ID'] = get_the_id();
+					if ( isset( $post->site_id ) ) {
+						$output[$i]['site_id'] = $post->site_id;
+					} else {
+						$output[$i]['site_id'] = '';
+					}
 					$output[$i]['post_title'] = html_entity_decode(get_the_title());
 					$output[$i]['post_type'] = get_post_type();
 					$output[$i]['post_content'] = wp_trim_words( wp_strip_all_tags( strip_shortcodes( get_the_content() ) ), 12, '...' );
@@ -232,6 +239,9 @@ class Featured_Content_Manager_Customizer {
 	public function available_featured_items_panel() {
 	?>
 		<div id="available-featured-items" class="accordion-container">
+		<?php if ( fcm_enable_blurbs() ) : ?>
+			<a class="button featured-item-add-url-item" href="#"><?php esc_attr_e( 'Add blurb', $this->plugin_slug ); ?></a>
+		<?php endif; ?>
 			<div id="available-featured-items-filter">
 				<label class="screen-reader-text" for="featured-items-search"><?php esc_html_e( 'Search Content' , $this->plugin_slug ); ?></label>
 				<input type="search" id="featured-items-search" placeholder="<?php esc_attr_e( 'Search content', $this->plugin_slug ); ?>">
@@ -266,6 +276,7 @@ class Featured_Content_Manager_Customizer {
 					<input type="hidden" name="area[{{data.index}}]" value="{{data.term}}">
 					<input type="hidden" name="menu_order[{{data.index}}]" value="{{data.post.menu_order}}">
 					<input type="hidden" name="post_id[{{data.index}}]" value="{{data.post.ID}}">
+					<input type="hidden" name="site_id[{{data.index}}]" value="{{data.site_id}}">
 					<input type="hidden" name="child[{{data.index}}]" value="{{data.child}}">
 					<input type="hidden" name="post_original[{{data.index}}]" value="{{data.post_original.ID}}">
 					<?php if ( current_theme_supports( 'post-thumbnails' ) ) { ?>
@@ -287,27 +298,100 @@ class Featured_Content_Manager_Customizer {
 							<# } #>
 					<?php } ?>
 					<?php
-						if ( ! empty( $styles ) ) {
-							$i = 0;
-							echo '<select class="widefat" name="style[{{data.index}}]">';
-							foreach ($styles as $style) {
-								if($i==0)
-									echo '<option value="' . $style->term_id . '" selected>' . $style->name . '</option>';
-								else
-									echo '<option value="' . $style->term_id . '">' . $style->name . '</option>';
-								$i++;
+					if ( ! empty( $styles ) ) {
+						$i = 0;
+						echo '<select class="widefat" name="style[{{data.index}}]">';
+						foreach ( $styles as $style ) {
+							if ( 0 === $i ) {
+								echo '<option value="' . absint( $style->term_id ) . '" selected>' . esc_html( $style->name ) . '</option>';
+							} else {
+								echo '<option value="' . absint( $style->term_id ) . '">' . esc_html( $style->name ) . '</option>';
 							}
-							echo '</select>';
+							$i++;
 						}
+						echo '</select>';
+					}
 					?>
 					<p>
-						<input type="text" name="post_title[{{data.index}}]" value="{{data.post.post_title}}">
+						<label><?php esc_html_e( 'Title', 'featured-content-manager' ); ?><input type="text" name="post_title[{{data.index}}]" value="{{data.post.post_title}}"></label>
 					</p>
 					<p>
 						<input type="hidden" name="post_date[{{data.index}}]" value="{{data.post.post_date}}">
 					</p>
 					<p>
-						<textarea name="post_content[{{data.index}}]">{{data.post.post_content}}</textarea>
+						<label><?php esc_html_e( 'Excerpt', 'featured-content-manager' ); ?><textarea name="post_content[{{data.index}}]">{{data.post.post_content}}</textarea></label>
+					</p>
+					<p>
+						<a href="#" class="remove"><?php esc_html_e( 'Delete', $this->plugin_slug ); ?></a>
+					</p>
+				</fieldset>
+			</div>
+			<div class="fcm-children">
+				<ul class="sortable connectable"></ul>
+			</div>
+		</li>
+	</script>
+	<script type="text/html" id="tmpl-featured-item-url">
+		<li class="closed">
+			<div class="fcm-title">
+				<div class="sidebar-name-arrow"><span class="toggle-indicator" aria-hidden="true"></span></div>
+				<div class="sidebar-parent-arrow"></div>
+				<div class="sidebar-delete-icon"></div>
+				<h4>{{{data.post.post_title}}}</h4>
+			</div>
+			<div class="fcm-inside">
+				<fieldset name="post-{{data.post.ID}}">
+					<input type="hidden" name="post_thumbnail[{{data.index}}]" value="{{data.post_thumbnail.ID}}">
+					<input type="hidden" name="area[{{data.index}}]" value="{{data.term}}">
+					<input type="hidden" name="menu_order[{{data.index}}]" value="{{data.post.menu_order}}">
+					<input type="hidden" name="post_id[{{data.index}}]" value="{{data.post.ID}}">
+					<input type="hidden" name="site_id[{{data.index}}]" value="{{data.site_id}}">
+					<input type="hidden" name="child[{{data.index}}]" value="{{data.child}}">
+					<input type="hidden" name="post_original[{{data.index}}]" value="{{data.post_original.ID}}">
+					<?php if ( current_theme_supports( 'post-thumbnails' ) ) { ?>
+						<div class="uploader">
+							<# if( data.post_thumbnail.guid) { #>
+							<p>
+								<a href="#" title="Select thumbnail" class="edit-thumbnail"><img src="{{data.post_thumbnail.guid}}"></a>
+							</p>
+							<p>
+								<a href="#" title="Delete thumbnail" class="remove-thumbnail"><?php esc_html_e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
+							</p>
+							<# } else { #>
+							<p>
+								<a href="#" title="Select thumbnail" class="edit-thumbnail"><?php esc_html_e( 'Select thumbnail', $this->plugin_slug ); ?></a>
+							</p>
+							<p>
+								<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail"><?php esc_html_e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
+							</p>
+							<# } #>
+					<?php } ?>
+					<?php
+					if ( ! empty( $styles ) ) {
+						$i = 0;
+						echo '<select class="widefat" name="style[{{data.index}}]">';
+						foreach ( $styles as $style ) {
+							if ( 0 === $i ) {
+								echo '<option value="' . absint( $style->term_id ) . '" selected>' . esc_html( $style->name ) . '</option>';
+							} else {
+								echo '<option value="' . absint( $style->term_id ) . '">' . esc_html( $style->name ) . '</option>';
+							}
+							$i++;
+						}
+						echo '</select>';
+					}
+					?>
+					<p>
+						<label><?php esc_html_e( 'Title', 'featured-content-manager' ); ?><input type="text" name="post_title[{{data.index}}]" value="{{data.post.post_title}}"></label>
+					</p>
+					<p>
+						<input type="hidden" name="post_date[{{data.index}}]" value="{{data.post.post_date}}">
+					</p>
+					<p>
+						<label><?php esc_html_e( 'Excerpt', 'featured-content-manager' ); ?><textarea name="post_content[{{data.index}}]">{{data.post.post_content}}</textarea></label>
+					</p>
+					<p>
+						<label><?php esc_html_e( 'URL', 'featured-content-manager' ); ?><input type="url" name="url[{{data.index}}]" value="{{data.post.url}}"></label>
 					</p>
 					<p>
 						<a href="#" class="remove"><?php esc_html_e( 'Delete', $this->plugin_slug ); ?></a>
@@ -330,7 +414,7 @@ class Featured_Content_Manager_Customizer {
 	public function search_result_templates(){
 	?>
 		<script type="text/html" id="tmpl-featured-area-search-result-item">
-			<li class="featured-area-search-result-item {{data.post_type}}" data-id="{{data.ID}}">
+			<li class="featured-area-search-result-item {{data.post_type}}" data-id="{{data.ID}}" data-site_id="{{data.site_id}}">
 				<div class="featured-area-search-item-title">
 					<h4>{{data.post_title}}</h4>
 				</div>
