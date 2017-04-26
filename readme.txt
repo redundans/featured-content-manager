@@ -37,6 +37,7 @@ Yes! If you don't want to network activate the plugin it has to be active on the
 * Support for elasticpress multisite search
 * Support for blurbs
 * Code cleanup
+* Bump composer/installers to v1.2.0
 
 = 0.6 =
 
