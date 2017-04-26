@@ -414,14 +414,11 @@ class Featured_Content_Manager {
 	 *
 	 * @since    1.0
 	 */
-	public static function save_order( $post_status = 'publish', $values ){
+	public static function save_order( $post_status = 'publish', $values ) {
 		global $wpdb;
-		if( $post_status == '' ) {
-			$post_status = 'publish';
-		}
 
-		if(isset($values['_wpnonce']) ) {
-			if( wp_verify_nonce( $values['_wpnonce'], 'fcm_save_posts' ) ) {
+		if ( isset( $values['_wpnonce'] ) ) {
+			if ( wp_verify_nonce( $values['_wpnonce'], 'fcm_save_posts' ) ) {
 				$featured_area = $values['featured_area'];
 
 				$wpdb->query( "DELETE a,b,c FROM $wpdb->posts a LEFT JOIN $wpdb->term_relationships b ON (a.ID = b.object_id) LEFT JOIN $wpdb->postmeta c ON (a.ID = c.post_id) LEFT JOIN $wpdb->term_taxonomy d ON (b.term_taxonomy_id = d.term_taxonomy_id) WHERE d.term_id = '" . $featured_area . "' AND a.post_type = '" . self::POST_TYPE . "' AND a.post_status = '" . $post_status . "'" );
@@ -450,8 +447,14 @@ class Featured_Content_Manager {
 									'post_date' => date( 'Y-m-d H:i:s', strtotime( $values['post_date'][$index] ) )
 								);
 							$featured_content_id = wp_insert_post( $post );
-							if( $parent == 0 ) {
+							if ( 0 === $parent ) {
 								$parent_id = $featured_content_id;
+							}
+							if ( isset( $values['url'][ $index ] ) ) {
+								update_post_meta( $featured_content_id, 'fcm_blurb', true );
+								if ( ! empty( $values['url'][ $index ] ) ) {
+									update_post_meta( $featured_content_id, 'fcm_blurb_url', esc_url( $values['url'][ $index ] ) );
+								}
 							}
 							update_post_meta( $featured_content_id, 'fcm_post_parent', $values['post_original'][$index] );
 							wp_set_post_terms( $featured_content_id, array( $featured_area ), self::TAXONOMY, TRUE );
@@ -742,12 +745,19 @@ function fcm_get_children( $post_id = '' ) {
 /**
  * If your site uses elasticpress on multisite you can return true in this filter
  * to be able to search and get content from all sites.
- * Do this at your own risk, you'll also need to filter ` `
- * and roll your own frontend output using switch_to_blog etc.
+ * Do this at your own risk and roll your own frontend output using switch_to_blog etc.
  */
 function fcm_is_multisite_elasticsearch_enabled() {
 	if ( ! is_multisite() ) {
 		return false;
 	}
 	return apply_filters( 'fcm_is_multisite_elasticsearch_enabled', false );
+}
+
+/**
+ * Add support for custom blurb functionality.
+ * Do this at your own risk and roll your own frontend output.
+ */
+function fcm_enable_blurbs() {
+	return apply_filters( 'fcm_is_blurbs_enabled', false );
 }

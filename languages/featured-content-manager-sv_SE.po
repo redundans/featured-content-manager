@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Featured Content Manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-19 15:36+0200\n"
+"POT-Creation-Date: 2017-04-26 12:11+0200\n"
 "PO-Revision-Date: 2016-01-20 15:49+0100\n"
 "Last-Translator: Jesper Nilsson <jesper@klandestino.se>\n"
 "Language-Team: Klandestino AB <kontakt@klandestino.se>\n"
@@ -40,38 +40,52 @@ msgstr ""
 msgid "Featured Area"
 msgstr "Utvalt område"
 
-#: admin/class-featured-content-manager-customizer.php:240
+#: admin/class-featured-content-manager-customizer.php:230
 msgid "Nothing found."
 msgstr "Hittade tyvärr ingenting."
 
-#: admin/class-featured-content-manager-customizer.php:254
-#: admin/class-featured-content-manager-customizer.php:260
+#: admin/class-featured-content-manager-customizer.php:243
+msgid "Add blurb"
+msgstr ""
+
+#: admin/class-featured-content-manager-customizer.php:246
 msgid "Search Content"
 msgstr "Sök innehåll"
 
-#: admin/class-featured-content-manager-customizer.php:255
-#: admin/class-featured-content-manager-customizer.php:261
+#: admin/class-featured-content-manager-customizer.php:247
 msgid "Search content"
 msgstr "Sök innehåll"
 
-#: admin/class-featured-content-manager-customizer.php:256
-#, fuzzy
-msgid "Add url-item"
-msgstr "Lägg till"
-
-#: admin/class-featured-content-manager-customizer.php:303
-#: admin/class-featured-content-manager-customizer.php:310
+#: admin/class-featured-content-manager-customizer.php:289
+#: admin/class-featured-content-manager-customizer.php:296
+#: admin/class-featured-content-manager-customizer.php:358
+#: admin/class-featured-content-manager-customizer.php:365
 msgid "Delete thumbnail"
 msgstr "Ta bort tumnagel"
 
-#: admin/class-featured-content-manager-customizer.php:307
+#: admin/class-featured-content-manager-customizer.php:293
+#: admin/class-featured-content-manager-customizer.php:362
 msgid "Select thumbnail"
 msgstr "Välj tumnagel"
 
-#: admin/class-featured-content-manager-customizer.php:338
+#: admin/class-featured-content-manager-customizer.php:316
+#: admin/class-featured-content-manager-customizer.php:385
+msgid "Title"
+msgstr "Titel"
+
+#: admin/class-featured-content-manager-customizer.php:322
 #: admin/class-featured-content-manager-customizer.php:391
+msgid "Excerpt"
+msgstr ""
+
+#: admin/class-featured-content-manager-customizer.php:325
+#: admin/class-featured-content-manager-customizer.php:397
 msgid "Delete"
 msgstr "Ta bort"
+
+#: admin/class-featured-content-manager-customizer.php:394
+msgid "URL"
+msgstr ""
 
 #: public/class-featured-content-manager.php:113
 msgid "Featured Items"
@@ -192,15 +206,15 @@ msgstr "Nytt namn till stil för utvalt innehåll"
 msgid "A default and predefined term for the Featured Area taxonomy."
 msgstr ""
 
-#: public/class-featured-content-manager.php:653
+#: public/class-featured-content-manager.php:656
 msgid "Related posts"
 msgstr ""
 
-#: public/class-featured-content-manager.php:698 updater/updater.php:16
+#: public/class-featured-content-manager.php:701 updater/updater.php:16
 msgid "Featured Content Manager"
 msgstr "Hantering av Utvalt Innehåll"
 
-#: public/class-featured-content-manager.php:698 updater/updater.php:16
+#: public/class-featured-content-manager.php:701 updater/updater.php:16
 msgid "Featured Content"
 msgstr "Utvalt Innehåll"
 
@@ -293,6 +307,10 @@ msgstr ""
 msgid "Activate License"
 msgstr ""
 
+#, fuzzy
+#~ msgid "Add url-item"
+#~ msgstr "Lägg till"
+
 #~ msgid "Drag and drop to reorder the featured items."
 #~ msgstr "Drag och släpp för att ordna om utvalda objekt."
 
@@ -305,9 +323,6 @@ msgstr ""
 
 #~ msgid "Drop Here!"
 #~ msgstr "Släpp här"
-
-#~ msgid "Title"
-#~ msgstr "Titel"
 
 #~ msgid "Create"
 #~ msgstr "Skapa"

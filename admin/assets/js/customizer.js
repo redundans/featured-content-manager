@@ -180,7 +180,8 @@ $(function() {
 		}, "JSON");
 	});
 
-	$('body').on('click', 'button.featured-item-add-url-item', function(event){
+	$('body').on('click', 'a.featured-item-add-url-item', function(event){
+		event.preventDefault();
 		var post_id = 0;
 		var new_index = $('.adding-featured-items-target li').length+1, template;
 		template = wp.template( 'featured-item-url' );
@@ -188,18 +189,10 @@ $(function() {
 
 		var site_id = 1;
 
-		// $output = array(
-		// 	'error' => 0,
-		// 	'post' => $post,
-		// 	'post_original' => array( 'ID' => $post_id ),
-		// 	'post_thumbnail' => $post_thumbnail,
-		// 	'term' => $target,
-		// 	'site_id' => $site_id,
-		// );
 		var response = {
 			post: {
 				'ID': 'new',
-				'post_title': 'test'
+				'post_title': ''
 			},
 			post_original: {'ID': 0},
 			post_thumbnail: '',
@@ -262,7 +255,7 @@ $(function() {
 	}
 
 	$(document).on('keyup', '#featured-items-search', start_search_timer );
-	$(document).on('keyup', '.sortable li input[type=text], .sortable li textarea', start_update_preview_timer );
+	$(document).on('keyup', '.sortable li input[type=text], .sortable li textarea, .sortable li input[type=url]', start_update_preview_timer );
 	$(document).on('keyup', '.sortable li input[name^=post_title]', update_sortable_title );
 	$(document).on('change', '.sortable li input[type=hidden], .sortable li select', start_update_preview_timer );
 

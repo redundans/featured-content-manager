@@ -208,16 +208,6 @@ class Featured_Content_Manager_Customizer {
 			// Populate the output and return as JSON
 			if ( $search_query->have_posts() ) {
 				$output = array();
-				// Add empty url post
-				// global $post;
-				// 	$output[0]['ID'] = 0;
-				// 	if ( isset( $post->site_id ) ) {
-				// 		$output[$i]['site_id'] = $post->site_id;
-				// 	} else {
-				// 		$output[$i]['site_id'] = '';
-				// 	}
-				// 	$output[$i]['post_title'] = html_entity_decode('Enter Title here...');
-				
 				$i = 0;
 				while ( $search_query->have_posts() ) {
 					$search_query->the_post();
@@ -249,12 +239,8 @@ class Featured_Content_Manager_Customizer {
 	public function available_featured_items_panel() {
 	?>
 		<div id="available-featured-items" class="accordion-container">
-		<?php if(true) : ?>
-			<div id="available-featured-items-filter">
-				<!--<label class="screen-reader-text" for="featured-items-search2"><?php esc_html_e( 'Search Content' , $this->plugin_slug ); ?></label>
-				<input type="search" id="featured-items-search2" placeholder="<?php esc_attr_e( 'Search content', $this->plugin_slug ); ?>">-->
-				<button class="btn btn-default featured-item-add-url-item"><?php esc_attr_e( 'Add url-item', $this->plugin_slug ); ?></button>
-			</div>
+		<?php if ( fcm_enable_blurbs() ) : ?>
+			<a class="button featured-item-add-url-item" href="#"><?php esc_attr_e( 'Add blurb', $this->plugin_slug ); ?></a>
 		<?php endif; ?>
 			<div id="available-featured-items-filter">
 				<label class="screen-reader-text" for="featured-items-search"><?php esc_html_e( 'Search Content' , $this->plugin_slug ); ?></label>
@@ -312,27 +298,28 @@ class Featured_Content_Manager_Customizer {
 							<# } #>
 					<?php } ?>
 					<?php
-						if ( ! empty( $styles ) ) {
-							$i = 0;
-							echo '<select class="widefat" name="style[{{data.index}}]">';
-							foreach ($styles as $style) {
-								if($i==0)
-									echo '<option value="' . $style->term_id . '" selected>' . $style->name . '</option>';
-								else
-									echo '<option value="' . $style->term_id . '">' . $style->name . '</option>';
-								$i++;
+					if ( ! empty( $styles ) ) {
+						$i = 0;
+						echo '<select class="widefat" name="style[{{data.index}}]">';
+						foreach ( $styles as $style ) {
+							if ( 0 === $i ) {
+								echo '<option value="' . absint( $style->term_id ) . '" selected>' . esc_html( $style->name ) . '</option>';
+							} else {
+								echo '<option value="' . absint( $style->term_id ) . '">' . esc_html( $style->name ) . '</option>';
 							}
-							echo '</select>';
+							$i++;
 						}
+						echo '</select>';
+					}
 					?>
 					<p>
-						<input type="text" name="post_title[{{data.index}}]" value="{{data.post.post_title}}">
+						<label><?php esc_html_e( 'Title', 'featured-content-manager' ); ?><input type="text" name="post_title[{{data.index}}]" value="{{data.post.post_title}}"></label>
 					</p>
 					<p>
 						<input type="hidden" name="post_date[{{data.index}}]" value="{{data.post.post_date}}">
 					</p>
 					<p>
-						<textarea name="post_content[{{data.index}}]">{{data.post.post_content}}</textarea>
+						<label><?php esc_html_e( 'Excerpt', 'featured-content-manager' ); ?><textarea name="post_content[{{data.index}}]">{{data.post.post_content}}</textarea></label>
 					</p>
 					<p>
 						<a href="#" class="remove"><?php esc_html_e( 'Delete', $this->plugin_slug ); ?></a>
@@ -361,31 +348,50 @@ class Featured_Content_Manager_Customizer {
 					<input type="hidden" name="site_id[{{data.index}}]" value="{{data.site_id}}">
 					<input type="hidden" name="child[{{data.index}}]" value="{{data.child}}">
 					<input type="hidden" name="post_original[{{data.index}}]" value="{{data.post_original.ID}}">
+					<?php if ( current_theme_supports( 'post-thumbnails' ) ) { ?>
+						<div class="uploader">
+							<# if( data.post_thumbnail.guid) { #>
+							<p>
+								<a href="#" title="Select thumbnail" class="edit-thumbnail"><img src="{{data.post_thumbnail.guid}}"></a>
+							</p>
+							<p>
+								<a href="#" title="Delete thumbnail" class="remove-thumbnail"><?php esc_html_e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
+							</p>
+							<# } else { #>
+							<p>
+								<a href="#" title="Select thumbnail" class="edit-thumbnail"><?php esc_html_e( 'Select thumbnail', $this->plugin_slug ); ?></a>
+							</p>
+							<p>
+								<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail"><?php esc_html_e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
+							</p>
+							<# } #>
+					<?php } ?>
 					<?php
-						if ( ! empty( $styles ) ) {
-							$i = 0;
-							echo '<select class="widefat" name="style[{{data.index}}]">';
-							foreach ($styles as $style) {
-								if($i==0)
-									echo '<option value="' . $style->term_id . '" selected>' . $style->name . '</option>';
-								else
-									echo '<option value="' . $style->term_id . '">' . $style->name . '</option>';
-								$i++;
+					if ( ! empty( $styles ) ) {
+						$i = 0;
+						echo '<select class="widefat" name="style[{{data.index}}]">';
+						foreach ( $styles as $style ) {
+							if ( 0 === $i ) {
+								echo '<option value="' . absint( $style->term_id ) . '" selected>' . esc_html( $style->name ) . '</option>';
+							} else {
+								echo '<option value="' . absint( $style->term_id ) . '">' . esc_html( $style->name ) . '</option>';
 							}
-							echo '</select>';
+							$i++;
 						}
+						echo '</select>';
+					}
 					?>
 					<p>
-						<input type="text" name="post_title[{{data.index}}]" value="{{data.post.post_title}}">
+						<label><?php esc_html_e( 'Title', 'featured-content-manager' ); ?><input type="text" name="post_title[{{data.index}}]" value="{{data.post.post_title}}"></label>
 					</p>
 					<p>
 						<input type="hidden" name="post_date[{{data.index}}]" value="{{data.post.post_date}}">
 					</p>
 					<p>
-						<input type="hidden" name="post_content[{{data.index}}]" value="{{data.post.post_content}}">
+						<label><?php esc_html_e( 'Excerpt', 'featured-content-manager' ); ?><textarea name="post_content[{{data.index}}]">{{data.post.post_content}}</textarea></label>
 					</p>
 					<p>
-						<input type="text" name="url[{{data.index}}]" value="{{data.post.url}}">
+						<label><?php esc_html_e( 'URL', 'featured-content-manager' ); ?><input type="url" name="url[{{data.index}}]" value="{{data.post.url}}"></label>
 					</p>
 					<p>
 						<a href="#" class="remove"><?php esc_html_e( 'Delete', $this->plugin_slug ); ?></a>
