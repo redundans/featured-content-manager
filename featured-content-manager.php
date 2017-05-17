@@ -35,28 +35,6 @@ if ( ! defined( 'WPINC' ) ) {
 require_once( plugin_dir_path( __FILE__ ) . 'public/class-featured-content-manager.php' );
 
 /*
- * Include the plugin updater.
- *
- */
-require_once( plugin_dir_path( __FILE__ ) . 'updater/updater.php' );
-
-function fcm_plugin_updater() {
-
-	$license_key = trim( get_option( 'fcm_license_key' ) );
-
-	// setup the updater
-	$fcm_updater = new EDD_SL_Plugin_Updater( FCM_STORE_URL, __FILE__, array(
-			'version' 	=> '0.7', 				// current version number
-			'license' 	=> $license_key, 		// license key (used get_option above to retrieve from DB)
-			'item_name' => FCM_PRODUCT_NAME, 	// name of this plugin
-			'author' 	=> 'Klandestino',  // author of this plugin
-		)
-	);
-
-}
-add_action( 'admin_init', 'fcm_plugin_updater', 0 );
-
-/*
  * Add action to start instance after plugin is loaded.
  *
  */

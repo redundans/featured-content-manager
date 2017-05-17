@@ -32,6 +32,10 @@ Yes! If you don't want to network activate the plugin it has to be active on the
 
 == Changelog ==
 
+= 0.7.1 =
+
+* Remove plugin updater functionality
+
 = 0.7 =
 
 * Support for elasticpress multisite search
