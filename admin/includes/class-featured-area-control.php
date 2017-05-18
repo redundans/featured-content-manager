@@ -165,26 +165,34 @@ class Featured_Area_Control extends WP_Customize_Control {
 				<input type="hidden" name="post_original[' . $index . ']" value="' . $post_original_id . '">';
 		if ( current_theme_supports( 'post-thumbnails' ) ) {
 			if ( $post_thumbnail ) {
-				$output .= '
-					<div class="uploader">
-						<p>
-							<a href="#" title="Select thumbnail" class="edit-thumbnail"><img src="' . $post_thumbnail->url . '"></a>
-						</p>
-						<p>
-							<a href="#" title="Delete thumbnail" class="remove-thumbnail">' . __( 'Delete thumbnail', $this->plugin_slug ) . '</a>
-						</p>
-					</div>';
-
+				if ( fcm_is_multisite_elasticsearch_enabled() && get_current_blog_id() != get_post_meta( $post->ID, 'fcm_site_id', true ) ) {
+					$output .= '<p><img src="' . $post_thumbnail->url . '"></p>';
+					$output .= '<p>Det går inte att ändra bilder från undersajter.</p>';
+				} else {
+					$output .= '
+						<div class="uploader">
+							<p>
+								<a href="#" title="Select thumbnail" class="edit-thumbnail"><img src="' . $post_thumbnail->url . '"></a>
+							</p>
+							<p>
+								<a href="#" title="Delete thumbnail" class="remove-thumbnail">' . __( 'Delete thumbnail', $this->plugin_slug ) . '</a>
+							</p>
+						</div>';
+				}
 			} else {
-				$output .= '
-					<div class="uploader">
-						<p>
-							<a href="#" title="Select thumbnail" class="edit-thumbnail">' . __( 'Select thumbnail', $this->plugin_slug ) . '</a>
-						</p>
-						<p>
-							<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail">' . __( 'Delete thumbnail', $this->plugin_slug ) . '</a>
-						</p>
-					</div>';
+				if ( fcm_is_multisite_elasticsearch_enabled() && get_current_blog_id() != get_post_meta( $post->ID, 'fcm_site_id', true ) ) {
+					$output .= '<p>Det går inte att ändra bilder från undersajter.</p>';
+				} else {
+					$output .= '
+						<div class="uploader">
+							<p>
+								<a href="#" title="Select thumbnail" class="edit-thumbnail">' . __( 'Select thumbnail', $this->plugin_slug ) . '</a>
+							</p>
+							<p>
+								<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail">' . __( 'Delete thumbnail', $this->plugin_slug ) . '</a>
+							</p>
+						</div>';
+				}
 			}
 		}
 		if ( ! empty( $styles ) ) {

@@ -410,6 +410,7 @@ class Featured_Content_Manager {
 		if ( fcm_is_multisite_elasticsearch_enabled() && isset( $_POST['site_id'] ) && ! empty( $_POST['site_id'] ) ) {
 			restore_current_blog();
 		}
+		$output['current_blog_id'] = get_current_blog_id();
 
 		echo json_encode( $output );
 

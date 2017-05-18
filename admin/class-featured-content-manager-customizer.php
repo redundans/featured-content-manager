@@ -281,7 +281,14 @@ class Featured_Content_Manager_Customizer {
 					<input type="hidden" name="post_original[{{data.index}}]" value="{{data.post_original.ID}}">
 					<?php if ( current_theme_supports( 'post-thumbnails' ) ) { ?>
 						<div class="uploader">
-							<# if( data.post_thumbnail.guid) { #>
+							<# if( ! _.isEqual( parseInt(data.current_blog_id), parseInt(data.site_id) ) ) { #>
+								<# if( data.post_thumbnail.guid ) { #>
+									<p><img src="{{data.post_thumbnail.guid}}"></p>
+									<p>Det går inte att ändra bilder från undersajter.</p>
+								<# } else { #>
+									<p>Det går inte att ändra bilder från undersajter.</p>
+								<# } #>
+							<# } else if( data.post_thumbnail.guid ) { #>
 							<p>
 								<a href="#" title="Select thumbnail" class="edit-thumbnail"><img src="{{data.post_thumbnail.guid}}"></a>
 							</p>
