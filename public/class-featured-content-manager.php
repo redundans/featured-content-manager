@@ -14,7 +14,7 @@ class Featured_Content_Manager {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.7.2';
+	const VERSION = '0.7.3';
 
 	/**
 	 * Unique identifier for featured item post type.
@@ -384,7 +384,7 @@ class Featured_Content_Manager {
 		if( has_excerpt( $post_id ) ) {
 			$post->post_content = $post->post_excerpt;
 		} else {
-			$post->post_content = wp_trim_words( wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
+			$post->post_content = wp_trim_words( wp_strip_all_tags( strip_shortcodes( $post->post_content ), true ), 20, '' );
 		}
 		$post_thumbnail_id = get_post_thumbnail_id( $post_id );
 		$post_thumbnail = get_post( $post_thumbnail_id );

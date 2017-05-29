@@ -3,7 +3,7 @@ Contributors: klandestino
 Tags: featured content
 Requires at least: 4.7
 Tested up to: 4.7.4
-Stable tag: 0.7.2
+Stable tag: 0.7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,6 +31,11 @@ Yes, all themes that use standard WordPress functionality works out of the box b
 Yes! If you don't want to network activate the plugin it has to be active on the main site for updates to work.
 
 == Changelog ==
+
+= 0.7.3 =
+
+* Fix issue where thumbnails wouldn't be editable fcm_multisite_search wasn't enabled.
+* Do not add &hellip; to the featured item excerpt when added.
 
 = 0.7.2 =
 

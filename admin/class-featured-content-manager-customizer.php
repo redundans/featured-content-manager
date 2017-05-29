@@ -220,7 +220,7 @@ class Featured_Content_Manager_Customizer {
 					}
 					$output[$i]['post_title'] = html_entity_decode(get_the_title());
 					$output[$i]['post_type'] = get_post_type();
-					$output[$i]['post_content'] = wp_trim_words( wp_strip_all_tags( strip_shortcodes( get_the_content() ) ), 12, '...' );
+					$output[ $i ]['post_content'] = wp_trim_words( wp_strip_all_tags( strip_shortcodes( get_the_content() ), true ), 12 );
 					$i++;
 				}
 				echo json_encode( array( 'error' => FALSE, 'result' => $output ) );
@@ -281,7 +281,7 @@ class Featured_Content_Manager_Customizer {
 					<input type="hidden" name="post_original[{{data.index}}]" value="{{data.post_original.ID}}">
 					<?php if ( current_theme_supports( 'post-thumbnails' ) ) { ?>
 						<div class="uploader">
-							<# if( ! _.isEqual( parseInt(data.current_blog_id), parseInt(data.site_id) ) ) { #>
+							<# if( data.site_id && ! _.isEqual( parseInt(data.current_blog_id), parseInt(data.site_id) ) ) { #>
 								<# if( data.post_thumbnail.guid ) { #>
 									<p><img src="{{data.post_thumbnail.guid}}"></p>
 									<p>Det går inte att ändra bilder från undersajter.</p>
