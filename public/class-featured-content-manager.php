@@ -14,7 +14,7 @@ class Featured_Content_Manager {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.7.3';
+	const VERSION = '0.7.4';
 
 	/**
 	 * Unique identifier for featured item post type.
@@ -177,16 +177,17 @@ class Featured_Content_Manager {
 	public function maybe_add_terms() {
 		global $fcm_registered_styles;
 
-		// If featured area taxonomy is registred add Main Area term.
-		if ( ! term_exists( 'Main Area', self::TAXONOMY ) )
+		// If featured area taxonomy is registred and current theme hasn't added theme support add Main Area term.
+		if ( ! current_theme_supports( $this->plugin_slug ) && ! term_exists( 'Main Area', self::TAXONOMY ) ) {
 			wp_insert_term(
 				'Main Area',
 				self::TAXONOMY,
 				array(
-					'description'=> __( 'A default and predefined term for the Featured Area taxonomy.', $this->plugin_slug ),
+					'description' => __( 'A default and predefined term for the Featured Area taxonomy.', $this->plugin_slug ),
 					'slug' => 'fcm-main-area',
 				)
 			);
+		}
 
 		// Delete featured content styles if not registred
 		$styles = get_terms( self::STYLE_TAXONOMY, array('hide_empty' => 0) );

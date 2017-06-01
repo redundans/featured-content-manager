@@ -147,7 +147,7 @@ class Featured_Content_Manager_Customizer {
 		) );
 
 		// Get all featured areas created by the template or the plugin
-		$featured_areas = get_terms( Featured_Content_Manager::TAXONOMY, array( 'hide_empty' => false, 'orderby' => 'id', 'order' => 'DESC' ) );
+		$featured_areas = get_terms( Featured_Content_Manager::TAXONOMY, array( 'hide_empty' => false, 'orderby' => 'name', 'order' => 'ASC' ) );
 
 		// For each featured area term registred
 		foreach ($featured_areas as $featured_area) :
@@ -307,6 +307,7 @@ class Featured_Content_Manager_Customizer {
 					<?php
 					if ( ! empty( $styles ) ) {
 						$i = 0;
+						echo '<label>' . esc_html( 'Style', 'featured-content-manager' );
 						echo '<select class="widefat" name="style[{{data.index}}]">';
 						foreach ( $styles as $style ) {
 							if ( 0 === $i ) {
@@ -316,7 +317,7 @@ class Featured_Content_Manager_Customizer {
 							}
 							$i++;
 						}
-						echo '</select>';
+						echo '</select></label>';
 					}
 					?>
 					<p>
@@ -376,6 +377,7 @@ class Featured_Content_Manager_Customizer {
 					<?php
 					if ( ! empty( $styles ) ) {
 						$i = 0;
+						echo '<label>' . esc_html( 'Style', 'featured-content-manager' );
 						echo '<select class="widefat" name="style[{{data.index}}]">';
 						foreach ( $styles as $style ) {
 							if ( 0 === $i ) {
@@ -385,7 +387,7 @@ class Featured_Content_Manager_Customizer {
 							}
 							$i++;
 						}
-						echo '</select>';
+						echo '</select></label>';
 					}
 					?>
 					<p>

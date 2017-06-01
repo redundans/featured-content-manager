@@ -196,7 +196,7 @@ class Featured_Area_Control extends WP_Customize_Control {
 			}
 		}
 		if ( ! empty( $styles ) ) {
-			$output .= '<p><select class="widefat" name="style[' . $index . ']">';
+			$output .= '<p><label>' . esc_html( 'Style', 'featured-content-manager' ) . '<select class="widefat" name="style[' . $index . ']">';
 			foreach ( $styles as $style ) {
 				if ( null !== $post_style && intval( $post_style->term_id ) === intval( $style->term_id ) ) {
 					$output .= '<option value="' . $style->term_id . '" selected>' . $style->name . '</option>';
@@ -204,7 +204,7 @@ class Featured_Area_Control extends WP_Customize_Control {
 					$output .= '<option value="' . $style->term_id . '">' . $style->name . '</option>';
 				}
 			}
-			$output .= '</select><p>';
+			$output .= '</select></label><p>';
 		}
 		$output .= '
 			<p>
