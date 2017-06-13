@@ -1,3 +1,4 @@
+*.vscode
 *.zip
 build/tmp
 build/featured-content-manager
