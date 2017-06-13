@@ -303,11 +303,12 @@ class Featured_Content_Manager_Customizer {
 								<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail"><?php esc_html_e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
 							</p>
 							<# } #>
+						</div>
 					<?php } ?>
 					<?php
 					if ( ! empty( $styles ) ) {
 						$i = 0;
-						echo '<label>' . esc_html( 'Style', 'featured-content-manager' );
+						echo '<p><label>' . esc_html( 'Style', 'featured-content-manager' );
 						echo '<select class="widefat" name="style[{{data.index}}]">';
 						foreach ( $styles as $style ) {
 							if ( 0 === $i ) {
@@ -317,7 +318,7 @@ class Featured_Content_Manager_Customizer {
 							}
 							$i++;
 						}
-						echo '</select></label>';
+						echo '</select></label></p>';
 					}
 					?>
 					<p>
@@ -373,11 +374,12 @@ class Featured_Content_Manager_Customizer {
 								<a href="#" title="Delete thumbnail" style="display: none;" class="remove-thumbnail"><?php esc_html_e( 'Delete thumbnail', $this->plugin_slug ); ?></a>
 							</p>
 							<# } #>
+						</div>
 					<?php } ?>
 					<?php
 					if ( ! empty( $styles ) ) {
 						$i = 0;
-						echo '<label>' . esc_html( 'Style', 'featured-content-manager' );
+						echo '<p><label>' . esc_html( 'Style', 'featured-content-manager' );
 						echo '<select class="widefat" name="style[{{data.index}}]">';
 						foreach ( $styles as $style ) {
 							if ( 0 === $i ) {
@@ -387,7 +389,7 @@ class Featured_Content_Manager_Customizer {
 							}
 							$i++;
 						}
-						echo '</select></label>';
+						echo '</select></label></p>';
 					}
 					?>
 					<p>
