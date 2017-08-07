@@ -133,7 +133,7 @@ class Featured_Area_Control extends WP_Customize_Control {
 	 * @since     0.1.0
 	 */
 	public function render_featured_item( $index, $post, $post_original_id, $child, $post_thumbnail ) {
-		$styles = get_terms( Featured_Content_Manager::STYLE_TAXONOMY, array( 'hide_empty' => 0 ) );
+		$styles = get_terms( Featured_Content_Manager::STYLE_TAXONOMY, array( 'hide_empty' => 0, 'orderby' => 'name' ) );
 		$post_style = wp_get_post_terms( $post->ID, Featured_Content_Manager::STYLE_TAXONOMY );
 
 		if ( 0 !== count( $post_style ) ) {

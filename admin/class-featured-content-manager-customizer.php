@@ -260,7 +260,7 @@ class Featured_Content_Manager_Customizer {
 	 * @since    0.1.0
 	 */
 	public function featured_item_templates() {
-		$styles = get_terms( Featured_Content_Manager::STYLE_TAXONOMY, array('hide_empty' => 0) );
+		$styles = get_terms( Featured_Content_Manager::STYLE_TAXONOMY, array('hide_empty' => 0, 'orderby' => 'name') );
 	?>
 	<script type="text/html" id="tmpl-featured-item">
 		<li class="closed">
