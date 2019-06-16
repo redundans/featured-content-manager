@@ -27,6 +27,19 @@ Yes! If you don't want to network activate the plugin it has to be active on the
 
 ## Changelog ##
 
+### 0.7.7 ###
+
+* Add missing commits from v0.7.5 which where never merged to master... :/
+
+### 0.7.6 ###
+
+* Use thumbnail size in customizer panel - Before it was using large/original incurring unnecessary data transer.
+
+### 0.7.5 ###
+
+* Make sure the markup in the customizer is the same regardless of if it's been loaded by js or php.
+
+
 ### 0.7.4 ###
 
 * Do not add default area if current theme supports FCM.

@@ -204,7 +204,7 @@ class Featured_Area_Control extends WP_Customize_Control {
 					$output .= '<option value="' . $style->term_id . '">' . $style->name . '</option>';
 				}
 			}
-			$output .= '</select></label><p>';
+			$output .= '</select></label></p>';
 		}
 		$output .= '
 			<p>
