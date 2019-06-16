@@ -80,12 +80,12 @@ class Featured_Area_Control extends WP_Customize_Control {
 
 				if ( has_post_thumbnail( $post ) ) {
 					$post_thumbnail = get_post( get_post_thumbnail_id( $post ) );
-					$post_thumbnail->url = set_url_scheme( get_the_post_thumbnail_url( $post, 'large' ) );
+					$post_thumbnail->url = set_url_scheme( get_the_post_thumbnail_url( $post, 'thumbnail' ) );
 				} elseif ( fcm_is_multisite_elasticsearch_enabled() && $site_id = get_post_meta( $post->ID, 'fcm_site_id', true ) ) {
 					switch_to_blog( $site_id );
 					if ( has_post_thumbnail( $post_original_id ) ) {
 						$post_thumbnail = get_post( get_post_thumbnail_id( $post_original_id ) );
-						$post_thumbnail->url = set_url_scheme( get_the_post_thumbnail_url( $post_original_id, 'large' ) );
+						$post_thumbnail->url = set_url_scheme( get_the_post_thumbnail_url( $post_original_id, 'thumbnail' ) );
 					}
 					restore_current_blog();
 				}
